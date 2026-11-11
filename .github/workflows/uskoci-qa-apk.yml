@@ -1,0 +1,202 @@
+name: USKOCI temporary isolated Android APK proof
+
+# Test-only; does not sign with the official EAS preview or Play keystore.
+# An independent package prevents uninstall/overwriting the owner's signed preview.
+on:
+  workflow_dispatch:
+  push:
+    branches: [work/uskoci-cist-proizvod-20261104]
+    paths-ignore: ['docs/**', '**/*.md']
+
+permissions:
+  contents: read
+
+concurrency:
+  group: uskoci-qa-apk-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  qa-apk:
+    if: github.ref == 'refs/heads/work/uskoci-cist-proizvod-20261104'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      CI: '1'
+      EAS_BUILD_PROFILE: preview
+      USKOCI_OTA_TARGET: preview
+    steps:
+      - name: Check out exact source
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Capture tracked source for offline audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/uskoci-source"
+          git archive --format=tar.gz --output="$RUNNER_TEMP/uskoci-source/source.tar.gz" HEAD
+          git rev-parse HEAD > "$RUNNER_TEMP/uskoci-source/source-commit.txt"
+          git ls-tree -r -l HEAD > "$RUNNER_TEMP/uskoci-source/source-inventory.txt"
+      - name: Upload exact source snapshot separately from APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: uskoci-source-${{ github.sha }}
+          path: ${{ runner.temp }}/uskoci-source/
+          if-no-files-found: error
+          retention-days: 3
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v4
+      - name: Install exact dependencies and enforce the native patch
+        run: |
+          npm ci
+          node scripts/verify-native-patches.cjs
+      - name: Archive bounded test runtime for reproducible offline checks
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/uskoci-test-runtime"
+          tar -czf "$RUNNER_TEMP/uskoci-test-runtime/runtime.tar.gz" node_modules/react node_modules/react-test-renderer node_modules/react-is node_modules/scheduler node_modules/typescript
+          sha256sum package-lock.json > "$RUNNER_TEMP/uskoci-test-runtime/lock.sha256"
+          git rev-parse HEAD > "$RUNNER_TEMP/uskoci-test-runtime/source-commit.txt"
+      - name: Upload bounded test runtime
+        uses: actions/upload-artifact@v4
+        with:
+          name: uskoci-test-runtime-${{ github.sha }}
+          path: ${{ runner.temp }}/uskoci-test-runtime/
+          if-no-files-found: error
+          retention-days: 3
+      - name: Verify the active clean source
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/uskoci-checks"
+          npm test 2>&1 | tee "$RUNNER_TEMP/uskoci-checks/tests.tap"
+          npx tsc --noEmit 2>&1 | tee "$RUNNER_TEMP/uskoci-checks/typescript.txt"
+          sh supabase/migrations/check_md5.sh 2>&1 | tee "$RUNNER_TEMP/uskoci-checks/migration-integrity.txt"
+      - name: Upload source check results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: uskoci-checks-${{ github.sha }}
+          path: ${{ runner.temp }}/uskoci-checks/
+          if-no-files-found: ignore
+          retention-days: 3
+      - name: Pin canonical DEV settings and isolate app identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const fs = require('node:fs');
+          const {assertDevBuildContract} = require('./scripts/build-contract.cjs');
+          // The QA APK is deliberately a DIFFERENT package from the dedicated push-proof preview.
+          // Never inherit Firebase enrollment/proof flags from the shared EAS preview profile.
+          const config = { ...require('./eas.json').build.preview.env,
+            USKOCI_PUSH_PROOF_BUILD: '0', EXPO_PUBLIC_USKOCI_DEV_AUTO_PUSH_ENROLL: '0' };
+          if (Object.keys(config).some(name => !/^\w+$/.test(name))) throw new Error('INVALID_PREVIEW_KEY');
+          const env = {...process.env, ...config};
+          assertDevBuildContract(env);
+          for (const [key,value] of Object.entries(config)) {
+            if (typeof value !== 'string' || /[\r\n]/.test(value)) throw new Error('INVALID_PREVIEW_VALUE');
+            fs.appendFileSync(process.env.GITHUB_ENV, key + '=' + value + '\n');
+          }
+          const src = JSON.parse(fs.readFileSync('app.json', 'utf8'));
+          if (src.expo?.android?.package !== 'rs.uskoci.preview') throw new Error('UNEXPECTED_SOURCE_PACKAGE');
+          // Ephemeral CI-only sideload package. NEVER overwrite the signed preview.
+          src.expo.name = 'USKOČI • QA';
+          src.expo.android.package = 'rs.uskoci.preview.qa';
+          fs.writeFileSync('app.json', JSON.stringify(src, null, 2) + '\n');
+          NODE
+          node - <<'NODE'
+          Object.assign(process.env, require('./eas.json').build.preview.env, {
+            USKOCI_PUSH_PROOF_BUILD: '0', EXPO_PUBLIC_USKOCI_DEV_AUTO_PUSH_ENROLL: '0',
+          });
+          const expo=require('./app.config.js')({config: require('./app.json').expo});
+          if(expo.android.package!=='rs.uskoci.preview.qa'||expo.extra?.uskociBuild?.backendTarget!=='canonical'||expo.runtimeVersion!=='uskoci-v1-preview-r1') throw Error('QA_BUILD_IDENTITY_INVALID');
+          if (expo.android.googleServicesFile) throw Error('QA_MUST_HAVE_NO_FIREBASE');
+          if (expo.updates.enabled !== false || expo.updates.checkAutomatically !== 'NEVER' || expo.updates.useEmbeddedUpdate !== true) throw Error('QA_MUST_USE_EMBEDDED_SOURCE');
+          if (expo.extra.uskociBuild.sourceCommit !== process.env.GITHUB_SHA) throw Error('QA_SOURCE_COMMIT_MISMATCH');
+          console.log('QA package isolation, DEV backend and embedded-only source PASS');
+          NODE
+      - name: Generate only the Android native project
+        run: npx expo prebuild --platform android --no-install --clean
+      - name: Verify generated native update isolation
+        run: |
+          python - <<'PY'
+          import xml.etree.ElementTree as ET
+          manifest = ET.parse('android/app/src/main/AndroidManifest.xml').getroot()
+          android = '{http://schemas.android.com/apk/res/android}'
+          metadata = {item.get(android + 'name'): item.get(android + 'value') for item in manifest.findall('application/meta-data')}
+          assert metadata.get('expo.modules.updates.ENABLED') == 'false', 'QA_NATIVE_UPDATES_MUST_BE_DISABLED'
+          assert metadata.get('expo.modules.updates.EXPO_UPDATES_CHECK_ON_LAUNCH') == 'NEVER', 'QA_NATIVE_UPDATE_CHECK_MUST_BE_DISABLED'
+          assert metadata.get('expo.modules.updates.HAS_EMBEDDED_UPDATE') != 'false', 'QA_NATIVE_BUNDLE_REQUIRED'
+          print('Generated Android manifest: embedded source only PASS')
+          PY
+      - name: Build standalone installable release JS bundle and APK
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Same bounded ARM64-only ABI and memory settings as the earlier successful owner APK.
+          printf '\nreactNativeArchitectures=arm64-v8a\norg.gradle.jvmargs=-Xmx4096m -XX:MaxMetaspaceSize=2048m -Dfile.encoding=UTF-8\n' >> android/gradle.properties
+          cd android
+          chmod +x gradlew
+          ./gradlew :app:assembleRelease --no-daemon --stacktrace --max-workers=2
+      - name: Attest isolated APK and source identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/qa-apk
+          apk=android/app/build/outputs/apk/release/app-release.apk
+          test -s "$apk"
+          tools_dir="$(find "$ANDROID_HOME/build-tools" -mindepth 1 -maxdepth 1 -type d | sort -V | tail -1)"
+          "$tools_dir/apksigner" verify --verbose --print-certs "$apk" > artifacts/qa-apk/signature.txt
+          "$tools_dir/aapt" dump badging "$apk" > artifacts/qa-apk/apk-badging.txt
+          grep -F "package: name='rs.uskoci.preview.qa'" artifacts/qa-apk/apk-badging.txt
+          "$tools_dir/aapt" dump xmltree "$apk" AndroidManifest.xml > artifacts/qa-apk/AndroidManifest-tree.txt
+          python - <<'PY'
+          import json, re, zipfile
+          from pathlib import Path
+          directory = Path('artifacts/qa-apk')
+          manifest = (directory / 'AndroidManifest-tree.txt').read_text()
+          blocks = re.split(r'(?m)^\s*E: ', manifest)
+          enabled = [block for block in blocks if block.startswith('meta-data ') and '"expo.modules.updates.ENABLED"' in block]
+          assert len(enabled) == 1 and re.search(r'android:value\([^)]*\)=\(type 0x12\)0x0\b', enabled[0]), 'APK_UPDATES_NOT_DISABLED'
+          with zipfile.ZipFile('android/app/build/outputs/apk/release/app-release.apk') as apk:
+            names = apk.namelist()
+            abis = sorted({name.split('/')[1] for name in names if name.startswith('lib/') and name.endswith('.so')})
+            assert abis == ['arm64-v8a'], 'APK_ABI_MISMATCH'
+            assert 'assets/index.android.bundle' in names and apk.getinfo('assets/index.android.bundle').file_size > 0, 'APK_EMBEDDED_BUNDLE_MISSING'
+            dex = [name for name in names if re.fullmatch(r'classes\d*\.dex', name)]
+            assert dex and any(b'USKOCI_RNR01' in apk.read(name) for name in dex), 'APK_NATIVE_PATCH_MISSING'
+          (directory / 'native-receipt.json').write_text(json.dumps({'abis': abis, 'embeddedBundle': True, 'otaEnabled': False, 'nativePatchMarker': 'USKOCI_RNR01', 'dexFiles': len(dex)}, indent=2) + '\n')
+          print('Final APK: ARM64, embedded bundle, OTA disabled and native patch marker PASS')
+          PY
+          cp "$apk" artifacts/qa-apk/USKOCI-QA-$(git rev-parse --short=9 HEAD).apk
+          (cd artifacts/qa-apk && sha256sum *.apk > SHA256SUMS.txt)
+          node - <<'NODE'
+          const fs = require('node:fs'), crypto=require('node:crypto');
+          const dir='artifacts/qa-apk';
+          const files=fs.readdirSync(dir).filter(f=>f.endsWith('.apk'));
+          if(files.length!==1)throw Error('APK_COUNT_INVALID');
+          const data=fs.readFileSync(dir + '/' + files[0]);
+          const native=JSON.parse(fs.readFileSync(dir + '/native-receipt.json','utf8'));
+          const meta={status:'BUILD_OUTPUT_NOT_NATIVE_E2E',sourceCommit:process.env.GITHUB_SHA,filename:files[0],bytes:data.length,sha256:crypto.createHash('sha256').update(data).digest('hex'),package:'rs.uskoci.preview.qa',signing:'EXPO_TEMPLATE_ANDROID_DEBUG_KEY',backend:'DEV',runtimeVersion:'uskoci-v1-preview-r1',...native,configOverrides:{name:'USKOČI • QA',androidPackage:'rs.uskoci.preview.qa'},push:'NOT_PROVEN',deviceInstall:'NOT_PERFORMED',replacesExistingPreview:false};
+          fs.writeFileSync(dir + '/build-receipt.json',JSON.stringify(meta,null,2)+'\n');
+          NODE
+          printf 'Temporary side-by-side ARM64 QA APK only. Embedded source only; OTA disabled. New package/signing; NOT the signed EAS preview, NOT production/store, NO push or device-install proof.\n' > artifacts/qa-apk/README.txt
+      - name: Upload installable APK and bounded receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: uskoci-isolated-qa-apk-${{ github.run_number }}
+          path: artifacts/qa-apk/
+          if-no-files-found: error
+          retention-days: 7

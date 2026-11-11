@@ -1,0 +1,775 @@
+{
+  "schema": "R01_MODERN_KEY_DEV_DEPLOYMENT_V1",
+  "capturedAt": "2026-11-07T15:49:48.670Z",
+  "projectRef": "leqcwgzvjsxugfgzdmth",
+  "sourceBaseCommit": "b56f0e52db99256cdfb6988567edc0e7d597849c",
+  "status": "DEV_FULL_PACKAGE_READBACK_CONFIRMED_RETIREMENT_OPEN",
+  "deploymentStartedAt": "2026-11-07T15:47:33.419Z",
+  "deploymentCompletedAt": "2026-11-07T15:48:36.813Z",
+  "candidateManifestSha256": "15be02d11643b899166943c2eddb67b525f7879693fec40d546b6c24356bbb04",
+  "helperSha256": "d1f903f379d30f0c9c1da684b335013f37b1cd5b62eb6e2b61d4d3a27352ab61",
+  "candidateTests": {
+    "passed": 32,
+    "failed": 0,
+    "repoEdgeFallback": false,
+    "handlers": 12
+  },
+  "functions": [
+    {
+      "name": "uskoci-account-closure-worker",
+      "beforeVersion": 18,
+      "version": 19,
+      "status": "ACTIVE",
+      "verifyJwt": false,
+      "entrypoint": "supabase/functions/uskoci-account-closure-worker/index.ts",
+      "files": 4,
+      "allFilesByteIdentical": true,
+      "freshPreimageByteIdentical": true,
+      "packageSha256": "46145bfb323f311b1b0bac58512c6410984be3e710a92e866c1c2e3a6c781753",
+      "unrelatedDriftPreserved": [],
+      "fileHashes": [
+        {
+          "name": "supabase/functions/_shared/data-export.ts",
+          "beforeSha256": "44a09fb214c6963663e8bc081918673a93a237159c60af37d2ca2976299dd793",
+          "afterSha256": "acce086875f3222415e4238e719b8e99c456c16d2c2917c9bfe4b943ae6fd737",
+          "changed": true
+        },
+        {
+          "name": "supabase/functions/_shared/supabaseKeys.mjs",
+          "beforeSha256": null,
+          "afterSha256": "d1f903f379d30f0c9c1da684b335013f37b1cd5b62eb6e2b61d4d3a27352ab61",
+          "changed": true
+        },
+        {
+          "name": "supabase/functions/uskoci-account-closure-worker/closure.ts",
+          "beforeSha256": "3bed4aaca7537bed3fb9e29a8c91c6e557d8af43263bdae27745a3c568dab043",
+          "afterSha256": "3bed4aaca7537bed3fb9e29a8c91c6e557d8af43263bdae27745a3c568dab043",
+          "changed": false
+        },
+        {
+          "name": "supabase/functions/uskoci-account-closure-worker/index.ts",
+          "beforeSha256": "0f87d3abbb09ecd29720da54e023b3d327bf13cce4f688fde3731e06013bc36b",
+          "afterSha256": "0f87d3abbb09ecd29720da54e023b3d327bf13cce4f688fde3731e06013bc36b",
+          "changed": false
+        }
+      ]
+    },
+    {
+      "name": "uskoci-ai-interview",
+      "beforeVersion": 192,
+      "version": 193,
+      "status": "ACTIVE",
+      "verifyJwt": false,
+      "entrypoint": "supabase/functions/uskoci-ai-interview/index.ts",
+      "files": 22,
+      "allFilesByteIdentical": true,
+      "freshPreimageByteIdentical": true,
+      "packageSha256": "70f45aa0b0269ccf8a9fab8b4fe61750441a1a029f5b0b56776c0aa9d6e9eb91",
+      "unrelatedDriftPreserved": [],
+      "fileHashes": [
+        {
+          "name": "src/contracts/aiAvailability.ts",
+          "beforeSha256": "e670bc2df4bdabe8df0285a80a6dcdaba348e4e9453ccfe787dbd1a2a2f1c9b8",
+          "afterSha256": "e670bc2df4bdabe8df0285a80a6dcdaba348e4e9453ccfe787dbd1a2a2f1c9b8",
+          "changed": false
+        },
+        {
+          "name": "src/contracts/needFactsV2.ts",
+          "beforeSha256": "f5f9eed0f9ed17278d805982d036feae3b910a413e98d20f8e93e0e9fe1d5099",
+          "afterSha256": "f5f9eed0f9ed17278d805982d036feae3b910a413e98d20f8e93e0e9fe1d5099",
+          "changed": false
+        },
+        {
+          "name": "src/contracts/taskApplicationDeadline.ts",
+          "beforeSha256": "6561ccfe5530ae34944d304abeb8400e8f3e5e8d29d16d5a5d517226b5e5ff5a",
+          "afterSha256": "6561ccfe5530ae34944d304abeb8400e8f3e5e8d29d16d5a5d517226b5e5ff5a",
+          "changed": false
+        },
+        {
+          "name": "supabase/functions/_shared/aiPhaseTiming.mjs",
+          "beforeSha256": "4eba3bd3d1692a4094c2b84d75d3e678554859e64c96c9535567280213d088d2",
+          "afterSha256": "4eba3bd3d1692a4094c2b84d75d3e678554859e64c96c9535567280213d088d2",
+          "changed": false
+        },
+        {
+          "name": "supabase/functions/_shared/aiTestBudget.ts",
+          "beforeSha256": "d93bb7a9a4f2e3cdab5ea4b1d0afb60f81e927f2c067695309f7ed6f5ac3778c",
+          "afterSha256": "f2603e5b8e40ccaa0677536bc43b1e93ea42bacaf59211762e03f33382726a90",
+          "changed": true
+        },
+        {
+          "name": "supabase/functions/_shared/backgroundTaxonomyArchitect.mjs",
+          "beforeSha256": "90c6ec46f56248d184ea338d51acb9153e64358ea0acdf7fa118575c6377ee6f",
+          "afterSha256": "90c6ec46f56248d184ea338d51acb9153e64358ea0acdf7fa118575c6377ee6f",
+          "changed": false
+        },
+        {
+          "name": "supabase/functions/_shared/classificationEngine.mjs",
+          "beforeSha256": "7b888425294c7c2d9d95927b14c4a0a544d44ad0b785a6f0749c610b1b433971",
+          "afterSha256": "7b888425294c7c2d9d95927b14c4a0a544d44ad0b785a6f0749c610b1b433971",
+          "changed": false
+        },
+        {
+          "name": "supabase/functions/_shared/completeFirstPlan.ts",
+          "beforeSha256": "09db698bf5b3a728d80daeffd14c3be3ba9a0e4b83c70f13f9ba6472f7ae48de",
+          "afterSha256": "09db698bf5b3a728d80daeffd14c3be3ba9a0e4b83c70f13f9ba6472f7ae48de",
+          "changed": false
+        },
+        {
+          "name": "supabase/functions/_shared/conversationIntent.mjs",
+          "beforeSha256": "5c99f4a30ad7e3b30189dfeb143f45ab66f19060b5e58cbde5d6498f0badffc7",
+          "afterSha256": "5c99f4a30ad7e3b30189dfeb143f45ab66f19060b5e58cbde5d6498f0badffc7",
+          "changed": false
+        },
+        {
+          "name": "supabase/functions/_shared/craftQuestionMatrix.mjs",
+          "beforeSha256": "d1c81546eaa7282fa636bdda0e15723ff0c79a0a233fd35ee72b35d69235cc8b",
+          "afterSha256": "d1c81546eaa7282fa636bdda0e15723ff0c79a0a233fd35ee72b35d69235cc8b",
+          "changed": false
+        },
+        {
+          "name": "supabase/functions/_shared/geminiContextCache.mjs",
+          "beforeSha256": "160fb09f35538f6b0f4170931fa7d64bb87e9f2af2695e4dcabedfb799fce9c7",
+          "afterSha256": "160fb09f35538f6b0f4170931fa7d64bb87e9f2af2695e4dcabedfb799fce9c7",
+          "changed": false
+        },
+        {
+          "name": "supabase/functions/_shared/geminiTaskStream.ts",
+          "beforeSha256": "56e731f72c8fb094c133a79a63c97538d18ad6581f991a40ab0d6139324b9d69",
+          "afterSha256": "56e731f72c8fb094c133a79a63c97538d18ad6581f991a40ab0d6139324b9d69",
+          "changed": false
+        },
+        {
+          "name": "supabase/functions/_shared/interviewVoiceInstruction.mjs",
+          "beforeSha256": "ce73cde3e8722eb1440850ba6fcbf6651cf9aebef75acda31dca5e8fafb67c0e",
+          "afterSha256": "ce73cde3e8722eb1440850ba6fcbf6651cf9aebef75acda31dca5e8fafb67c0e",
+          "changed": false
+        },
+        {
+          "name": "supabase/functions/_shared/locationReply.ts",
+          "beforeSha256": "e58382d12212257801fdbfdb5271ea5488891533e2208943cf18b81fe49770e3",
+          "afterSha256": "e58382d12212257801fdbfdb5271ea5488891533e2208943cf18b81fe49770e3",
+          "changed": false
+        },
+        {
+          "name": "supabase/functions/_shared/researchDeadline.ts",
+          "beforeSha256": "6ae7a25c1bac1b2da89a10ed2c1ddbeed12def545411f796ce151695708054f9",
+          "afterSha256": "6ae7a25c1bac1b2da89a10ed2c1ddbeed12def545411f796ce151695708054f9",
+          "changed": false
+        },
+        {
+          "name": "supabase/functions/_shared/serviceExecutionInstruction.mjs",
+          "beforeSha256": "1e6ec151b93d17fab1cc6b4fde44025c0f41350e569686aa8e2c2a6b02d05314",
+          "afterSha256": "1e6ec151b93d17fab1cc6b4fde44025c0f41350e569686aa8e2c2a6b02d05314",
+          "changed": false
+        },
+        {
+          "name": "supabase/functions/_shared/serviceHandoff.mjs",
+          "beforeSha256": "784f55be68944570acac509444e19eaf51b27664f686ecd7e210c9ae9681df2e",
+          "afterSha256": "784f55be68944570acac509444e19eaf51b27664f686ecd7e210c9ae9681df2e",
+          "changed": false
+        },
+        {
+          "name": "supabase/functions/_shared/singlePassTaxonomy.mjs",
+          "beforeSha256": "aa126a55d690fb0799ca8b1e4473061ed3b0f503631a738378490618f2664632",
+          "afterSha256": "aa126a55d690fb0799ca8b1e4473061ed3b0f503631a738378490618f2664632",
+          "changed": false
+        },
+        {
+          "name": "supabase/functions/_shared/supabaseKeys.mjs",
+          "beforeSha256": null,
+          "afterSha256": "d1f903f379d30f0c9c1da684b335013f37b1cd5b62eb6e2b61d4d3a27352ab61",
+          "changed": true
+        },
+        {
+          "name": "supabase/functions/_shared/taxonomyRuntimeConfig.mjs",
+          "beforeSha256": "bd9b146ec53e3e7659d8294cdfac4eac77b4f965ece7c7ee60cd63b111f5a4b0",
+          "afterSha256": "3b6678e26cf6e72daf42e5345e736d6de8899416a83a0dc96f97db891304e398",
+          "changed": true
+        },
+        {
+          "name": "supabase/functions/_shared/workerServiceModeContext.mjs",
+          "beforeSha256": "839e373ac5949085f735222c870bcd4374a90b045233e90c9a146e6046ea452f",
+          "afterSha256": "839e373ac5949085f735222c870bcd4374a90b045233e90c9a146e6046ea452f",
+          "changed": false
+        },
+        {
+          "name": "supabase/functions/uskoci-ai-interview/index.ts",
+          "beforeSha256": "1a93ef373c18a1451502205d50faf35608757289e9b5db4f618d907c72764bce",
+          "afterSha256": "9a213ed0f2751abbc09e65da23217e6e5422f566cef4f2a5143f190424fbc086",
+          "changed": true
+        }
+      ]
+    },
+    {
+      "name": "uskoci-data-export-download",
+      "beforeVersion": 28,
+      "version": 29,
+      "status": "ACTIVE",
+      "verifyJwt": true,
+      "entrypoint": "supabase/functions/uskoci-data-export-download/index.ts",
+      "files": 3,
+      "allFilesByteIdentical": true,
+      "freshPreimageByteIdentical": true,
+      "packageSha256": "02fb5b4c2b3ed56b4ebd06cd676bb7108d4ba7cf017c9a902b8de2c3392dc43e",
+      "unrelatedDriftPreserved": [],
+      "fileHashes": [
+        {
+          "name": "supabase/functions/_shared/data-export.ts",
+          "beforeSha256": "44a09fb214c6963663e8bc081918673a93a237159c60af37d2ca2976299dd793",
+          "afterSha256": "acce086875f3222415e4238e719b8e99c456c16d2c2917c9bfe4b943ae6fd737",
+          "changed": true
+        },
+        {
+          "name": "supabase/functions/_shared/supabaseKeys.mjs",
+          "beforeSha256": null,
+          "afterSha256": "d1f903f379d30f0c9c1da684b335013f37b1cd5b62eb6e2b61d4d3a27352ab61",
+          "changed": true
+        },
+        {
+          "name": "supabase/functions/uskoci-data-export-download/index.ts",
+          "beforeSha256": "8982dd72cb1caecc2b1dcad21350f94655af16c96cefa46b4441d0dfa679663c",
+          "afterSha256": "8982dd72cb1caecc2b1dcad21350f94655af16c96cefa46b4441d0dfa679663c",
+          "changed": false
+        }
+      ]
+    },
+    {
+      "name": "uskoci-data-export-worker",
+      "beforeVersion": 28,
+      "version": 29,
+      "status": "ACTIVE",
+      "verifyJwt": false,
+      "entrypoint": "supabase/functions/uskoci-data-export-worker/index.ts",
+      "files": 3,
+      "allFilesByteIdentical": true,
+      "freshPreimageByteIdentical": true,
+      "packageSha256": "1099d13a9d8fe11fbc439adb64ed82dfa5652a87232c611aeffa194756cf57f9",
+      "unrelatedDriftPreserved": [],
+      "fileHashes": [
+        {
+          "name": "supabase/functions/_shared/data-export.ts",
+          "beforeSha256": "44a09fb214c6963663e8bc081918673a93a237159c60af37d2ca2976299dd793",
+          "afterSha256": "acce086875f3222415e4238e719b8e99c456c16d2c2917c9bfe4b943ae6fd737",
+          "changed": true
+        },
+        {
+          "name": "supabase/functions/_shared/supabaseKeys.mjs",
+          "beforeSha256": null,
+          "afterSha256": "d1f903f379d30f0c9c1da684b335013f37b1cd5b62eb6e2b61d4d3a27352ab61",
+          "changed": true
+        },
+        {
+          "name": "supabase/functions/uskoci-data-export-worker/index.ts",
+          "beforeSha256": "f7042410dd136f1506d315a94bea8d06cfa55b7add2bbd9210fa67ec1d665edd",
+          "afterSha256": "f7042410dd136f1506d315a94bea8d06cfa55b7add2bbd9210fa67ec1d665edd",
+          "changed": false
+        }
+      ]
+    },
+    {
+      "name": "uskoci-location-search",
+      "beforeVersion": 31,
+      "version": 32,
+      "status": "ACTIVE",
+      "verifyJwt": true,
+      "entrypoint": "supabase/functions/uskoci-location-search/index.ts",
+      "files": 2,
+      "allFilesByteIdentical": true,
+      "freshPreimageByteIdentical": true,
+      "packageSha256": "860663b1efe5783c062575bbdddbb9385b2aa3d6635904078854878e9b561b6f",
+      "unrelatedDriftPreserved": [],
+      "fileHashes": [
+        {
+          "name": "supabase/functions/_shared/supabaseKeys.mjs",
+          "beforeSha256": null,
+          "afterSha256": "d1f903f379d30f0c9c1da684b335013f37b1cd5b62eb6e2b61d4d3a27352ab61",
+          "changed": true
+        },
+        {
+          "name": "supabase/functions/uskoci-location-search/index.ts",
+          "beforeSha256": "dbbace6899567525795eb6ec6d005d0af351d7c86493f72e08ef74c929d0149a",
+          "afterSha256": "0f8c47c1962899078d3f0f473ae04bb79cb686e0cc00d0586fdeb5dac3149273",
+          "changed": true
+        }
+      ]
+    },
+    {
+      "name": "uskoci-media",
+      "beforeVersion": 29,
+      "version": 30,
+      "status": "ACTIVE",
+      "verifyJwt": true,
+      "entrypoint": "supabase/functions/uskoci-media/index.ts",
+      "files": 5,
+      "allFilesByteIdentical": true,
+      "freshPreimageByteIdentical": true,
+      "packageSha256": "3991e87597a2d0a5560c2a75d45e15b07812ea78e6e07f10170ca68a2006528e",
+      "unrelatedDriftPreserved": [],
+      "fileHashes": [
+        {
+          "name": "supabase/functions/_shared/mediaImageSanitizer.mjs",
+          "beforeSha256": "9db536a2acb7c527a163798beb27635b4ff8220660c8699fcb4162352f8613a8",
+          "afterSha256": "9db536a2acb7c527a163798beb27635b4ff8220660c8699fcb4162352f8613a8",
+          "changed": false
+        },
+        {
+          "name": "supabase/functions/_shared/mediaUploadAdmission.mjs",
+          "beforeSha256": "3ab0c07b3203bd52b6b8eefea69689b20b79c26d3dd077b6d02d679f7e5a3171",
+          "afterSha256": "3ab0c07b3203bd52b6b8eefea69689b20b79c26d3dd077b6d02d679f7e5a3171",
+          "changed": false
+        },
+        {
+          "name": "supabase/functions/_shared/supabaseKeys.mjs",
+          "beforeSha256": null,
+          "afterSha256": "d1f903f379d30f0c9c1da684b335013f37b1cd5b62eb6e2b61d4d3a27352ab61",
+          "changed": true
+        },
+        {
+          "name": "supabase/functions/_shared/voiceM4a.mjs",
+          "beforeSha256": "f3b073845d08f3c81ac48ae48ffee4d93e48f460a971fed2c3f9ef1f3b17a6fe",
+          "afterSha256": "f3b073845d08f3c81ac48ae48ffee4d93e48f460a971fed2c3f9ef1f3b17a6fe",
+          "changed": false
+        },
+        {
+          "name": "supabase/functions/uskoci-media/index.ts",
+          "beforeSha256": "553dd5e5072af0b41bc940c1b80d3025d567653ffa0ed62d4da2678be6462ec1",
+          "afterSha256": "4b3d39c100c5d8a9d48be051ce9893ba8e972fedf043516b914af6e1b3fbf4b0",
+          "changed": true
+        }
+      ]
+    },
+    {
+      "name": "uskoci-publication-evaluate",
+      "beforeVersion": 29,
+      "version": 30,
+      "status": "ACTIVE",
+      "verifyJwt": true,
+      "entrypoint": "supabase/functions/uskoci-publication-evaluate/index.ts",
+      "files": 5,
+      "allFilesByteIdentical": true,
+      "freshPreimageByteIdentical": true,
+      "packageSha256": "439c88a60ee529cc798fdfa2f7a95dea8280807608688352c24d9e754ae73e0c",
+      "unrelatedDriftPreserved": [
+        "src/contracts/aiAvailability.ts",
+        "supabase/functions/_shared/aiTestBudget.ts",
+        "supabase/functions/_shared/geminiTaskStream.ts"
+      ],
+      "fileHashes": [
+        {
+          "name": "src/contracts/aiAvailability.ts",
+          "beforeSha256": "8652494b72bce2956543d5dadd5c459d0196cc47317ab3be7a63aa82b9d2e409",
+          "afterSha256": "8652494b72bce2956543d5dadd5c459d0196cc47317ab3be7a63aa82b9d2e409",
+          "changed": false
+        },
+        {
+          "name": "supabase/functions/_shared/aiTestBudget.ts",
+          "beforeSha256": "2b7160d61fc8561c926601bfc21a1d06874b40edb1cc3c8b1e89bb6b16df4d31",
+          "afterSha256": "2e029b0ac9dde43c2661405357ff6195f2ed5b4c4ae3f2e81f029c5e97864c13",
+          "changed": true
+        },
+        {
+          "name": "supabase/functions/_shared/geminiTaskStream.ts",
+          "beforeSha256": "52995599c0c4dd89350681fa657c2777089046dd560555e764931f20c9b12aac",
+          "afterSha256": "52995599c0c4dd89350681fa657c2777089046dd560555e764931f20c9b12aac",
+          "changed": false
+        },
+        {
+          "name": "supabase/functions/_shared/supabaseKeys.mjs",
+          "beforeSha256": null,
+          "afterSha256": "d1f903f379d30f0c9c1da684b335013f37b1cd5b62eb6e2b61d4d3a27352ab61",
+          "changed": true
+        },
+        {
+          "name": "supabase/functions/uskoci-publication-evaluate/index.ts",
+          "beforeSha256": "2639ae690496e657192341501721ea842311d28da7449053823e329f0382b7bf",
+          "afterSha256": "7d3665a435420d88433be8f9a96836b770a80724bd88b4d88d349b762405cb05",
+          "changed": true
+        }
+      ]
+    },
+    {
+      "name": "uskoci-push-transport",
+      "beforeVersion": 44,
+      "version": 45,
+      "status": "ACTIVE",
+      "verifyJwt": false,
+      "entrypoint": "supabase/functions/uskoci-push-transport/index.ts",
+      "files": 3,
+      "allFilesByteIdentical": true,
+      "freshPreimageByteIdentical": true,
+      "packageSha256": "444061ce85a6f6dbbb28d1cd1641960ce4165fc11da6ee1efcd7b0787ee24df1",
+      "unrelatedDriftPreserved": [],
+      "fileHashes": [
+        {
+          "name": "supabase/functions/_shared/pushNotificationCopy.mjs",
+          "beforeSha256": "bd7171c544c3b42527940137b863f3641f96d063143d2850e5f5000621912215",
+          "afterSha256": "bd7171c544c3b42527940137b863f3641f96d063143d2850e5f5000621912215",
+          "changed": false
+        },
+        {
+          "name": "supabase/functions/_shared/supabaseKeys.mjs",
+          "beforeSha256": null,
+          "afterSha256": "d1f903f379d30f0c9c1da684b335013f37b1cd5b62eb6e2b61d4d3a27352ab61",
+          "changed": true
+        },
+        {
+          "name": "supabase/functions/uskoci-push-transport/index.ts",
+          "beforeSha256": "fa53ecd3623bd26edc81479bbbc207690b54977e861d589f00e039af4cb73a44",
+          "afterSha256": "8959ec37f329d0a46d5052bc859f9bdf4f49309cc01d114bee2de7167e14eaf0",
+          "changed": true
+        }
+      ]
+    },
+    {
+      "name": "uskoci-qa-classify",
+      "beforeVersion": 27,
+      "version": 28,
+      "status": "ACTIVE",
+      "verifyJwt": true,
+      "entrypoint": "supabase/functions/uskoci-qa-classify/index.ts",
+      "files": 5,
+      "allFilesByteIdentical": true,
+      "freshPreimageByteIdentical": true,
+      "packageSha256": "02499e99511dfa58be7812fe247b345fcd6211b74cbd29e68d7719a41e4491f0",
+      "unrelatedDriftPreserved": [
+        "src/contracts/qaSubmission.ts",
+        "supabase/functions/_shared/aiTestBudget.ts"
+      ],
+      "fileHashes": [
+        {
+          "name": "src/contracts/qaSubmission.ts",
+          "beforeSha256": "decf8744b41f808cb3dd45cda1b6f26809656b1ff46a9f6157071e4caf5bbeb5",
+          "afterSha256": "decf8744b41f808cb3dd45cda1b6f26809656b1ff46a9f6157071e4caf5bbeb5",
+          "changed": false
+        },
+        {
+          "name": "src/lib/qaTextHash.ts",
+          "beforeSha256": "9c1226bdbbbe9a6a8bbc50f71e30036e86b668c35d540ba3317eae6efd842285",
+          "afterSha256": "9c1226bdbbbe9a6a8bbc50f71e30036e86b668c35d540ba3317eae6efd842285",
+          "changed": false
+        },
+        {
+          "name": "supabase/functions/_shared/aiTestBudget.ts",
+          "beforeSha256": "de7b0a9f4b5f90f8cb036577ff6cfeb48c8bdd03b8a5d2987cb393c60f393331",
+          "afterSha256": "076c7a51dddbe1c1e73ba58a6ac18e8f9ce364dfb0eb710fe8798248efe73804",
+          "changed": true
+        },
+        {
+          "name": "supabase/functions/_shared/supabaseKeys.mjs",
+          "beforeSha256": null,
+          "afterSha256": "d1f903f379d30f0c9c1da684b335013f37b1cd5b62eb6e2b61d4d3a27352ab61",
+          "changed": true
+        },
+        {
+          "name": "supabase/functions/uskoci-qa-classify/index.ts",
+          "beforeSha256": "7bd653e1aa1f10fba3e24a3677512bba1dfc10d6c546eb31c5c020f00a03c944",
+          "afterSha256": "ba043aca76da7caba7674d77b368341054dd0aadfdd28070a626f526c6ef3e5b",
+          "changed": true
+        }
+      ]
+    },
+    {
+      "name": "uskoci-speech-session",
+      "beforeVersion": 30,
+      "version": 31,
+      "status": "ACTIVE",
+      "verifyJwt": true,
+      "entrypoint": "supabase/functions/uskoci-speech-session/index.ts",
+      "files": 5,
+      "allFilesByteIdentical": true,
+      "freshPreimageByteIdentical": true,
+      "packageSha256": "ce7f55ce8d2eb8a5b8cd58a0bafd432fd48a4ced2fe866a9d657181e6904411c",
+      "unrelatedDriftPreserved": [],
+      "fileHashes": [
+        {
+          "name": "src/features/voice/speechProtocol.ts",
+          "beforeSha256": "6f8cef7e96ed7802e2784342edea98019c08d16a8c6924cacc9c7ea39cb38ddc",
+          "afterSha256": "6f8cef7e96ed7802e2784342edea98019c08d16a8c6924cacc9c7ea39cb38ddc",
+          "changed": false
+        },
+        {
+          "name": "supabase/functions/_shared/aiTestBudget.ts",
+          "beforeSha256": "d93bb7a9a4f2e3cdab5ea4b1d0afb60f81e927f2c067695309f7ed6f5ac3778c",
+          "afterSha256": "f2603e5b8e40ccaa0677536bc43b1e93ea42bacaf59211762e03f33382726a90",
+          "changed": true
+        },
+        {
+          "name": "supabase/functions/_shared/supabaseKeys.mjs",
+          "beforeSha256": null,
+          "afterSha256": "d1f903f379d30f0c9c1da684b335013f37b1cd5b62eb6e2b61d4d3a27352ab61",
+          "changed": true
+        },
+        {
+          "name": "supabase/functions/uskoci-speech-session/index.ts",
+          "beforeSha256": "5b7daee19020835dcc52f7807201eaed14e2d4ba6cf19b878134b78cfe06a3fb",
+          "afterSha256": "c456c16a30404ddc2396da8cfb5410751cbd8c71fe24860b42a2583c567ca6b5",
+          "changed": true
+        },
+        {
+          "name": "supabase/functions/uskoci-speech-session/proxy.ts",
+          "beforeSha256": "3819ef579a6fc8370ee289aa3e53386bbeeb96add16552c78a6cd4d4c68f02f4",
+          "afterSha256": "3819ef579a6fc8370ee289aa3e53386bbeeb96add16552c78a6cd4d4c68f02f4",
+          "changed": false
+        }
+      ]
+    },
+    {
+      "name": "uskoci-taxonomy-postsave-worker",
+      "beforeVersion": 13,
+      "version": 14,
+      "status": "ACTIVE",
+      "verifyJwt": false,
+      "entrypoint": "supabase/functions/uskoci-taxonomy-postsave-worker/index.ts",
+      "files": 3,
+      "allFilesByteIdentical": true,
+      "freshPreimageByteIdentical": true,
+      "packageSha256": "bc68e7aa070c037907a382c499ca522fdc4d8792058b274fbcc1b33c20c2ad06",
+      "unrelatedDriftPreserved": [],
+      "fileHashes": [
+        {
+          "name": "supabase/functions/_shared/supabaseKeys.mjs",
+          "beforeSha256": null,
+          "afterSha256": "d1f903f379d30f0c9c1da684b335013f37b1cd5b62eb6e2b61d4d3a27352ab61",
+          "changed": true
+        },
+        {
+          "name": "supabase/functions/_shared/taxonomyPostSaveWorker.mjs",
+          "beforeSha256": "1a787842735041cb754e0811fbbc83d4c78c39d7098758a1c4d03ae06607a584",
+          "afterSha256": "1a787842735041cb754e0811fbbc83d4c78c39d7098758a1c4d03ae06607a584",
+          "changed": false
+        },
+        {
+          "name": "supabase/functions/uskoci-taxonomy-postsave-worker/index.ts",
+          "beforeSha256": "49edf91be14e337b10d75990f60a729b47627f39fc2d8be1320e7b469ba1c4d2",
+          "afterSha256": "61ae5fcb8417727c3004f50ba50bf0bcd3b9b2f58185e25725e1179705c880e7",
+          "changed": true
+        }
+      ]
+    },
+    {
+      "name": "uskoci-worker-interview",
+      "beforeVersion": 144,
+      "version": 145,
+      "status": "ACTIVE",
+      "verifyJwt": false,
+      "entrypoint": "supabase/functions/uskoci-worker-interview/index.ts",
+      "files": 22,
+      "allFilesByteIdentical": true,
+      "freshPreimageByteIdentical": true,
+      "packageSha256": "41fbe25d49027516c043f6df3b20ab2cf0c4b961f1a49255051b6f6e3b564385",
+      "unrelatedDriftPreserved": [],
+      "fileHashes": [
+        {
+          "name": "src/contracts/aiAvailability.ts",
+          "beforeSha256": "e670bc2df4bdabe8df0285a80a6dcdaba348e4e9453ccfe787dbd1a2a2f1c9b8",
+          "afterSha256": "e670bc2df4bdabe8df0285a80a6dcdaba348e4e9453ccfe787dbd1a2a2f1c9b8",
+          "changed": false
+        },
+        {
+          "name": "src/contracts/workerAreas.ts",
+          "beforeSha256": "42043ac28b6be3443a9837d855bada914513e267e45710111698da2c0163c33d",
+          "afterSha256": "42043ac28b6be3443a9837d855bada914513e267e45710111698da2c0163c33d",
+          "changed": false
+        },
+        {
+          "name": "supabase/functions/_shared/aiPhaseTiming.mjs",
+          "beforeSha256": "4eba3bd3d1692a4094c2b84d75d3e678554859e64c96c9535567280213d088d2",
+          "afterSha256": "4eba3bd3d1692a4094c2b84d75d3e678554859e64c96c9535567280213d088d2",
+          "changed": false
+        },
+        {
+          "name": "supabase/functions/_shared/aiTestBudget.ts",
+          "beforeSha256": "d93bb7a9a4f2e3cdab5ea4b1d0afb60f81e927f2c067695309f7ed6f5ac3778c",
+          "afterSha256": "f2603e5b8e40ccaa0677536bc43b1e93ea42bacaf59211762e03f33382726a90",
+          "changed": true
+        },
+        {
+          "name": "supabase/functions/_shared/backgroundTaxonomyArchitect.mjs",
+          "beforeSha256": "90c6ec46f56248d184ea338d51acb9153e64358ea0acdf7fa118575c6377ee6f",
+          "afterSha256": "90c6ec46f56248d184ea338d51acb9153e64358ea0acdf7fa118575c6377ee6f",
+          "changed": false
+        },
+        {
+          "name": "supabase/functions/_shared/classificationEngine.mjs",
+          "beforeSha256": "7b888425294c7c2d9d95927b14c4a0a544d44ad0b785a6f0749c610b1b433971",
+          "afterSha256": "7b888425294c7c2d9d95927b14c4a0a544d44ad0b785a6f0749c610b1b433971",
+          "changed": false
+        },
+        {
+          "name": "supabase/functions/_shared/completeFirstPlan.ts",
+          "beforeSha256": "09db698bf5b3a728d80daeffd14c3be3ba9a0e4b83c70f13f9ba6472f7ae48de",
+          "afterSha256": "09db698bf5b3a728d80daeffd14c3be3ba9a0e4b83c70f13f9ba6472f7ae48de",
+          "changed": false
+        },
+        {
+          "name": "supabase/functions/_shared/conversationIntent.mjs",
+          "beforeSha256": "5c99f4a30ad7e3b30189dfeb143f45ab66f19060b5e58cbde5d6498f0badffc7",
+          "afterSha256": "5c99f4a30ad7e3b30189dfeb143f45ab66f19060b5e58cbde5d6498f0badffc7",
+          "changed": false
+        },
+        {
+          "name": "supabase/functions/_shared/craftQuestionMatrix.mjs",
+          "beforeSha256": "d1c81546eaa7282fa636bdda0e15723ff0c79a0a233fd35ee72b35d69235cc8b",
+          "afterSha256": "d1c81546eaa7282fa636bdda0e15723ff0c79a0a233fd35ee72b35d69235cc8b",
+          "changed": false
+        },
+        {
+          "name": "supabase/functions/_shared/geminiContextCache.mjs",
+          "beforeSha256": "160fb09f35538f6b0f4170931fa7d64bb87e9f2af2695e4dcabedfb799fce9c7",
+          "afterSha256": "160fb09f35538f6b0f4170931fa7d64bb87e9f2af2695e4dcabedfb799fce9c7",
+          "changed": false
+        },
+        {
+          "name": "supabase/functions/_shared/geminiTaskStream.ts",
+          "beforeSha256": "56e731f72c8fb094c133a79a63c97538d18ad6581f991a40ab0d6139324b9d69",
+          "afterSha256": "56e731f72c8fb094c133a79a63c97538d18ad6581f991a40ab0d6139324b9d69",
+          "changed": false
+        },
+        {
+          "name": "supabase/functions/_shared/interviewVoiceInstruction.mjs",
+          "beforeSha256": "ce73cde3e8722eb1440850ba6fcbf6651cf9aebef75acda31dca5e8fafb67c0e",
+          "afterSha256": "ce73cde3e8722eb1440850ba6fcbf6651cf9aebef75acda31dca5e8fafb67c0e",
+          "changed": false
+        },
+        {
+          "name": "supabase/functions/_shared/researchDeadline.ts",
+          "beforeSha256": "6ae7a25c1bac1b2da89a10ed2c1ddbeed12def545411f796ce151695708054f9",
+          "afterSha256": "6ae7a25c1bac1b2da89a10ed2c1ddbeed12def545411f796ce151695708054f9",
+          "changed": false
+        },
+        {
+          "name": "supabase/functions/_shared/serviceExecutionInstruction.mjs",
+          "beforeSha256": "1e6ec151b93d17fab1cc6b4fde44025c0f41350e569686aa8e2c2a6b02d05314",
+          "afterSha256": "1e6ec151b93d17fab1cc6b4fde44025c0f41350e569686aa8e2c2a6b02d05314",
+          "changed": false
+        },
+        {
+          "name": "supabase/functions/_shared/serviceHandoff.mjs",
+          "beforeSha256": "784f55be68944570acac509444e19eaf51b27664f686ecd7e210c9ae9681df2e",
+          "afterSha256": "784f55be68944570acac509444e19eaf51b27664f686ecd7e210c9ae9681df2e",
+          "changed": false
+        },
+        {
+          "name": "supabase/functions/_shared/singlePassTaxonomy.mjs",
+          "beforeSha256": "aa126a55d690fb0799ca8b1e4473061ed3b0f503631a738378490618f2664632",
+          "afterSha256": "aa126a55d690fb0799ca8b1e4473061ed3b0f503631a738378490618f2664632",
+          "changed": false
+        },
+        {
+          "name": "supabase/functions/_shared/supabaseKeys.mjs",
+          "beforeSha256": null,
+          "afterSha256": "d1f903f379d30f0c9c1da684b335013f37b1cd5b62eb6e2b61d4d3a27352ab61",
+          "changed": true
+        },
+        {
+          "name": "supabase/functions/_shared/taxonomyRuntimeConfig.mjs",
+          "beforeSha256": "bd9b146ec53e3e7659d8294cdfac4eac77b4f965ece7c7ee60cd63b111f5a4b0",
+          "afterSha256": "3b6678e26cf6e72daf42e5345e736d6de8899416a83a0dc96f97db891304e398",
+          "changed": true
+        },
+        {
+          "name": "supabase/functions/_shared/workerAreaAdmission.mjs",
+          "beforeSha256": "27e41e614301d73b55c61782ea1b885cbf76a634b0d25ae814eb9b09038f9c99",
+          "afterSha256": "27e41e614301d73b55c61782ea1b885cbf76a634b0d25ae814eb9b09038f9c99",
+          "changed": false
+        },
+        {
+          "name": "supabase/functions/_shared/workerAreaResolver.mjs",
+          "beforeSha256": "6890d942d88a845054abea2b0651b3c5db6dbf5554468d87840e59f67fc0e0ab",
+          "afterSha256": "6890d942d88a845054abea2b0651b3c5db6dbf5554468d87840e59f67fc0e0ab",
+          "changed": false
+        },
+        {
+          "name": "supabase/functions/_shared/workerServiceModeContext.mjs",
+          "beforeSha256": "839e373ac5949085f735222c870bcd4374a90b045233e90c9a146e6046ea452f",
+          "afterSha256": "839e373ac5949085f735222c870bcd4374a90b045233e90c9a146e6046ea452f",
+          "changed": false
+        },
+        {
+          "name": "supabase/functions/uskoci-worker-interview/index.ts",
+          "beforeSha256": "c4342ca6f2fa80f3ee7fd65cb1cc4ae502d235bad335e35528dcf139d081a27e",
+          "afterSha256": "7c8a7eb5c0c4acc4466d892e41699fe64ea5ad05846ca9acad1dbb7d77ba4a8f",
+          "changed": true
+        }
+      ]
+    }
+  ],
+  "databaseConsumers": {
+    "cron": [
+      {
+        "name": "uskoci_marketplace_tick",
+        "active": true,
+        "schedule": "* * * * *",
+        "usesVault": false,
+        "commandMd5": "93518fd0382301fc76f79037123bccfc",
+        "httpTransport": false,
+        "containsJwtLiteral": false,
+        "containsModernSecretLiteral": false
+      },
+      {
+        "name": "uskoci_edge_workers",
+        "active": true,
+        "schedule": "* * * * *",
+        "usesVault": false,
+        "commandMd5": "6abaf04335ccd2f8240bafcd4dbfb314",
+        "httpTransport": false,
+        "containsJwtLiteral": false,
+        "containsModernSecretLiteral": false
+      },
+      {
+        "name": "uskoci_taxonomy_postsave_tick_dev",
+        "active": true,
+        "schedule": "* * * * *",
+        "usesVault": true,
+        "commandMd5": "b1e89b08b31a550f0ccce47ddcf3cb08",
+        "httpTransport": true,
+        "containsJwtLiteral": false,
+        "containsModernSecretLiteral": false
+      }
+    ],
+    "vault": [
+      {
+        "name": "uskoci_edge_base_url",
+        "isModernSecret": false,
+        "matchesHistoricalFingerprint": false
+      },
+      {
+        "name": "uskoci_dev_test101_b_credentials_20261015",
+        "isModernSecret": false,
+        "matchesHistoricalFingerprint": false
+      },
+      {
+        "name": "uskoci_edge_worker_key",
+        "isModernSecret": true,
+        "matchesHistoricalFingerprint": false
+      }
+    ],
+    "edgeTick": [
+      {
+        "bodyMd5": "7d03dc2c31a629785b5f222786bf4dd9",
+        "signature": "private.edge_worker_tick_v5(timestamp with time zone)",
+        "usesVault": true,
+        "usesApikey": true,
+        "usesBearer": true
+      }
+    ]
+  },
+  "legacyControl": {
+    "name": "USKOCI_LEGACY_SUPABASE_KEYS_ENABLED",
+    "liveConfigurationChanged": false,
+    "disabledInDev": false,
+    "transitionDefault": "undefined or exact true retains configured legacy compatibility",
+    "falseOrOtherPresentValue": "disables legacy ingress equality and both environment fallbacks; valid modern default continues"
+  },
+  "legacyKeyRevoked": false,
+  "providerCalls": 0,
+  "nativeConfirmed": false,
+  "limits": [
+    "Exact full package deployment and readback are verified, with only auth deltas and the new helper. Runtime checks have a separate receipt.",
+    "Legacy retirement remains blocked by missing authorized key-management/Dashboard capability. The deployed default deliberately retains transition compatibility.",
+    "Actual runtime modern env selection for every handler has not been introspected. Local modern-only handler fixtures are not runtime secret evidence.",
+    "DB inventory substring checks describe code text; they do not prove that a Bearer branch is active.",
+    "No provider, account erasure, export job, push delivery, media upload or production operation was initiated by deployment verification."
+  ]
+}

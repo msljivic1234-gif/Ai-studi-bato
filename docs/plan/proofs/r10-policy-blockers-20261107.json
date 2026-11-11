@@ -1,0 +1,264 @@
+{
+  "schema_version": 1,
+  "task": "R10 — usko razdvajanje tehničkog source vezivanja i neodobrene pravne politike",
+  "status": "DEV POTVRĐENO — BLOKIRANO",
+  "project_ref": "leqcwgzvjsxugfgzdmth",
+  "observed_status_at_utc": "2026-11-07T16:06:44Z",
+  "completed_at_utc": "2026-11-07T16:13:51Z",
+  "source_head_at_recording": "c049c1278ba997f80cd4ea93e213c0d70ed682a6",
+  "scope": {
+    "access": "READ ONLY: pg_catalog, definicije funkcija, registry/policy metapodaci i brojači.",
+    "private_user_rows_read": false,
+    "source_or_database_mutations": false,
+    "retention_pin_changed": false,
+    "policies_or_legal_content_published": false
+  },
+  "predicates": {
+    "retention_ai_source_ready": false,
+    "data_export_policy_binding_is_null": true
+  },
+  "actual_function_bodies_read": [
+    {
+      "signature": "private.data_export_policy_binding()",
+      "body_md5": "21ae94d4425396da941359cd834913fb"
+    },
+    {
+      "signature": "private.retention_ai_source_ready()",
+      "body_md5": "b89891cd3eb5f327bd642a160e5a2e81"
+    },
+    {
+      "signature": "private.closure_source_digest_v5()",
+      "body_md5": "41e54d223122b58decd25cf66191470a"
+    },
+    {
+      "signature": "private.data_export_projection_sha_v5()",
+      "body_md5": "ffd64be69db4663dcb3e2d07713176cd"
+    },
+    {
+      "signature": "private.agreement_invalidation_surface_v1()",
+      "body_md5": "a362fcc11419703eb07f07b4f82eebdb"
+    },
+    {
+      "signature": "private.agreement_voice_surface_v1()",
+      "body_md5": "b697d12234198c95815257d7ce73f147"
+    },
+    {
+      "signature": "private.closure_erasure_program_digest_v5()",
+      "body_md5": "e6ec1acf0f08f19847b5e342f82f32b2"
+    },
+    {
+      "signature": "private.closure_schema_digest_v5_139()",
+      "body_md5": "988b9d3ab9c0dc7341cd30a391184e40"
+    },
+    {
+      "signature": "private.data_export_dataset_catalog()",
+      "body_md5": "e08e712c811ab2a093e48ca75a436c25"
+    }
+  ],
+  "retention_technical_blocker": {
+    "direct_predicate_metadata_comparison": {
+      "relation_count_kind_partition": true,
+      "no_inheritance": true,
+      "conversation_columns": true,
+      "message_columns": true,
+      "incoming_conversation_fk_sources": true,
+      "incoming_conversation_fk_shape": true,
+      "no_incoming_message_fk": true,
+      "exact_13_trigger_body_event_pins": true,
+      "trigger_environment_args_columns": true,
+      "exact_3_closure_helper_pins": true
+    },
+    "comparison_method": "Nezavisno poređenje pročitanih pg_catalog metapodataka sa literalnim uslovima iz aktuelnog punog tela predikata; ovo nije izvršavanje prepravljenog predikata.",
+    "direct_trigger_pins_matching": 13,
+    "direct_closure_helper_pins_matching": 3,
+    "expected_closure_source_digest": "0201a7ccf74a3a5d0ed397d714392881af6ea1056b42f549097f9d3ecd9a4acb",
+    "actual_closure_source_digest": "05ffb90968b9e503726f89ed0d12a02e4038a5bb99f9006c96f9ece4ab499cac",
+    "final_aggregate_matches": false,
+    "aggregate_inputs": {
+      "schema_digest": "f70c3a9fc2a495a7a0aecd1c426ce1f7cc4a62d9ab74ef6e85840dcc4b749c0d",
+      "erasure_program_digest": "efc9a752621fff9b86c3375e59d856a819354278023708880f74a7147e670024",
+      "agreement_invalidation_surface": "fef533a4f1d69f123b842e5673bc9d928d9ffe055d0b4b8d4e1e1ae43ce028c4",
+      "agreement_voice_surface": "f44e5c0ee1b90929636a55ac813b2b6bfd4768f0e857d0bae13db24172a4373a",
+      "explicitly_named_function_body_roster_count": 148,
+      "schema_relation_count": 168,
+      "schema_scope": "Sve public/private relacije vrste r/p i storage.objects; njihove kolone/tipovi/nullability, ograničenja i trigger definicije/tela. Sufiks _139 je istorijsko ime, ne tekući fiksni broj relacija.",
+      "erasure_program_scope": "Eksplicitni spisak funkcija i redaction trigger funkcije sa metapodacima; owner/ACL/RLS javnih i privatnih tabela; enabled status njihovih i storage.objects triggera.",
+      "invalidation_scope": "Četiri invalidation funkcije/metapodaci, relevantne RLS politike, Realtime publication membership/flags.",
+      "voice_scope": "agreement-voice bucket metapodaci, relevantne/restrictive Storage politike i storage.objects RLS zastavice."
+    },
+    "exact_individual_pinned_definitions_differing": [],
+    "aggregate_baseline_attribution_limit": "Agregat sadrži samo zajednički očekivani SHA, bez očekivanih pojedinačnih hash-eva za svih 148 funkcija i dinamički schema skup. Ova uska provera ne identifikuje istorijski prvi objekat koji je promenio agregat.",
+    "relation_to_this_round": {
+      "r06_changed_four_writer_bodies": [
+        {
+          "name": "public.rpc_ai_test_budget_reserve_service",
+          "outer_roster": false,
+          "erasure_explicit_mentions": false
+        },
+        {
+          "name": "public.rpc_ai_test_record_usage_service",
+          "outer_roster": false,
+          "erasure_explicit_mentions": false
+        },
+        {
+          "name": "public.rpc_ai_test_release_unused_reservation_service",
+          "outer_roster": false,
+          "erasure_explicit_mentions": false
+        },
+        {
+          "name": "public.rpc_ai_test_settle_audio_service",
+          "outer_roster": false,
+          "erasure_explicit_mentions": false
+        }
+      ],
+      "r07_added_reader": {
+        "name": "public.rpc_read_selection_result",
+        "outer_roster": false,
+        "erasure_explicit_mentions": false
+      },
+      "r06_changed_check_constraints": [
+        "private.ai_test_budget_v5.ai_test_budget_v5_reserved_microusd_check",
+        "private.ai_test_reservations_v5.ai_test_reservations_v5_settlement_check",
+        "private.ai_test_reservations_v5.ai_test_reservations_v5_audio_measure_check"
+      ],
+      "r06_constraint_relations_in_dynamic_schema_scope": true,
+      "interpretation": "Današnje R06 CHECK definicije jesu ulazi tekućeg schema digest-a. To ne utvrđuje uzrok ranije potvrđenog false stanja. R07 dodaje reader, a navedena R06/R07 tela nisu imenovana u spoljašnjem 148-funkcijskom niti eksplicitnom erasure spisku."
+    },
+    "requires_owner_to_choose_hash": false,
+    "new_digest_alone_is_retention_approval": false
+  },
+  "export_policy_blocker": {
+    "first_failing_branch": "SELECT efektivnog, nepovučenog private.retention_policy_sets reda ne nalazi red; funkcija odmah vraća NULL.",
+    "policy_sets": {
+      "rows": [],
+      "total": 0,
+      "future_unretired": 0,
+      "effective_unretired": 0
+    },
+    "policy_rules": {
+      "total": 0,
+      "data_classes": []
+    },
+    "legal_documents": {
+      "rows": [],
+      "total": 0,
+      "active_effective": 0,
+      "active_effective_privacy": 0
+    },
+    "required_active_data_classes": [
+      "ACCOUNT_IDENTITY",
+      "AGREEMENT_CORE",
+      "AGREEMENT_MESSAGES",
+      "AGREEMENT_REVIEWS",
+      "AI_VOLATILE",
+      "AUDIT_SECURITY_LOGS",
+      "COMMAND_LEDGERS",
+      "LEGAL_CONSENT",
+      "MEDIA_OBJECTS",
+      "NEED_PUBLIC",
+      "NEED_SENSITIVE",
+      "NOTIFICATION_DELIVERY",
+      "PRESELECTION_QA",
+      "PROFILE_DATA",
+      "RESPONSES_SELECTION"
+    ],
+    "available_dataset_catalog_count": 73,
+    "unique_dataset_catalog_keys": 73,
+    "required_classes_missing_catalog": [],
+    "current_projection_sha256": "46b8c6a4b4a7fb67bec0545cde68a6f92088810663695c0f3b09b195a090246e",
+    "downstream_requirements_not_yet_reached": [
+      "USKOCI_EXPORT_DELIVERY_V2 / OWN_ACCOUNT_V5_11 binding tačnog projection SHA i sopstvenog content SHA.",
+      "Aktivan efektivan PRIVACY dokument tačnog ID-ja i content SHA.",
+      "Policy pravilo za svih 15 required/active klasa.",
+      "Tačno 73 dataset odluke sa dozvoljenim poljima ili razlogom izuzimanja; account/id se ne mogu izostaviti.",
+      "Pozitivni rokovi export kopije, privremenog snapshot-a i linka, sa odgovarajućim cleanup režimima."
+    ],
+    "lifetime_validator_maxima_seconds": {
+      "artifact": 2592000,
+      "snapshot": 2592000,
+      "download": 900
+    },
+    "maxima_are_approved_or_default_periods": false,
+    "catalog_or_validator_is_legal_approval": false
+  },
+  "temporal_boundary": {
+    "pre_round_commit": "833885296d6e4bad0e49acb58ac72a247df911aa",
+    "pre_round_source": "docs/plan/CODEX_PLAN_RADA.md",
+    "pre_round_source_sha256": "50269d54d3e2d2bba3155f6865105d39a8ab238a450f739afc493016a7ee33e1",
+    "pre_round_evidence": "P0 R10 tabela i R10/lifecycle red već potvrđuju retention_ai_source_ready=false i data_export_policy_binding=NULL, pre ovog razvojnog kruga i novih R06/R07 migracija.",
+    "fresh_pre_r06_aggregate_digest_available_in_this_check": false,
+    "actual_digest_is_current_observation_only": true
+  },
+  "approved_authority_review": {
+    "product_master": "docs/product/USKOCI_PRODUCT_UX_MASTER.md",
+    "product_master_sha256": "9f1c2385e47f79c0d339bc34ecefc10b75524794e42fbf8642912d17bcf70cdb",
+    "product_sections": [
+      "S15 — Podešavanja, privatnost i podrška",
+      "Rokovi čuvanja #811",
+      "Automatsko brisanje #812"
+    ],
+    "approved_product_requirements": "Istiniti statusi; samo objavljena pravila/rokovi; kada nisu dostupni prikazati „Trenutno nije dostupno“; bez obećanja trenutnog potpunog brisanja; eksplicitna potvrda i oporavak nepoznatog ishoda.",
+    "execution_master": "docs/plan/CODEX_PLAN_RADA.md",
+    "execution_master_sha256": "61907e26fafa69f0f97a5b4422e035988e25d80bb85cf5aefee53dea28c1d411",
+    "execution_sections": [
+      "R10 — Život podataka, saglasnosti, izvoz i zatvaranje naloga",
+      "SV06 — existing export/retention/closure binding"
+    ],
+    "approved_technical_work": "Usklađivanje postojećih workAreas projekcija, živih/arhivskih kopija i ugovora; autorizovani izvoz, revoke/late download, consent version drift i zasebni Storage/Auth/closure dokazi.",
+    "explicit_approved_policy_found_in_reviewed_authorities": false,
+    "missing_approval": "Nema konačno odobrene numeričke retention matrice, finalnog PRIVACY sadržaja/operatera niti stvarnih export lifetime/scope odluka koje bi se sada samo tehnički povezale.",
+    "blind_repin_or_ready_flag_permitted": false
+  },
+  "minimum_owner_inputs": [
+    {
+      "input": "Odobren pravni sadržaj",
+      "question": "Ko je stvarni operater/rukovalac i kontakt za privatnost, i koji konačni tekst Politike privatnosti je odobren za objavu, sa verzijom, datumom važenja i potvrdom pregleda?",
+      "boundary": "TERMS je takođe potreban za kompletan tok saglasnosti, ali nije uslov koji ovaj konkretan export predikat neposredno proverava. Tehnički tim računa ID/SHA i povezuje stvarne URL-ove."
+    },
+    {
+      "input": "Odobrena pravila čuvanja i brisanja",
+      "question": "Koja su odobrena svrha, trajanje, početak roka/okidač brisanja, izuzeci ili zadržavanje i pravni osnov za podatke naloga, AI razgovore, fotografije/govor, zadatke, prijave, saradnju/poruke/ocene i bezbednosne evidencije?",
+      "boundary": "Tehnički tim mapira razumljiva pravila na 15 postojećih klasa i proverene kopije/obrađivače; ne traži od vlasnika da bira hash, SQL identifikator ili da odobrava izmišljenu politiku."
+    },
+    {
+      "input": "Odobren obim i trajanje izvoza",
+      "question": "Koji sadržaj korisnik dobija u izvozu, kako se obrađuju originalni mediji i opravdana izuzimanja, koliko traje dostupnost export kopije i koliko se čuva privremeni snapshot?",
+      "boundary": "Tehnički tim prevodi odluku na 73 dataset unosa i bezbedni download rok. Validatorovi maksimumi nisu preporučeni ili odobreni poslovni rokovi."
+    }
+  ],
+  "next_safe_technical_step": "Na izolovanom aktuelnom schema uzorku primeniti već odobrena R10 pravila za projekcije i kopije, uporediti promenjene closure komponente sa poslednjim prihvaćenim baseline-om i dokazati export/revoke/closure granice sintetičkim podacima. Tek posle tog dokaza i odobrene politike pripremiti proverljivu forward binding migraciju; do tada zadržati false/NULL.",
+  "no_pure_technical_binding_activation_authorized_by_existing_policy": true,
+  "not_proven": [
+    "Odobrenje nove politike",
+    "Spremnost celog izvoza ili brisanja",
+    "Native prihvat",
+    "Potpuna pojedinačna razlika svih closure objekata prema istorijskom baseline-u"
+  ],
+  "website_readback": {
+    "scope": "Public GET requests; no form submission, authentication or publication",
+    "requests": [
+      {
+        "url": "https://uskoci.rs/politika-privatnosti",
+        "checked_at_utc": "2026-11-07T16:19:45.544053+00:00",
+        "method": "GET",
+        "http_status": 404,
+        "final_url": "https://uskoci.rs/politika-privatnosti"
+      },
+      {
+        "url": "https://uskoci.rs/uslovi-koriscenja",
+        "checked_at_utc": "2026-11-07T16:19:45.544727+00:00",
+        "method": "GET",
+        "http_status": 404,
+        "final_url": "https://uskoci.rs/uslovi-koriscenja"
+      },
+      {
+        "url": "https://uskoci.rs/brisanje-naloga",
+        "checked_at_utc": "2026-11-07T16:19:45.545170+00:00",
+        "method": "GET",
+        "http_status": 404,
+        "final_url": "https://uskoci.rs/brisanje-naloga"
+      }
+    ],
+    "all_required_pages_available": false
+  }
+}

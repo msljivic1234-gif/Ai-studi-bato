@@ -1,0 +1,71 @@
+{
+  "project": "leqcwgzvjsxugfgzdmth",
+  "readAt": "2026-11-07",
+  "sourceCommit": "259b451ae8963d1173466103c191b3c8be98fc55",
+  "scope": "Read-only exact definitions for bounded dispatch-retention regression; no user data.",
+  "functions": [
+    {
+      "schema_name": "private",
+      "proname": "ai_need_turn_status",
+      "args": "p_account_id uuid, p_conversation_id uuid, p_client_request_id uuid",
+      "body_md5": "3e282af463b21b4fbbcd5ede077878d6",
+      "def_md5": "0305da9073f20be42f379ffd7279fb7a",
+      "acl": "{postgres=X/postgres}",
+      "definition": "CREATE OR REPLACE FUNCTION private.ai_need_turn_status(p_account_id uuid, p_conversation_id uuid, p_client_request_id uuid)\n RETURNS jsonb\n LANGUAGE plpgsql\n SET search_path TO 'pg_catalog'\nAS $function$\ndeclare c public.ai_conversations;t private.ai_need_turn_commands;ready boolean;state_value text;\nbegin\n select * into c from public.ai_conversations where id=p_conversation_id and account_id=p_account_id for share;\n if not found or c.purpose<>'NEED_INTAKE' or c.fact_schema_version<>'NEED_FACT_V2'\n then raise exception 'CONVERSATION_NOT_FOUND' using errcode='P0002';end if;\n if p_client_request_id is null then raise exception 'CLIENT_REQUEST_ID_INVALID' using errcode='22023';end if;\n select * into t from private.ai_need_turn_commands where account_id=p_account_id and client_request_id=p_client_request_id;\n if found and t.conversation_id<>c.id then raise exception 'AI_REQUEST_ID_REUSED' using errcode='22023';end if;\n ready:=c.status='OPEN' and not exists(select 1 from private.ai_need_turn_commands x where x.conversation_id=c.id\n  and x.client_request_id<>p_client_request_id and x.state='PROCESSING' and (x.lease_expires_at is null or x.lease_expires_at > clock_timestamp()));\n state_value:=case when t.turn_id is null then 'ABSENT' else t.state end;\n return jsonb_build_object('conversationId',c.id,'clientRequestId',p_client_request_id,'state',state_value,'turnId',t.turn_id,\n  'retryAllowed',ready and (state_value='ABSENT' or (state_value='FAILED' and not t.provider_dispatched and t.cancelled_at is null)),\n  'receipt',t.receipt-'location');\nend $function$\n"
+    },
+    {
+      "schema_name": "public",
+      "proname": "rpc_ai_claim_need_turn_v2_service",
+      "args": "p_account_id uuid, p_conversation_id uuid, p_client_request_id uuid, p_user_message text",
+      "body_md5": "0b3c7f1d276a3b4349aeebee4f111af7",
+      "def_md5": "2999a947d41c85145f1efc41845e5621",
+      "acl": "{postgres=X/postgres,service_role=X/postgres}",
+      "definition": "CREATE OR REPLACE FUNCTION public.rpc_ai_claim_need_turn_v2_service(p_account_id uuid, p_conversation_id uuid, p_client_request_id uuid, p_user_message text)\n RETURNS jsonb\n LANGUAGE sql\n SECURITY DEFINER\n SET search_path TO 'pg_catalog'\nAS $function$\r\n select private.ai_claim_need_turn_context_v1(p_account_id,p_conversation_id,p_client_request_id,p_user_message,null);\r\n$function$\n"
+    },
+    {
+      "schema_name": "public",
+      "proname": "rpc_ai_dispatch_need_turn_v2_service",
+      "args": "p_account_id uuid, p_conversation_id uuid, p_client_request_id uuid, p_attempt_id uuid",
+      "body_md5": "fa90211a3fb9297eeebc74463845c7ca",
+      "def_md5": "9a97dd0658b52d34f393ec5ba2f40888",
+      "acl": "{postgres=X/postgres,service_role=X/postgres}",
+      "definition": "CREATE OR REPLACE FUNCTION public.rpc_ai_dispatch_need_turn_v2_service(p_account_id uuid, p_conversation_id uuid, p_client_request_id uuid, p_attempt_id uuid)\n RETURNS boolean\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO 'pg_catalog'\nAS $function$\ndeclare c public.ai_conversations;t private.ai_need_turn_commands;\nbegin\n if p_account_id is null or p_conversation_id is null or p_client_request_id is null or p_attempt_id is null then raise exception 'TURN_IDENTITY_REQUIRED' using errcode='22023';end if;\n perform private.closure_assert_open(p_account_id);\n perform pg_advisory_xact_lock(hashtextextended('w03-account:'||p_account_id::text,0));\n select * into c from public.ai_conversations where id=p_conversation_id and account_id=p_account_id for update;\n if not found or c.purpose<>'NEED_INTAKE' or c.fact_schema_version<>'NEED_FACT_V2' then raise exception 'CONVERSATION_NOT_FOUND' using errcode='P0002';end if;\n select * into t from private.ai_need_turn_commands where account_id=p_account_id and client_request_id=p_client_request_id for update;\n if not found or t.conversation_id<>c.id or t.attempt_id is distinct from p_attempt_id\n or t.state<>'PROCESSING' or t.cancelled_at is not null or t.provider_dispatched or c.status<>'OPEN'\n or t.lease_expires_at<=clock_timestamp() or t.context_hash is distinct from (private.ai_need_turn_context(c.id)->>'sha256') then return false;end if;\n update private.ai_need_turn_commands set provider_dispatched=true,updated_at=clock_timestamp()\n where account_id=p_account_id and client_request_id=p_client_request_id;\n return true;\nend $function$\n"
+    },
+    {
+      "schema_name": "public",
+      "proname": "rpc_ai_fail_need_turn_v2_service",
+      "args": "p_account_id uuid, p_conversation_id uuid, p_client_request_id uuid, p_attempt_id uuid",
+      "body_md5": "60bb093a18d558058b1b66ce3219160c",
+      "def_md5": "0820758d36cbe42ca913a24e2fefa089",
+      "acl": "{postgres=X/postgres,service_role=X/postgres}",
+      "definition": "CREATE OR REPLACE FUNCTION public.rpc_ai_fail_need_turn_v2_service(p_account_id uuid, p_conversation_id uuid, p_client_request_id uuid, p_attempt_id uuid)\n RETURNS jsonb\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO 'pg_catalog'\nAS $function$\nbegin\n if p_account_id is null or p_client_request_id is null or p_attempt_id is null then raise exception 'TURN_IDENTITY_REQUIRED' using errcode='22023';end if;\n perform pg_advisory_xact_lock(hashtextextended('w03-account:'||p_account_id::text,0));\n perform 1 from public.ai_conversations where id=p_conversation_id and account_id=p_account_id for update;\n if not found then raise exception 'CONVERSATION_NOT_FOUND' using errcode='P0002';end if;\n update private.ai_need_turn_commands set state='FAILED', provider_dispatched=false, updated_at=clock_timestamp()\n where account_id=p_account_id and client_request_id=p_client_request_id and conversation_id=p_conversation_id\n and state='PROCESSING' and attempt_id=p_attempt_id and cancelled_at is null;\n return private.ai_need_turn_status(p_account_id,p_conversation_id,p_client_request_id);\nend $function$\n"
+    },
+    {
+      "schema_name": "public",
+      "proname": "rpc_ai_read_need_turn_v2",
+      "args": "p_conversation_id uuid, p_client_request_id uuid",
+      "body_md5": "fa7bbb48f7e6bd058463bcdfdf56b205",
+      "def_md5": "fffa7737563544caf4f080ed68f188b3",
+      "acl": "{postgres=X/postgres,authenticated=X/postgres,service_role=X/postgres}",
+      "definition": "CREATE OR REPLACE FUNCTION public.rpc_ai_read_need_turn_v2(p_conversation_id uuid, p_client_request_id uuid)\n RETURNS jsonb\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO 'pg_catalog'\nAS $function$\nbegin\n if auth.uid() is null then raise exception 'AUTH_REQUIRED' using errcode='28000';end if;\n return private.ai_need_turn_status(auth.uid(),p_conversation_id,p_client_request_id);\nend $function$\n"
+    },
+    {
+      "schema_name": "public",
+      "proname": "rpc_ai_recover_need_turn_v2",
+      "args": "p_conversation_id uuid, p_client_request_id uuid",
+      "body_md5": "d6601c035f78d5e97de93d2a3ef0b6c4",
+      "def_md5": "5ec01f9a8ca245b0d46a54022f756d3e",
+      "acl": "{postgres=X/postgres,authenticated=X/postgres,service_role=X/postgres}",
+      "definition": "CREATE OR REPLACE FUNCTION public.rpc_ai_recover_need_turn_v2(p_conversation_id uuid, p_client_request_id uuid)\n RETURNS jsonb\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO 'pg_catalog'\nAS $function$\ndeclare a uuid:=auth.uid();c public.ai_conversations;t private.ai_need_turn_commands;turn_value jsonb;\nbegin\n if a is null then raise exception 'AUTH_REQUIRED' using errcode='28000';end if;\n turn_value:=private.ai_need_turn_status(a,p_conversation_id,p_client_request_id);\n select * into c from public.ai_conversations where id=p_conversation_id and account_id=a;\n select * into t from private.ai_need_turn_commands where account_id=a and client_request_id=p_client_request_id;\n return jsonb_build_object('accountId',a,'conversationId',c.id,'clientRequestId',p_client_request_id,'conversationStatus',c.status,\n  'turn',turn_value,'providerDispatched',coalesce(t.provider_dispatched,false),'cancelled',t.cancelled_at is not null,\n  'canCancel',c.status='OPEN' and not private.closure_account_restricted(a) and t.cancelled_at is null\n  and (t.turn_id is null or t.state='PROCESSING' or (not t.provider_dispatched and t.state='FAILED')),\n  'authoritative',true);\nend $function$\n"
+    },
+    {
+      "schema_name": "private",
+      "proname": "ai_claim_need_turn_context_v1",
+      "args": "p_account_id uuid, p_conversation_id uuid, p_client_request_id uuid, p_user_message text, p_location_context jsonb",
+      "body_md5": "114bd0b4b9d6e60a0abb0d0d64e63c69",
+      "def_md5": "29b0a3568dfb471b741bc39c9e087b2a",
+      "acl": "{postgres=X/postgres}",
+      "definition": "CREATE OR REPLACE FUNCTION private.ai_claim_need_turn_context_v1(p_account_id uuid, p_conversation_id uuid, p_client_request_id uuid, p_user_message text, p_location_context jsonb)\n RETURNS jsonb\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO 'pg_catalog'\nAS $function$\r\ndeclare c public.ai_conversations;t private.ai_need_turn_commands;request_hash_value text;ctx jsonb;now_at timestamptz;attempt uuid;turn jsonb;\r\nbegin\r\n if p_account_id is null or p_conversation_id is null or p_client_request_id is null then raise exception 'TURN_IDENTITY_REQUIRED' using errcode='22023';end if;\r\n if p_user_message is null or char_length(btrim(p_user_message)) not between 1 and 4000 then raise exception 'USER_MESSAGE_INVALID' using errcode='22023';end if;\r\n if p_location_context is not null and not private.ai_location_context_valid(p_location_context) then raise exception 'LOCATION_CONTEXT_INVALID' using errcode='PT409';end if;\r\n perform private.closure_assert_open(p_account_id);\r\n perform pg_advisory_xact_lock(hashtextextended('w03-account:'||p_account_id::text,0));\r\n select * into c from public.ai_conversations where id=p_conversation_id and account_id=p_account_id for update;\r\n if not found or c.purpose<>'NEED_INTAKE' or c.fact_schema_version<>'NEED_FACT_V2' then raise exception 'CONVERSATION_NOT_FOUND' using errcode='P0002';end if;\r\n now_at:=clock_timestamp();\r\n request_hash_value:=private.ai_location_request_hash(c.id,p_user_message,p_location_context);\r\n select * into t from private.ai_need_turn_commands where account_id=p_account_id and client_request_id=p_client_request_id for update;\r\n if found and t.conversation_id<>c.id then raise exception 'AI_REQUEST_ID_REUSED' using errcode=case when p_location_context is null then '22023' else 'PT409' end;end if;\r\n if t.cancelled_at is not null then\r\n  if t.request_hash<>repeat('0',64) and t.request_hash<>request_hash_value then raise exception 'AI_REQUEST_ID_REUSED' using errcode=case when p_location_context is null then '22023' else 'PT409' end;end if;\r\n  return jsonb_build_object('turn',private.ai_need_turn_status(p_account_id,c.id,p_client_request_id),'claim',null);\r\n end if;\r\n if found and (t.conversation_id<>c.id or t.request_hash<>request_hash_value) then raise exception 'AI_REQUEST_ID_REUSED' using errcode=case when p_location_context is null then '22023' else 'PT409' end;end if;\r\n turn:=private.ai_need_turn_status(p_account_id,c.id,p_client_request_id);\r\n if not (turn->>'retryAllowed')::boolean then\r\n  if t.turn_id is null then\r\n   insert into private.ai_need_turn_commands(account_id,client_request_id,conversation_id,request_hash,state)\r\n   values(p_account_id,p_client_request_id,c.id,request_hash_value,'FAILED');\r\n   turn:=private.ai_need_turn_status(p_account_id,c.id,p_client_request_id);\r\n  end if;\r\n  return jsonb_build_object('turn',turn,'claim',null);\r\n end if;\r\n if (select count(*) from private.ai_need_turn_commands x cross join lateral unnest(x.attempt_times) a(started)\r\n  where x.account_id=p_account_id and a.started>now_at-interval '1 minute')>=6\r\n then raise exception 'AI_RATE_LIMITED' using errcode='P0001';end if;\r\n if p_location_context is not null and not private.ai_location_review_matches(c.id,p_location_context) then raise exception 'LOCATION_VERSION_CONFLICT' using errcode='PT409';end if;\r\n ctx:=private.ai_need_turn_context(c.id);attempt:=gen_random_uuid();\r\n if t.turn_id is null then\r\n  insert into private.ai_need_turn_commands(account_id,client_request_id,conversation_id,request_hash,state,context_hash,attempt_id,lease_expires_at,attempt_times)\r\n  values(p_account_id,p_client_request_id,c.id,request_hash_value,'PROCESSING',ctx->>'sha256',attempt,now_at+interval '90 seconds',array[now_at]);\r\n else\r\n  update private.ai_need_turn_commands set state='PROCESSING',context_hash=ctx->>'sha256',attempt_id=attempt,\r\n   lease_expires_at=now_at+interval '90 seconds',updated_at=now_at,\r\n   attempt_times=array(select x from unnest(attempt_times) x where x>now_at-interval '1 minute')||array[now_at]\r\n  where account_id=p_account_id and client_request_id=p_client_request_id;\r\n end if;\r\n return jsonb_build_object('turn',private.ai_need_turn_status(p_account_id,c.id,p_client_request_id),\r\n  'claim',jsonb_build_object('attemptId',attempt,'leaseExpiresAt',now_at+interval '90 seconds','context',ctx->'context'));\r\nend $function$\n"
+    }
+  ]
+}

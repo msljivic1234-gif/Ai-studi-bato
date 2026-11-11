@@ -1,0 +1,52 @@
+{
+  "project": "leqcwgzvjsxugfgzdmth",
+  "migrations": [
+    {
+      "version": "20261107100323",
+      "name": "r06_first_plan_replay_20261107",
+      "statement_md5": "db06137fd42b2799306ceff19ada2b59",
+      "statement_sha256": "edb15319ee1ad9aade14f31f4a5a061427c9fb15ebf6b70ba2ff5c7336f6d001",
+      "statement_count": 1
+    },
+    {
+      "version": "20261107100405",
+      "name": "r06_provider_dispatch_retention_20261107",
+      "statement_md5": "f05d1f354705fc2a733b2914318ca78b",
+      "statement_sha256": "63fad260a67e2907dbdd2f23b1cce40b0805bf109678f9077fd4d2cb7adb1b22",
+      "statement_count": 1
+    }
+  ],
+  "edge": [
+    {
+      "name": "uskoci-ai-interview",
+      "oldVersion": 190,
+      "newVersion": 191,
+      "verify_jwt": false,
+      "readbackFiles": 20,
+      "totalFiles": 20,
+      "changedFiles": [
+        "supabase/functions/_shared/singlePassTaxonomy.mjs"
+      ],
+      "packageSha256": "86cdbd28cfdb70bd02d44b5657fd54beebc2c2d628650a9964db9465eadd309f",
+      "ezbrSha256": "38220ecba7cfa82c6c6d905884dc8a67e9433298ecb3b491099be8e5d6b1c6cf"
+    },
+    {
+      "name": "uskoci-worker-interview",
+      "oldVersion": 139,
+      "newVersion": 140,
+      "verify_jwt": false,
+      "readbackFiles": 20,
+      "totalFiles": 20,
+      "changedFiles": [
+        "supabase/functions/_shared/singlePassTaxonomy.mjs"
+      ],
+      "packageSha256": "e8a06dd90274cbb31ad45643bec506e0d7f97fbb61daa1982ed45fd85fa826c3",
+      "ezbrSha256": "e3ccb4a514aaab37808467f3fac38f4e93f417c67ff70e589aba2f276c65b16a"
+    }
+  ],
+  "packageHashAlgorithm": "SHA256 of sorted name + NUL + UTF8-byte-length + NUL + content + LF",
+  "sharedSourceSha256": "aa126a55d690fb0799ca8b1e4473061ed3b0f503631a738378490618f2664632",
+  "proofBoundary": "DEV DDL and complete source/deployment readback. No provider call, user business mutation, Auth E2E or native execution.",
+  "observed_at_utc": "2026-11-07",
+  "base_commit": "259b451ae8963d1173466103c191b3c8be98fc55"
+}

@@ -1,0 +1,146 @@
+{
+  "schema": "USKOCI_POST_DEPLOY_CRON_AND_POLICY_V1",
+  "capturedAt": "2026-11-07T15:58:06.080Z",
+  "projectRef": "leqcwgzvjsxugfgzdmth",
+  "sourceCommit": "ce1ad5e4d21b20bd21901ba42ad4e822843e3916",
+  "windowStart": "2026-11-07T15:48:36.813Z",
+  "functionRequests": [
+    {
+      "count": 9,
+      "modern_secret_apikey": 1,
+      "path": "/functions/v1/uskoci-push-transport",
+      "status": "200",
+      "version": "45"
+    },
+    {
+      "count": 2,
+      "modern_secret_apikey": 0,
+      "path": "/functions/v1/uskoci-push-transport",
+      "status": "403",
+      "version": "45"
+    },
+    {
+      "count": 9,
+      "modern_secret_apikey": 1,
+      "path": "/functions/v1/uskoci-taxonomy-postsave-worker",
+      "status": "200",
+      "version": "14"
+    },
+    {
+      "count": 2,
+      "modern_secret_apikey": 0,
+      "path": "/functions/v1/uskoci-taxonomy-postsave-worker",
+      "status": "403",
+      "version": "14"
+    }
+  ],
+  "outgoingTaxonomyRequests": [
+    {
+      "count": 9,
+      "legacy_service_bearer": 0,
+      "modern_secret_apikey": 1,
+      "path": "/rest/v1/rpc/rpc_taxonomy_bind_ready_reviews_service",
+      "status": "200"
+    },
+    {
+      "count": 8,
+      "legacy_service_bearer": 0,
+      "modern_secret_apikey": 1,
+      "path": "/rest/v1/rpc/rpc_taxonomy_claim_reviewed_batches_service",
+      "status": "200"
+    },
+    {
+      "count": 9,
+      "legacy_service_bearer": 0,
+      "modern_secret_apikey": 1,
+      "path": "/rest/v1/rpc/rpc_taxonomy_reconcile_reviewed_outbox_service",
+      "status": "200"
+    }
+  ],
+  "database": {
+    "cron": [
+      {
+        "runs": 9,
+        "failed": 0,
+        "jobname": "uskoci_edge_workers",
+        "succeeded": 9
+      },
+      {
+        "runs": 9,
+        "failed": 0,
+        "jobname": "uskoci_marketplace_tick",
+        "succeeded": 9
+      },
+      {
+        "runs": 9,
+        "failed": 0,
+        "jobname": "uskoci_taxonomy_postsave_tick_dev",
+        "succeeded": 9
+      }
+    ],
+    "budget": {
+      "ceilingMicrousd": 5000000,
+      "reservedMicrousd": 65486681,
+      "reservationCapEnforced": true
+    },
+    "migrationCount": 344,
+    "latestMigration": "20261107153455",
+    "retentionAiSourceReady": false,
+    "dataExportPolicyBindingNull": true
+  },
+  "limits": [
+    "Only aggregate path/status/version and credential classes were read; no key/header values, identifiers or private bodies.",
+    "Natural taxonomy and push invocations returned 200 after deployment; deliberate ordinary-Auth probes returned 403.",
+    "Observed outgoing taxonomy, push and media-read RPC calls use modern secret apikey with no observed legacy service Bearer. This does not introspect every Edge environment or prove successful work items, provider delivery or Storage bytes.",
+    "Cron SQL success is recorded separately from function HTTP success. No push delivery, export/erasure completion or new provider dispatch is claimed.",
+    "Retention/export legal gates remain not ready; this is a verified blocker, not a readiness override.",
+    "Legacy-off remains unactivated and the historical key unrevoked."
+  ],
+  "additionalObservedModernServiceCalls": {
+    "capturedAt": "2026-11-07T15:59:17.088Z",
+    "calls": [
+      {
+        "count": 20,
+        "legacy_service_bearer": 0,
+        "path": "/rest/v1/rpc/rpc_claim_push_transport",
+        "status": "200"
+      },
+      {
+        "count": 2,
+        "legacy_service_bearer": 0,
+        "path": "/rest/v1/rpc/rpc_complete_push_transport",
+        "status": "200"
+      },
+      {
+        "count": 1,
+        "legacy_service_bearer": 0,
+        "path": "/rest/v1/rpc/rpc_read_need_media_assets_service",
+        "status": "200"
+      },
+      {
+        "count": 10,
+        "legacy_service_bearer": 0,
+        "path": "/rest/v1/rpc/rpc_record_push_readiness",
+        "status": "200"
+      },
+      {
+        "count": 10,
+        "legacy_service_bearer": 0,
+        "path": "/rest/v1/rpc/rpc_taxonomy_bind_ready_reviews_service",
+        "status": "200"
+      },
+      {
+        "count": 9,
+        "legacy_service_bearer": 0,
+        "path": "/rest/v1/rpc/rpc_taxonomy_claim_reviewed_batches_service",
+        "status": "200"
+      },
+      {
+        "count": 10,
+        "legacy_service_bearer": 0,
+        "path": "/rest/v1/rpc/rpc_taxonomy_reconcile_reviewed_outbox_service",
+        "status": "200"
+      }
+    ]
+  }
+}

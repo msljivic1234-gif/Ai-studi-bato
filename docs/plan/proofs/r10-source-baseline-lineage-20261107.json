@@ -1,0 +1,246 @@
+{
+  "schema_version": 1,
+  "kind": "R10_SOURCE_BASELINE_LINEAGE_READ_ONLY",
+  "project_ref": "leqcwgzvjsxugfgzdmth",
+  "source_head_at_recording": "94f2801db54bcbd7cb294cda983e048cd5885939",
+  "completed_at_utc": "2026-11-07 17:12:32.165661+00",
+  "status": "POREKLO PINA POTVRĐENO; POTPUN PRIHVAĆEN POJEDINAČNI POSTIMAGE NIJE PRONAĐEN",
+  "scope": "Uski trag završnog retention source pina i precizna granica istorijskog inventara. Bez ponavljanja potvrđenih 13 triggera i tri closure helpera.",
+  "current_dev": {
+    "observed_at_utc": "2026-11-07 17:11:19.832799+00",
+    "ledger_count": 346,
+    "latest_migration": "20261107165752",
+    "retention_ready": false,
+    "export_binding_is_null": true,
+    "actual_source_digest": "53f35f7a32866d922c19cd079d4e156d7520c7d54a5e6e38607246f966a20d1f",
+    "expected_source_digest": "0201a7ccf74a3a5d0ed397d714392881af6ea1056b42f549097f9d3ecd9a4acb",
+    "expected_erasure_digest": "0201a7ccf74a3a5d0ed397d714392881af6ea1056b42f549097f9d3ecd9a4acb",
+    "schema_relation_count": 168,
+    "explicit_source_function_count": 148,
+    "unique_source_function_count": 148,
+    "source_roster_sorted_signature_sha256": "a4aa2c247e574a59b0fb4be5ad3bfe366469bdbd17e43397f7b6e5773b8c291e",
+    "source_roster_function_body_md5": "41e54d223122b58decd25cf66191470a",
+    "retention_predicate_body_md5": "b89891cd3eb5f327bd642a160e5a2e81"
+  },
+  "pin_origin": {
+    "archived_application_source_commit": "f61d91f7425aeb028b27443a5d218ce3cd92d136",
+    "archived_application_receipt": "supabase/operations/dev-alpha/ledger/20261009_push_single_target_v1_application.receipt.json",
+    "canonical_project_matches": true,
+    "preflight_at_utc": "2026-10-09T07:03:42.604899+00:00",
+    "postflight_at_utc": "2026-10-09T07:04:07.258761+00:00",
+    "prior_source_digest": "3a785d423a564a5b39f55f916c536753ac73c4a76664ce0a09394ee68909cd23",
+    "accepted_source_digest": "0201a7ccf74a3a5d0ed397d714392881af6ea1056b42f549097f9d3ecd9a4acb",
+    "prior_roster_count": 99,
+    "accepted_roster_count": 108,
+    "migration": {
+      "version": "20261009070352",
+      "name": "push_single_target_v1_current99",
+      "statement_count": 1,
+      "stored_sha256": "be8782a4834857f3d2507a40e6bcf9757fc61f753e6857977fa02360867f9ace"
+    },
+    "candidate_sha256": "239ccd181e2787ad7624bc638c3b6bf88eb928e1419f332f0d709e8f6adc45ac",
+    "computed_source_erasure_binding_agreed": true,
+    "postflight_problems": [],
+    "legal_policy_attested": false,
+    "evidence_level": "Sačuvan istorijski aplikacioni receipt u tačno navedenom Git blobu; današnji read-only ledger potvrđuje verziju, ali ne sadrži njene statements bajtove.",
+    "ready_body_continuity": {
+      "preimage_path": "supabase/proofs/push_single_target/certificate-baseline.json",
+      "preimage_body_md5": "cd4bd5ecf09fefac1b9d7cdea8089630",
+      "old_literal_occurrences": 1,
+      "in_memory_literal_replacement_body_md5": "b89891cd3eb5f327bd642a160e5a2e81",
+      "matches_current_dev_predicate_body": true,
+      "method": "Samo izračunavanje u memoriji nad Git tekstom; nije SQL izvršavanje niti izmena funkcije."
+    }
+  },
+  "origin_migration_readback": {
+    "observed_at_utc": "2026-11-07 17:12:32.165661+00",
+    "retention_predicate_body_md5": "b89891cd3eb5f327bd642a160e5a2e81",
+    "origin_migration_ledger": {
+      "name": null,
+      "version": "20261009070352",
+      "statement_count": null,
+      "statements_absent": true
+    }
+  },
+  "accepted_per_object_baseline_boundary": {
+    "full_108_function_0201_postimage_found": false,
+    "archive_search_boundary": {
+      "available_tree": "de7fbe540aab919cf8bb5d14a08bc20f3ede433e",
+      "local_git_is_shallow": true,
+      "targeted_directories": [
+        "supabase/proofs/push_single_target",
+        "supabase/candidates/ai-location-01-20261002",
+        "supabase/operations/dev-alpha/ledger",
+        "supabase/candidates/closure-current-20261021",
+        "supabase/candidates/closure-f01-rebase-20261021"
+      ],
+      "meaning": "Negativan nalaz važi za proverene sačuvane izvore, ne tvrdi da nijedna spoljna rezervna kopija ne postoji."
+    },
+    "closest_large_inventory": {
+      "path": "supabase/proofs/push_single_target/promotion/expected-prelocation-surface.json",
+      "projected_pre_location": true,
+      "functions_total": 133,
+      "source_members": 88,
+      "program_members": 130,
+      "schema_relations": 126,
+      "program_relations": 125,
+      "projected_source_digest": "0579191d8ef6ef2d9625569cd64e65ad1398c4e9cc176404beff253a10853431",
+      "observed_components_source_digest": "3a785d423a564a5b39f55f916c536753ac73c4a76664ce0a09394ee68909cd23",
+      "interpretation": "Projektovan stariji 88-funkcijski predecessor, sa source/program telima vraćenim na pre-AI-location stanje. Nije prihvaćeni post-push 108/0201 inventar."
+    },
+    "fresh_pre_promotion_capture": {
+      "path": "supabase/proofs/push_single_target/promotion/live-preflight-capture.json",
+      "checked_at_utc": "2026-10-08T23:46:03.268797+00:00",
+      "function_definitions": 13,
+      "table_surfaces": 3,
+      "source_digest": "3a785d423a564a5b39f55f916c536753ac73c4a76664ce0a09394ee68909cd23",
+      "interpretation": "Svež Oct8/9 predecessor sa 13 definicija i tri push tabele, plus zbirni pinovi/katalozi; ne kompletan pojedinačni postimage."
+    },
+    "later_f01_snapshot": {
+      "path": "supabase/candidates/closure-f01-rebase-20261021/verified_subset_snapshot.json",
+      "accepted_baseline": false,
+      "interpretation": "Eksplicitno VERIFIED_SUBSET_ONLY_NOT_DEPLOYABLE; 34 funkcije/20 tabela i već različit zbirni source digest. Ne koristiti kao ranije prihvaćen 0201 baseline."
+    },
+    "where_trace_stops": "Primenjeni 99→108 kandidat i zbirni rezultat 0201 su sačuvani, ali nije pronađen kompletan postimage svih njegovih funkcijskih i relacijskih ulaza sa istim kataloškim identitetima. Današnji ledger za 20261009070352 čuva samo verziju (name/statements NULL).",
+    "unknown_object_differences_asserted": [],
+    "interpretation": "Bez rekonstrukcije tačnog prihvaćenog pojedinačnog inventara ne može se pouzdano proglasiti svaki aktuelni 148/168 objekat neobjašnjenom promenom. Broj 168 je dinamički obuhvat sadašnjih relacija, a sufiks _139 nije fiksni broj."
+  },
+  "already_explained_changes_not_reopened": [
+    {
+      "item": "F01 roster extension",
+      "source": "supabase/candidates/closure-current-20261021/manifest.generated.json",
+      "recorded_source_roster": 148,
+      "full_closure_proof": false,
+      "interpretation": "Poznata kasnija promena inventara; ne nova certifikacija 0201 pina."
+    },
+    {
+      "item": "20261021104742 closure_executor_rollback_probe",
+      "statement_md5": "677b58772d8716f94e66ef3cf3d202dd",
+      "interpretation": "Privremeni rebind je unutar podtransakcije koja namerno baca ZF003 i vraća izmene; postuslov proverava stari pin, stare definicije i odsustvo sintetičkih podataka. Nije trajni izvor 0201 pina."
+    },
+    {
+      "item": "R06 constraint changes and current R10 projection change",
+      "references": [
+        "docs/plan/proofs/r10-policy-blockers-20261107.json",
+        "scripts/sql/r10_work_areas_projection_20261107.dev.receipt.json"
+      ],
+      "interpretation": "Već sačuvane promene u tekućem obuhvatu. Ne pripisivati im ranije dokumentovano false stanje."
+    }
+  ],
+  "next_bounded_technical_step": "Isključivo izolovana rekonstrukcija sačuvanog 88 predecessor-a kroz tačne AI-location 88→99 i push 99→108 delte, uz istorijske kataloške identitete tamo gde su zapisani. Prvo reprodukovati stare kontrolne digest-e, zatim pokušati 0201. Nedostajuće bajtove/metapodatke ne zamenjivati današnjim stanjem. Tek dokaziv rezultat može biti osnov za pojedinačno poređenje; ovo nije predlog novog pina niti pravno odobrenje.",
+  "preserved_boundaries": {
+    "dev_writes": 0,
+    "policy_or_pin_changes": 0,
+    "paid_provider_calls": 0,
+    "business_rows_read": 0,
+    "native_evidence": false,
+    "export_or_closure_admitted": false
+  },
+  "git_artifacts": [
+    {
+      "commit": "de7fbe540aab919cf8bb5d14a08bc20f3ede433e",
+      "path": "supabase/operations/dev-alpha/ledger/20261009_push_single_target_v1_application.receipt.json",
+      "git_blob": "d7f129cbdbd25b1dc7ef73b2a35aa4e522f62d6a",
+      "sha256": "c8b86e1dfba07d7c85d167630767304cfb6b3d71f1471aec56fe62205bf346b3",
+      "bytes": 4979
+    },
+    {
+      "commit": "de7fbe540aab919cf8bb5d14a08bc20f3ede433e",
+      "path": "supabase/proofs/push_single_target/promotion/candidate.sql",
+      "git_blob": "2fa94aae8b1a3d566baf699a1f52674e666a889f",
+      "sha256": "239ccd181e2787ad7624bc638c3b6bf88eb928e1419f332f0d709e8f6adc45ac",
+      "bytes": 170124
+    },
+    {
+      "commit": "de7fbe540aab919cf8bb5d14a08bc20f3ede433e",
+      "path": "supabase/proofs/push_single_target/promotion/build-promotion.mjs",
+      "git_blob": "c463720f5f8d13c33988a7dd5b5d241d4729a6a9",
+      "sha256": "78297f8f984a80df8abd07641e2cacc26e18f9870e2adcbb505218a051d14c7b",
+      "bytes": 17935
+    },
+    {
+      "commit": "de7fbe540aab919cf8bb5d14a08bc20f3ede433e",
+      "path": "supabase/proofs/push_single_target/promotion/PROMOTION_MANIFEST.json",
+      "git_blob": "e63ab22e58534bf7f87a440159920d9d2ac85841",
+      "sha256": "75b3acac39adc67410c35313302a3cf1ddeb4ced40f7251773a91e2a72deb9c9",
+      "bytes": 1765
+    },
+    {
+      "commit": "de7fbe540aab919cf8bb5d14a08bc20f3ede433e",
+      "path": "supabase/proofs/push_single_target/certificate-baseline.json",
+      "git_blob": "08f5ff0c69f008bc7ba1f96ebdc4435a7546d24f",
+      "sha256": "1b691b9c2176755243797573fbff80bda3463ff6fb408897c40d3a9a878c8b15",
+      "bytes": 49880
+    },
+    {
+      "commit": "de7fbe540aab919cf8bb5d14a08bc20f3ede433e",
+      "path": "supabase/proofs/push_single_target/promotion/expected-prelocation-surface.json",
+      "git_blob": "2e784b9654ddc9c40050465abb21b25505c2779b",
+      "sha256": "aab109d29fffce55d4fba596ab9d7cc7eb10678ffb128f1bfb1d8e2ac958fc5d",
+      "bytes": 363185
+    },
+    {
+      "commit": "de7fbe540aab919cf8bb5d14a08bc20f3ede433e",
+      "path": "supabase/proofs/push_single_target/promotion/cert-surface-diagnostic.mjs",
+      "git_blob": "0637e8dde9d7fd8c173353f29e32443b068f980c",
+      "sha256": "cc1bb91cdf459f21119a1c5a47e9ba6cf899cf630222bac789d88d5859fd3686",
+      "bytes": 11255
+    },
+    {
+      "commit": "de7fbe540aab919cf8bb5d14a08bc20f3ede433e",
+      "path": "supabase/proofs/push_single_target/promotion/live-preflight-capture.json",
+      "git_blob": "ecef7d9405acbf5b9a4a43a96c3addbc55e53495",
+      "sha256": "ecd493237c8dd6e364d16aaf5b50c57588529e78706fff3c7fe1bf0aec07c427",
+      "bytes": 97066
+    },
+    {
+      "commit": "de7fbe540aab919cf8bb5d14a08bc20f3ede433e",
+      "path": "supabase/proofs/push_single_target/promotion/live-surface-capture.json",
+      "git_blob": "fe438d3a9d65f2d829ba8dc85d4bdff55bbc1209",
+      "sha256": "3bc218ed2baa8e952fc054e9756cf6a7c49c48ec871f9452f7e5cea2a588a085",
+      "bytes": 23502
+    },
+    {
+      "commit": "de7fbe540aab919cf8bb5d14a08bc20f3ede433e",
+      "path": "supabase/proofs/push_single_target/promotion/recapture-20261009/capture.json",
+      "git_blob": "ecef7d9405acbf5b9a4a43a96c3addbc55e53495",
+      "sha256": "ecd493237c8dd6e364d16aaf5b50c57588529e78706fff3c7fe1bf0aec07c427",
+      "bytes": 97066
+    },
+    {
+      "commit": "de7fbe540aab919cf8bb5d14a08bc20f3ede433e",
+      "path": "supabase/operations/dev-alpha/ledger/20261002_ai_location_01_application.receipt.json",
+      "git_blob": "5778af40e09a4a69e43cd523b7247e0df442794b",
+      "sha256": "abd8697e14968bea8ed840e52459939e40b46a16834dfe3bb4e27c775368cebc",
+      "bytes": 13189
+    },
+    {
+      "commit": "de7fbe540aab919cf8bb5d14a08bc20f3ede433e",
+      "path": "supabase/candidates/ai-location-01-20261002/closure_transition_before.sql",
+      "git_blob": "05d68a94780f14af52c0db22aca0daa672ae36a0",
+      "sha256": "3acee4edcbc365dfa24694cd8e45c73f89a644b658c94a3c484e6787f009e69f",
+      "bytes": 3767
+    },
+    {
+      "commit": "de7fbe540aab919cf8bb5d14a08bc20f3ede433e",
+      "path": "supabase/candidates/ai-location-01-20261002/closure_transition_after.sql",
+      "git_blob": "875ca714bac25a6c4f0fbce688b0d8a077b8a98a",
+      "sha256": "66171818a85188a20d5c740859217d3afa38090b8b02b98dc5627f05072597bb",
+      "bytes": 15927
+    },
+    {
+      "commit": "de7fbe540aab919cf8bb5d14a08bc20f3ede433e",
+      "path": "supabase/candidates/closure-current-20261021/manifest.generated.json",
+      "git_blob": "a7c4ec1419e0065aeaf7ade94d74d14742b908a3",
+      "sha256": "d4441d22852b35bcf728ece519cf7ecf4a2b8c060007066043140f4973b7718c",
+      "bytes": 3202
+    },
+    {
+      "commit": "de7fbe540aab919cf8bb5d14a08bc20f3ede433e",
+      "path": "supabase/candidates/closure-f01-rebase-20261021/verified_subset_snapshot.json",
+      "git_blob": "d68000df853ad397f5a8995bde40c547de682d9c",
+      "sha256": "7c9c123694075148b5015d8b94bfcc177af41788ce7f9980f693503023c586ab",
+      "bytes": 257838
+    }
+  ]
+}

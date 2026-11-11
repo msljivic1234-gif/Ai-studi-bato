@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="44" height="48" viewBox="0 0 44 48">
+  <!-- Exact former ResolvedPinMap markerDot/markerTip geometry; logical 44x48.
+       Source: src/ui/location/ResolvedPinMap.tsx at fdbf5f12ff91fdacfe6f09ddee03bc0db64a9bb4.
+       Dot 32x32 at (6,2), border4; tip14x12 at (15,31); no design alteration. -->
+  <circle cx="22" cy="18" r="14" fill="#FF7908" stroke="#FFFFFF" stroke-width="4"/>
+  <path d="M15 31H29L22 43Z" fill="#FF7908"/>
+</svg>

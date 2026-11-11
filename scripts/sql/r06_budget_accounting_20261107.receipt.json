@@ -1,0 +1,292 @@
+{
+  "schema": "USKOCI_R06_BUDGET_ACCOUNTING_V1",
+  "status": "SOURCE_LOCAL_SQL_AND_CANONICAL_DEV_CONFIRMED_NATIVE_UNPROVEN",
+  "capturedAt": "2026-11-07T15:31:50.573719+00:00",
+  "projectRef": "leqcwgzvjsxugfgzdmth",
+  "sourceCheckpointBase": "833885296d6e4bad0e49acb58ac72a247df911aa",
+  "files": {
+    "scripts/sql/r06_budget_accounting_20261107.sql": {
+      "sha256": "9b5be47adabafd24b6ad60c76f5f86b28385ca790fcb4730f94a20225ffad370",
+      "bytes": 22519
+    },
+    "scripts/sql/r06_budget_accounting_20261107.preimage.json": {
+      "sha256": "9f98b38571c97b8b6459155fbf7f2a759069adabf0fb47656bf5d7c35d61d7b6",
+      "bytes": 32414
+    },
+    "scripts/r06-budget-accounting.test.cjs": {
+      "sha256": "7da7701721deecd9483e1a1eaed6bad76d52484b67c1a6dca4b4f27af476105a",
+      "bytes": 21240
+    }
+  },
+  "beforeState": {
+    "budget": {
+      "enabled": true,
+      "ceiling_microusd": 5000000,
+      "price_valid_until": "2027-01-01T00:00:00+00:00",
+      "reserved_microusd": 65486681,
+      "reservation_cap_enforced": false
+    },
+    "reservations": {
+      "count": 2324,
+      "unknown_hold_microusd": 55100000,
+      "settled_total_microusd": 10386681,
+      "unsettled_reservations": 221,
+      "ledger_exposure_microusd": 65486681,
+      "allocation_total_microusd": 547050000
+    },
+    "settlement_groups": [
+      {
+        "reservations": 122,
+        "settled_microusd": 0,
+        "settlement_basis": "FAILED_NO_USAGE",
+        "with_provider_usage": 0,
+        "usage_priced_microusd": 0,
+        "late_provider_usage_count": 0,
+        "usage_over_reservation_count": 0
+      },
+      {
+        "reservations": 554,
+        "settled_microusd": 791274,
+        "settlement_basis": "AUDIO_DURATION_AT_PUBLISHED_RATE",
+        "with_provider_usage": 0,
+        "usage_priced_microusd": 0,
+        "late_provider_usage_count": 0,
+        "usage_over_reservation_count": 0
+      },
+      {
+        "reservations": 19,
+        "settled_microusd": 58026,
+        "settlement_basis": "CONSERVATIVE_ESTIMATE_UNMEASURED",
+        "with_provider_usage": 0,
+        "usage_priced_microusd": 0,
+        "late_provider_usage_count": 0,
+        "usage_over_reservation_count": 0
+      },
+      {
+        "reservations": 221,
+        "settled_microusd": 0,
+        "settlement_basis": null,
+        "with_provider_usage": 0,
+        "usage_priced_microusd": 0,
+        "late_provider_usage_count": 0,
+        "usage_over_reservation_count": 0
+      },
+      {
+        "reservations": 1408,
+        "settled_microusd": 9537381,
+        "settlement_basis": "MEASURED",
+        "with_provider_usage": 1227,
+        "usage_priced_microusd": 9015893,
+        "late_provider_usage_count": 0,
+        "usage_over_reservation_count": 0
+      }
+    ]
+  },
+  "changes": {
+    "functions": [
+      {
+        "name": "public.rpc_ai_test_budget_reserve_service",
+        "signature": "public.rpc_ai_test_budget_reserve_service(uuid,uuid,text,bigint)",
+        "beforeBodyMd5": "3cadd9345025fd962fc64cab085f29f7",
+        "expectedAfterBodyMd5": "91629b929aae24dc3a9b05b412ab1b2e"
+      },
+      {
+        "name": "public.rpc_ai_test_record_usage_service",
+        "signature": "public.rpc_ai_test_record_usage_service(uuid,text,integer,integer,integer)",
+        "beforeBodyMd5": "d4d6252075fe7affc6afd17b8b861d34",
+        "expectedAfterBodyMd5": "584eecfd229477010ae1043257a04227"
+      },
+      {
+        "name": "public.rpc_ai_test_release_unused_reservation_service",
+        "signature": "public.rpc_ai_test_release_unused_reservation_service(uuid)",
+        "beforeBodyMd5": "0508f4b02a0f0abd620ba9da944500c0",
+        "expectedAfterBodyMd5": "f3307b7e3c09b11d34f7e53ba19b7922"
+      },
+      {
+        "name": "public.rpc_ai_test_settle_audio_service",
+        "signature": "public.rpc_ai_test_settle_audio_service(uuid,bigint,integer)",
+        "beforeBodyMd5": "794db1cf0e12774a92c77bcb0f45854e",
+        "expectedAfterBodyMd5": "443dd3877a4aac63eed7189d0e3eba1f"
+      }
+    ],
+    "unchangedPricingFunctions": [
+      {
+        "signature": "private.ai_test_price_microusd(integer,integer)",
+        "bodyMd5": "87ad940334ae78be5a3c0b19983d5981"
+      },
+      {
+        "signature": "private.ai_test_stt_price_microusd(bigint,integer)",
+        "bodyMd5": "ddbe2bb651ccc097b153ed4ec8ddb39b"
+      }
+    ],
+    "constraints": [
+      "private.ai_test_budget_v5.ai_test_budget_v5_reserved_microusd_check",
+      "private.ai_test_reservations_v5.ai_test_reservations_v5_settlement_check",
+      "private.ai_test_reservations_v5.ai_test_reservations_v5_audio_measure_check"
+    ],
+    "existingCeilingMicrousd": 5000000,
+    "ceilingChanged": false,
+    "allowlistChanged": false,
+    "historicalRowsRewritten": false,
+    "historicalReservationsReset": false,
+    "sameGlobalLockBeforeSettlementRead": true,
+    "reportedUsageSupersedesEarlierEstimateOnce": true,
+    "knownCostNeverTruncatedToReservationEstimate": true,
+    "measuredAudioMetadataPreservedOnPromotion": true,
+    "ordinaryRolesDeniedAccountingWrites": true,
+    "disabledCapCannotBypassNewAdmission": true
+  },
+  "localVerification": [
+    {
+      "command": "node --test scripts/r06-budget-accounting.test.cjs",
+      "passed": 26,
+      "failed": 0,
+      "skipped": 0,
+      "todo": 0,
+      "exitCode": 0
+    },
+    {
+      "command": "node --test scripts/r06-provider-dispatch-retention.test.cjs",
+      "passed": 12,
+      "failed": 0,
+      "skipped": 0,
+      "todo": 0,
+      "exitCode": 0
+    },
+    {
+      "command": "node --check scripts/r06-budget-accounting.test.cjs",
+      "exitCode": 0
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0
+    },
+    {
+      "command": "node --test scripts/r06-budget-accounting.test.cjs scripts/r06-provider-dispatch-retention.test.cjs",
+      "passed": 38,
+      "failed": 0,
+      "skipped": 0,
+      "todo": 0,
+      "exitCode": 0,
+      "performedBy": "integration coordinator"
+    }
+  ],
+  "preimageDefectsReproduced": [
+    "Configured global cap was bypassed while reservation_cap_enforced=false.",
+    "Reported usage after a prior zero-cost release was inserted but its real priced amount was omitted from reservation and global accounting.",
+    "Reported usage after duration settlement left the earlier estimated amount and basis unchanged.",
+    "Known priced usage above its reservation was silently truncated to the original estimate."
+  ],
+  "expectedDevEffect": {
+    "reservationCapEnforced": true,
+    "initialReservedMicrousd": 65486681,
+    "unknownHoldMicrousdPreserved": 55100000,
+    "newPaidOperations": "REFUSED_AI_TEST_BUDGET_EXHAUSTED",
+    "existingReceipts": "READABLE_NO_SECOND_PROVIDER_ADMISSION",
+    "laterRealUsage": "ACCOUNTED_ONCE_WITH_EXISTING_PRICE_HELPERS",
+    "activationDoesNotCreateAdditionalBudget": true
+  },
+  "migrationGuards": [
+    "Six exact function bodies, owners, ACLs, security-definer flags and search paths before mutation.",
+    "Three exact prior CHECK definitions; only the redundant AND grouping PostgreSQL round-trip spelling has an explicit equivalent alternative.",
+    "One existing 5 USD budget row and exact reservation-ledger equality.",
+    "Function metadata/OIDs, table ownership/ACL/RLS, full existing reservation/usage/account row hashes, ceiling, amount and remaining configuration preserved atomically.",
+    "No rewrite of applied historical migrations or existing receipts."
+  ],
+  "limits": [
+    "DEV application, exact ledger bytes, function ACL/body readback and no-mutation service-claim SQL probe are confirmed. Ordinary Auth and native acceptance are separate.",
+    "PGlite queued work is not independent hosted concurrent-session proof.",
+    "The configured prices and accounting are internal estimates from usage, not a provider invoice or proof of the provider total charge.",
+    "A conservative per-call reservation is admission accounting; this change preserves truthful overruns instead of concealing them.",
+    "Unknown provider outcomes remain held; absence of usage is not proof of zero cost.",
+    "The no-dispatch release RPC remains service-only; its caller must already hold positive evidence that audio was never dispatched.",
+    "The AI test allowlist remains unchanged and the exhausted budget does not admit new users.",
+    "No model request, live credential rotation, TypeScript/whole-corpus/CI/native/production acceptance is claimed by this isolated SQL test."
+  ],
+  "devMutationPerformed": true,
+  "paidProviderCalls": 0,
+  "secretValuesIncluded": false,
+  "dev": {
+    "migration": {
+      "version": "20261107152928",
+      "name": "r06_budget_accounting_20261107",
+      "statement_count": 1,
+      "joined_md5": "092e24021a33ec79119ae11a56cab287",
+      "joined_sha256": "9b5be47adabafd24b6ad60c76f5f86b28385ca790fcb4730f94a20225ffad370",
+      "joined_bytes": 22519
+    },
+    "canonicalFile": "supabase/migrations/20261107152928_r06_budget_accounting_20261107.sql",
+    "exactCandidateAndLedgerBytes": true,
+    "readback": {
+      "budget": {
+        "ceilingMicrousd": 5000000,
+        "reservedMicrousd": 65486681,
+        "reservationCapEnforced": true
+      },
+      "ledger": {
+        "reservations": 2324,
+        "unknownCount": 221,
+        "ledgerMicrousd": 65486681,
+        "settledMicrousd": 10386681,
+        "unknownMicrousd": 55100000
+      },
+      "writers": [
+        {
+          "acl": "{postgres=X/postgres,service_role=X/postgres}",
+          "md5": "91629b929aae24dc3a9b05b412ab1b2e",
+          "owner": "postgres",
+          "config": [
+            "search_path=pg_catalog, public, private"
+          ],
+          "definer": true,
+          "signature": "rpc_ai_test_budget_reserve_service(uuid,uuid,text,bigint)",
+          "anonCanExecute": false,
+          "authenticatedCanExecute": false
+        },
+        {
+          "acl": "{postgres=X/postgres,service_role=X/postgres}",
+          "md5": "584eecfd229477010ae1043257a04227",
+          "owner": "postgres",
+          "config": [
+            "search_path=pg_catalog"
+          ],
+          "definer": true,
+          "signature": "rpc_ai_test_record_usage_service(uuid,text,integer,integer,integer)",
+          "anonCanExecute": false,
+          "authenticatedCanExecute": false
+        },
+        {
+          "acl": "{postgres=X/postgres,service_role=X/postgres}",
+          "md5": "f3307b7e3c09b11d34f7e53ba19b7922",
+          "owner": "postgres",
+          "config": [
+            "search_path=pg_catalog"
+          ],
+          "definer": true,
+          "signature": "rpc_ai_test_release_unused_reservation_service(uuid)",
+          "anonCanExecute": false,
+          "authenticatedCanExecute": false
+        },
+        {
+          "acl": "{postgres=X/postgres,service_role=X/postgres}",
+          "md5": "443dd3877a4aac63eed7189d0e3eba1f",
+          "owner": "postgres",
+          "config": [
+            "search_path=pg_catalog"
+          ],
+          "definer": true,
+          "signature": "rpc_ai_test_settle_audio_service(uuid,bigint,integer)",
+          "anonCanExecute": false,
+          "authenticatedCanExecute": false
+        }
+      ]
+    },
+    "probe": {
+      "newAdmission": "AI_TEST_BUDGET_EXHAUSTED",
+      "ordinaryAuth": false,
+      "providerCalls": 0,
+      "existingOperation": "AI_TEST_OPERATION_REPLAY",
+      "accountingUnchanged": true
+    }
+  }
+}

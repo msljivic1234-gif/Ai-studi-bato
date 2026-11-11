@@ -1,0 +1,36 @@
+{
+  "projectRef": "leqcwgzvjsxugfgzdmth",
+  "baseSourceCommit": "20903892d7f5def28ce33a15027918e5ca19c342",
+  "status": "DEV_READBACK_CONFIRMED",
+  "function": "uskoci-media",
+  "previousVersion": 28,
+  "version": 29,
+  "verify_jwt": true,
+  "packageSha256": "bdaafab365c684221d005f6182ab9f0011668815fbf52b6853c3c8d13be9597f",
+  "files": 4,
+  "allFilesByteIdentical": true,
+  "returnedPathMapping": "get_edge_function returned functions/...; reviewed mapping to repo supabase/functions/... only, with all four contents byte-identical.",
+  "changedSourceFiles": [
+    {
+      "name": "supabase/functions/uskoci-media/index.ts",
+      "sha256": "553dd5e5072af0b41bc940c1b80d3025d567653ffa0ed62d4da2678be6462ec1"
+    },
+    {
+      "name": "supabase/functions/_shared/mediaUploadAdmission.mjs",
+      "sha256": "3ab0c07b3203bd52b6b8eefea69689b20b79c26d3dd077b6d02d679f7e5a3171",
+      "newInDeployment": true
+    }
+  ],
+  "localTests": {
+    "actualHandler": 15,
+    "allPassed": true,
+    "typescript": "PASS"
+  },
+  "scope": "Separate bounded image/voice admission and temporary upload-buffer cleanup including oversize and read/abort races. Existing Auth, JWT setting, six-photo server limit, ownership, Storage and unknown-outcome contracts retained.",
+  "limitations": [
+    "WASM codec replaced at runtime boundary in local tests",
+    "No real audio/provider calls",
+    "No ordinary hosted upload or native camera/gallery proof"
+  ],
+  "sourceIdentity": "Full package checked against source including both unchanged helpers; Git checkpoint recorded in CODEX_PLAN_RADA.md."
+}

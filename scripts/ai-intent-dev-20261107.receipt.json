@@ -1,0 +1,54 @@
+{
+  "projectRef": "leqcwgzvjsxugfgzdmth",
+  "baseSourceCommit": "20903892d7f5def28ce33a15027918e5ca19c342",
+  "status": "DEV_READBACK_CONFIRMED",
+  "localTests": {
+    "passed": 321,
+    "failed": 0,
+    "typescript": "PASS"
+  },
+  "functions": [
+    {
+      "name": "uskoci-ai-interview",
+      "previousVersion": 191,
+      "version": 192,
+      "status": "ACTIVE",
+      "verify_jwt": false,
+      "packageSha256": "95ce5a1ddd799560bb6eb8192c59f7be20cde2cf315f72468ea69d54d6d40f5c",
+      "files": 21,
+      "allFilesByteIdentical": true,
+      "changedSourceFiles": [
+        {
+          "name": "supabase/functions/uskoci-ai-interview/index.ts",
+          "sha256": "1a93ef373c18a1451502205d50faf35608757289e9b5db4f618d907c72764bce"
+        },
+        {
+          "name": "supabase/functions/_shared/conversationIntent.mjs",
+          "sha256": "5c99f4a30ad7e3b30189dfeb143f45ab66f19060b5e58cbde5d6498f0badffc7"
+        }
+      ]
+    },
+    {
+      "name": "uskoci-worker-interview",
+      "previousVersion": 140,
+      "version": 141,
+      "status": "ACTIVE",
+      "verify_jwt": false,
+      "packageSha256": "f61c66e4ad984caba26e22a65e35a6d0bbcf4acf41d21937af0d11627baa3419",
+      "files": 21,
+      "allFilesByteIdentical": true,
+      "changedSourceFiles": [
+        {
+          "name": "supabase/functions/uskoci-worker-interview/index.ts",
+          "sha256": "10618663f04be9666c0674e1f803d6fc57c23c2820890ec53cc57ed826a68957"
+        },
+        {
+          "name": "supabase/functions/_shared/conversationIntent.mjs",
+          "sha256": "5c99f4a30ad7e3b30189dfeb143f45ab66f19060b5e58cbde5d6498f0badffc7"
+        }
+      ]
+    }
+  ],
+  "sourceIdentity": "Base commit and exact per-file SHA-256; final Git checkpoint is recorded in CODEX_PLAN_RADA.md.",
+  "checkpointScope": "Intermediate paired deployment: Need192 remains current; Worker141 was superseded by Worker142 and any subsequent receipt. The321-test result is the then-executed checkpoint, not the final active corpus."
+}

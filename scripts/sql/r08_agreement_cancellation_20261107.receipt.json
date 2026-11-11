@@ -1,0 +1,408 @@
+{
+  "format_version": 1,
+  "project": "leqcwgzvjsxugfgzdmth",
+  "observed_at_utc": "2026-11-07",
+  "base_commit": "20903892d7f5def28ce33a15027918e5ca19c342",
+  "source": "scripts/sql/r08_agreement_cancellation_20261107.sql",
+  "canonical_file": "supabase/migrations/20261107113611_r08_agreement_cancellation_20261107.sql",
+  "migration": {
+    "version": "20261107113611",
+    "name": "r08_agreement_cancellation_20261107",
+    "statement_count": 1,
+    "joined_md5": "8676d546f96e6e8266dedb07515df905",
+    "joined_sha256": "fca1cf49a2ade156bd872040122547978f4aecbad4980679e57d6da4655aa733",
+    "joined_bytes": 15515
+  },
+  "preflight": {
+    "project_status": "ACTIVE_HEALTHY",
+    "migration_count": 338,
+    "all_18_source_acl_guards_equal": true,
+    "message_constraint_pinned": true
+  },
+  "after_migration_count": 339,
+  "readback": {
+    "changed_function": "public.rpc_cancel_agreement(uuid,text)",
+    "full_definition_equal_reviewed_source": true,
+    "body_md5": "e592af7aead2172ff769f38aada8e056",
+    "unchanged_full_definitions": 49,
+    "functions_with_equal_catalog_attributes": 50,
+    "previously_captured_oids_unchanged": 45,
+    "owner": "postgres",
+    "security_definer": true,
+    "search_path": "pg_catalog",
+    "anon_execute": false,
+    "authenticated_execute": true,
+    "service_execute": true,
+    "all_existing_acl_and_arguments_unchanged": true
+  },
+  "local_verification": {
+    "command": "node --test scripts/r08-agreement-cancellation-sql.test.cjs",
+    "tests": 26,
+    "passed": 26,
+    "behavior_subtests": 25,
+    "actual_captured_triggers_executed": 29,
+    "internal_foreign_keys_executed": 26,
+    "postgres_runtime": "PGlite/PostgreSQL 18",
+    "preimage_requester_after_done_bypass_reproduced": true,
+    "preimage_reason_loss_reproduced": true,
+    "max_reason_codepoints": 4000,
+    "max_authored_messages": 3,
+    "reason_not_copied_to_activity_payload": true,
+    "sender_export_projection_and_redaction_scope_verified": true,
+    "unchanged_completion_48h_replay_verified": true,
+    "calendar_move_conflict_release_verified": true
+  },
+  "live_calendar_aggregate": {
+    "agreements_total": 5,
+    "confirmed": 1,
+    "current_version_missing": 0,
+    "worker_identity_mismatch": 0,
+    "confirmed_with_valid_interval": 1,
+    "confirmed_interval_missing_calendar": 0,
+    "confirmed_calendar_mismatch": 1,
+    "no_interval_but_blocking": 0,
+    "terminal_but_blocking": 0,
+    "partial_interval": 0,
+    "invalid_interval": 0,
+    "confirmed_calendar_rows": 1,
+    "not_blocking": 1,
+    "projection_status_mismatch": 0,
+    "version_mismatch": 0,
+    "start_mismatch": 0,
+    "end_mismatch": 0,
+    "both_parties_test_world": 1,
+    "earliest_agreement_date": "2026-11-04",
+    "last_agreement_update_date": "2026-11-04",
+    "earliest_calendar_date": "2026-11-04",
+    "last_calendar_update_date": "2026-11-04",
+    "scope": "Read-only counts/dates only. One old TEST-world confirmed fixture has matching calendar interval/version/identity but RELEASED state. No row is absent. The historical global release below explains the observed shape; no row-level invocation log was available, no data repair/backfill was performed and double booking is not proved.",
+    "historical_global_release": {
+      "ledger_version": "20261105224957",
+      "ledger_name": "update_simulation_need_calendar_clean",
+      "recorded_sql_md5": "1633b4bf88a8871dc47847f358188d86",
+      "operation": "All BLOCKING private.worker_calendar_events rows were set to RELEASED without an account/agreement predicate or corresponding agreement-status change.",
+      "current_simulation_helper_mentions_calendar": false,
+      "current_simulation_helper_service_only": true,
+      "current_direct_calendar_writer": "private.refresh_worker_calendar_event",
+      "row_level_causality_proved": false,
+      "data_mutated_by_this_inspection": false
+    }
+  },
+  "proof_boundary": {
+    "source_implemented": true,
+    "dev_sql_confirmed": true,
+    "source_commit_for_new_code": null,
+    "ci_confirmed": false,
+    "two_ordinary_user_e2e": false,
+    "native_e2e": false,
+    "hosted_business_mutation_tests_by_this_agent": false,
+    "full_canonical_database_replay": false,
+    "whole_export_or_closure_readiness": false,
+    "provider_dispatch_group_media_e2e": false,
+    "blocked_or_closing_reason_retained": false,
+    "blocked_or_closing_reason_note": "Existing ordinary-message privacy guards are preserved. Cancellation remains possible and one safe event identifies who/when, but reasonState is NOT_KEPT. No author-owned terminal reason channel was introduced.",
+    "historical_rows_rewritten": false
+  },
+  "function_body_readback": [
+    {
+      "name": "private.agreement_action_state",
+      "body_md5": "fdda79c270eb331bf1679dc12c654263",
+      "full_definition_compared": true,
+      "catalog_attributes_equal": true
+    },
+    {
+      "name": "private.agreement_calendar_interval",
+      "body_md5": "c75b53c50a362718f607da4d74c333cb",
+      "full_definition_compared": true,
+      "catalog_attributes_equal": true
+    },
+    {
+      "name": "private.agreement_cancellation_facts_v1",
+      "body_md5": "65eec38f58d81667f14a046f3596a243",
+      "full_definition_compared": true,
+      "catalog_attributes_equal": true
+    },
+    {
+      "name": "private.agreement_invalidation_cleanup_v1",
+      "body_md5": "763c4e3a9499053b3884dec5723feed9",
+      "full_definition_compared": true,
+      "catalog_attributes_equal": true
+    },
+    {
+      "name": "private.agreement_message_invalidate_v1",
+      "body_md5": "783b0c5322dfb1c1cbc0eec5df41c38f",
+      "full_definition_compared": true,
+      "catalog_attributes_equal": true
+    },
+    {
+      "name": "private.agreement_photo_link_guard_v5",
+      "body_md5": "c1024cfc1a2e344772e66eee57a0d7a9",
+      "full_definition_compared": true,
+      "catalog_attributes_equal": true
+    },
+    {
+      "name": "private.agreement_photo_message_guard_v5",
+      "body_md5": "c9b405c188294f0ac058bec193467091",
+      "full_definition_compared": true,
+      "catalog_attributes_equal": true
+    },
+    {
+      "name": "private.agreement_voice_link_guard_v1",
+      "body_md5": "70b7d13295f1a9407106d32a7c08fb15",
+      "full_definition_compared": true,
+      "catalog_attributes_equal": true
+    },
+    {
+      "name": "private.agreement_voice_message_guard_v1",
+      "body_md5": "f7945764ecc4176f519c6adc051036a4",
+      "full_definition_compared": true,
+      "catalog_attributes_equal": true
+    },
+    {
+      "name": "private.category_of_event",
+      "body_md5": "85389285506a1f5801ad204f60dfa2a1",
+      "full_definition_compared": true,
+      "catalog_attributes_equal": true
+    },
+    {
+      "name": "private.closure_account_key",
+      "body_md5": "2dde6ad2462255b188e4f03ffe88edcd",
+      "full_definition_compared": true,
+      "catalog_attributes_equal": true
+    },
+    {
+      "name": "private.closure_account_restricted",
+      "body_md5": "f4999250c315e0253374d4611291c7ad",
+      "full_definition_compared": true,
+      "catalog_attributes_equal": true
+    },
+    {
+      "name": "private.closure_assert_open",
+      "body_md5": "dc9bc4c718593850da4fdb49e612dbd2",
+      "full_definition_compared": true,
+      "catalog_attributes_equal": true
+    },
+    {
+      "name": "private.closure_event_restricted",
+      "body_md5": "9487f617239b01bd5c698e6dc93d055d",
+      "full_definition_compared": true,
+      "catalog_attributes_equal": true
+    },
+    {
+      "name": "private.closure_guard_delivery",
+      "body_md5": "33649ad64a682f939bad905cf9ff4734",
+      "full_definition_compared": true,
+      "catalog_attributes_equal": true
+    },
+    {
+      "name": "private.closure_guard_owned_write",
+      "body_md5": "f13117fd601dcb82de423b78f25acb4f",
+      "full_definition_compared": true,
+      "catalog_attributes_equal": true
+    },
+    {
+      "name": "private.closure_redaction_patch_v5",
+      "body_md5": "55ba7bf41ce39d9c914929270b916570",
+      "full_definition_compared": true,
+      "catalog_attributes_equal": true
+    },
+    {
+      "name": "private.closure_redaction_relations_v5",
+      "body_md5": "102e417ab6d52ab0eec421a8bda5c0c4",
+      "full_definition_compared": true,
+      "catalog_attributes_equal": true
+    },
+    {
+      "name": "private.closure_redaction_scope_v5",
+      "body_md5": "81dbe706544b14990da7fe2bebb6bbb2",
+      "full_definition_compared": true,
+      "catalog_attributes_equal": true
+    },
+    {
+      "name": "private.data_export_snapshot",
+      "body_md5": "c3bde16e2175c7ec33c1a171e0ad04a3",
+      "full_definition_compared": true,
+      "catalog_attributes_equal": true
+    },
+    {
+      "name": "private.emit_event",
+      "body_md5": "586c40786332a9863922585503f083f6",
+      "full_definition_compared": true,
+      "catalog_attributes_equal": true
+    },
+    {
+      "name": "private.enqueue_dispatch",
+      "body_md5": "470ed6ab6501c69bf9ebbfe057ccd0fb",
+      "full_definition_compared": true,
+      "catalog_attributes_equal": true
+    },
+    {
+      "name": "private.group_agreement_changed_v5",
+      "body_md5": "58ea9edb7d34e842eb5e92bbd319908c",
+      "full_definition_compared": true,
+      "catalog_attributes_equal": true
+    },
+    {
+      "name": "private.group_need_changed_v5",
+      "body_md5": "651e61bebf9af17d737ea0478516524c",
+      "full_definition_compared": true,
+      "catalog_attributes_equal": true
+    },
+    {
+      "name": "private.guard_closed_remaining_search_response",
+      "body_md5": "cf3da799fac158812bbbc549def026a7",
+      "full_definition_compared": true,
+      "catalog_attributes_equal": true
+    },
+    {
+      "name": "private.guard_need_write",
+      "body_md5": "314b93f7f89d3d52dbcf17a2a2552502",
+      "full_definition_compared": true,
+      "catalog_attributes_equal": true
+    },
+    {
+      "name": "private.in_quiet_hours",
+      "body_md5": "386e00eb4a7645addffac95fde09bea7",
+      "full_definition_compared": true,
+      "catalog_attributes_equal": true
+    },
+    {
+      "name": "private.notification_copy_v5",
+      "body_md5": "dfea0668e2388310370b67676c4a83c4",
+      "full_definition_compared": true,
+      "catalog_attributes_equal": true
+    },
+    {
+      "name": "private.refresh_worker_calendar_event",
+      "body_md5": "1baef4c6659e83073fe7886e3fd3d7e9",
+      "full_definition_compared": true,
+      "catalog_attributes_equal": true
+    },
+    {
+      "name": "private.safety_assert_pair",
+      "body_md5": "211a423b263bbbebdcf5e04f3c0e1bf3",
+      "full_definition_compared": true,
+      "catalog_attributes_equal": true
+    },
+    {
+      "name": "private.safety_event_blocked",
+      "body_md5": "4a253bbaf6abd6b3207c7cd73a02ae0e",
+      "full_definition_compared": true,
+      "catalog_attributes_equal": true
+    },
+    {
+      "name": "private.safety_guard_delivery",
+      "body_md5": "650c89ef5bc36fe45d802f5dec1c9dbd",
+      "full_definition_compared": true,
+      "catalog_attributes_equal": true
+    },
+    {
+      "name": "private.safety_guard_interaction_write",
+      "body_md5": "85730117267a115e5d5517d463c847e7",
+      "full_definition_compared": true,
+      "catalog_attributes_equal": true
+    },
+    {
+      "name": "private.safety_pair_blocked",
+      "body_md5": "698fb21abb0379743bc7ab09d9f946ad",
+      "full_definition_compared": true,
+      "catalog_attributes_equal": true
+    },
+    {
+      "name": "private.safety_pair_key",
+      "body_md5": "8ba8bbae56238163de8a9188357667fe",
+      "full_definition_compared": true,
+      "catalog_attributes_equal": true
+    },
+    {
+      "name": "private.set_updated_at",
+      "body_md5": "d2ba7342ae061b491b5ec4bb74fb81c4",
+      "full_definition_compared": true,
+      "catalog_attributes_equal": true
+    },
+    {
+      "name": "private.sync_need_completion",
+      "body_md5": "c88bcaee9c51ba09bf7db84a43d33095",
+      "full_definition_compared": true,
+      "catalog_attributes_equal": true
+    },
+    {
+      "name": "private.tg_worker_calendar_agreement_update",
+      "body_md5": "07d1002963f9a7cb6256c34a61b8f1fd",
+      "full_definition_compared": true,
+      "catalog_attributes_equal": true
+    },
+    {
+      "name": "private.tg_worker_calendar_version_insert",
+      "body_md5": "b1845ecf847a377a79558863a8ae2ebf",
+      "full_definition_compared": true,
+      "catalog_attributes_equal": true
+    },
+    {
+      "name": "private.worker_calendar_conflict",
+      "body_md5": "417c9db16bbe70ed9ad652380790900c",
+      "full_definition_compared": true,
+      "catalog_attributes_equal": true
+    },
+    {
+      "name": "public.fn_is_party",
+      "body_md5": "94886227d7b7a429f0020a2b6c12d0ad",
+      "full_definition_compared": true,
+      "catalog_attributes_equal": true
+    },
+    {
+      "name": "public.fn_need_covered_slots",
+      "body_md5": "5a1d10aa69cda3c3095550b6f8e4c03f",
+      "full_definition_compared": true,
+      "catalog_attributes_equal": true
+    },
+    {
+      "name": "public.rpc_agreement_cancellation_v1",
+      "body_md5": "f54af14827bdd1c0906f512ee8aa9043",
+      "full_definition_compared": true,
+      "catalog_attributes_equal": true
+    },
+    {
+      "name": "public.rpc_cancel_agreement",
+      "body_md5": "e592af7aead2172ff769f38aada8e056",
+      "full_definition_compared": true,
+      "catalog_attributes_equal": true
+    },
+    {
+      "name": "public.rpc_confirm_completion",
+      "body_md5": "658006c318c3847ab7a9f80706ef3003",
+      "full_definition_compared": true,
+      "catalog_attributes_equal": true
+    },
+    {
+      "name": "public.rpc_get_agreement_workspace",
+      "body_md5": "0eb9b60cf7a52bdef85d8dc166690e0b",
+      "full_definition_compared": true,
+      "catalog_attributes_equal": true
+    },
+    {
+      "name": "public.rpc_mark_work_done",
+      "body_md5": "955e0719a3c0a67b684ee0d28483300c",
+      "full_definition_compared": true,
+      "catalog_attributes_equal": true
+    },
+    {
+      "name": "public.rpc_report_problem",
+      "body_md5": "978c36ae7f44d45f13fc4a0303116631",
+      "full_definition_compared": true,
+      "catalog_attributes_equal": true
+    },
+    {
+      "name": "public.rpc_tick_auto_completion",
+      "body_md5": "b617890420e11846dbe528ffc4d800d7",
+      "full_definition_compared": true,
+      "catalog_attributes_equal": true
+    },
+    {
+      "name": "public.set_updated_at",
+      "body_md5": "fbb247b78e5a461958844a3c37feb1e5",
+      "full_definition_compared": true,
+      "catalog_attributes_equal": true
+    }
+  ]
+}

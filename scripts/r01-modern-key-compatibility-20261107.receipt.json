@@ -1,0 +1,195 @@
+{
+  "task": "R01 modern Supabase API key source compatibility",
+  "captured_at_utc": "2026-11-07T15:33:27Z",
+  "source_parent_commit": "b56f0e52db99256cdfb6988567edc0e7d597849c",
+  "status": [
+    "SOURCE IMPLEMENTIRANO",
+    "TESTIRANO"
+  ],
+  "reference": "https://supabase.com/docs/guides/getting-started/migrating-to-new-api-keys",
+  "behavior": [
+    "Select own default from SUPABASE_SECRET_KEYS and SUPABASE_PUBLISHABLE_KEYS JSON maps; never select an arbitrary named key.",
+    "A present invalid modern map fails closed even if the legacy environment variable exists.",
+    "When modern maps are absent, legacy env fallback exists only while USKOCI_LEGACY_SUPABASE_KEYS_ENABLED is missing or exactly true.",
+    "Modern service requests use apikey only; case-insensitive Authorization is removed even from a Headers object; actual user JWT is preserved on user-scoped calls.",
+    "Internal workers compare presented credentials with configured keys without an early exit on differing bytes; sb-api-key-compatibility never grants authority.",
+    "Legacy configured credential equality is enabled only while USKOCI_LEGACY_SUPABASE_KEYS_ENABLED is missing or exactly true; false or any other present value disables both legacy equality and env fallback. A modern public apikey plus historical Bearer cannot obtain internal authority in that mode. This is not platform revocation.",
+    "Export policy readiness, account binding, final grant recheck and existing feature gates remain authoritative."
+  ],
+  "coverage": {
+    "service_consumers": 11,
+    "public_consumers": 10,
+    "distinct_edge_functions": 12,
+    "shared_transport_consumers": [
+      "uskoci-data-export-worker",
+      "uskoci-data-export-download",
+      "uskoci-account-closure-worker"
+    ]
+  },
+  "not_proven": [
+    "No Edge deployment or runtime modern-key selection/readback was performed by this source task.",
+    "No hosted Auth/cron/Storage request or provider call was made for this task; handlers used controlled local HTTP and socket fixtures.",
+    "Historical legacy service key has not been revoked; P0 retirement remains open.",
+    "No native Android or production acceptance was performed.",
+    "Live publication and QA packages have separately captured dependency drift; deployment must preserve those unrelated live versions.",
+    "The legacy-off flag exists and is locally verified; this packaging task did not change its live runtime setting or revoke any platform key."
+  ],
+  "files": [
+    {
+      "path": "supabase/functions/_shared/supabaseKeys.mjs",
+      "sha256": "d1f903f379d30f0c9c1da684b335013f37b1cd5b62eb6e2b61d4d3a27352ab61"
+    },
+    {
+      "path": "supabase/functions/_shared/supabaseKeys.d.mts",
+      "sha256": "0dc2b3c16f9048b7f62600abb3d4d819ba1a9ad11eb387bab1756bc18961178a"
+    },
+    {
+      "path": "supabase/functions/_shared/aiTestBudget.ts",
+      "sha256": "f2603e5b8e40ccaa0677536bc43b1e93ea42bacaf59211762e03f33382726a90"
+    },
+    {
+      "path": "supabase/functions/_shared/data-export.ts",
+      "sha256": "acce086875f3222415e4238e719b8e99c456c16d2c2917c9bfe4b943ae6fd737"
+    },
+    {
+      "path": "supabase/functions/_shared/taxonomyRuntimeConfig.mjs",
+      "sha256": "3b6678e26cf6e72daf42e5345e736d6de8899416a83a0dc96f97db891304e398"
+    },
+    {
+      "path": "supabase/functions/uskoci-ai-interview/index.ts",
+      "sha256": "9a213ed0f2751abbc09e65da23217e6e5422f566cef4f2a5143f190424fbc086"
+    },
+    {
+      "path": "supabase/functions/uskoci-worker-interview/index.ts",
+      "sha256": "7c8a7eb5c0c4acc4466d892e41699fe64ea5ad05846ca9acad1dbb7d77ba4a8f"
+    },
+    {
+      "path": "supabase/functions/uskoci-speech-session/index.ts",
+      "sha256": "c456c16a30404ddc2396da8cfb5410751cbd8c71fe24860b42a2583c567ca6b5"
+    },
+    {
+      "path": "supabase/functions/uskoci-media/index.ts",
+      "sha256": "4b3d39c100c5d8a9d48be051ce9893ba8e972fedf043516b914af6e1b3fbf4b0"
+    },
+    {
+      "path": "supabase/functions/uskoci-publication-evaluate/index.ts",
+      "sha256": "7d3665a435420d88433be8f9a96836b770a80724bd88b4d88d349b762405cb05"
+    },
+    {
+      "path": "supabase/functions/uskoci-qa-classify/index.ts",
+      "sha256": "ba043aca76da7caba7674d77b368341054dd0aadfdd28070a626f526c6ef3e5b"
+    },
+    {
+      "path": "supabase/functions/uskoci-location-search/index.ts",
+      "sha256": "0f8c47c1962899078d3f0f473ae04bb79cb686e0cc00d0586fdeb5dac3149273"
+    },
+    {
+      "path": "supabase/functions/uskoci-push-transport/index.ts",
+      "sha256": "8959ec37f329d0a46d5052bc859f9bdf4f49309cc01d114bee2de7167e14eaf0"
+    },
+    {
+      "path": "supabase/functions/uskoci-taxonomy-postsave-worker/index.ts",
+      "sha256": "61ae5fcb8417727c3004f50ba50bf0bcd3b9b2f58185e25725e1179705c880e7"
+    },
+    {
+      "path": "scripts/supabase-key-compatibility.test.cjs",
+      "sha256": "c59455b3c0ea842e655bb3654b0315e91eaa606dbebac69cbbcd8fa9ee7c8c0e"
+    },
+    {
+      "path": "scripts/conversation-intent-integration.test.cjs",
+      "sha256": "d95a165477192ccbb9c26064645c69ae68d51fe13b1fd77c3d6e12c8476a213b"
+    },
+    {
+      "path": "scripts/media-handler-admission.test.cjs",
+      "sha256": "1c2ef8cb20e34930a1f9837d57767e29c1ec4301b5902baadea439378a7fb59a"
+    },
+    {
+      "path": "scripts/speech-provider-accounting.test.cjs",
+      "sha256": "49e35d522f2ae4a823b4a450561a3ed01718d9b3fa3ecd00391476b7955c380d"
+    }
+  ],
+  "verification_before_legacy_off": [
+    {
+      "command": "node --test scripts/supabase-key-compatibility.test.cjs scripts/speech-provider-accounting.test.cjs scripts/worker-availability-intent.test.cjs",
+      "passed": 68,
+      "failed": 0,
+      "skipped": 0,
+      "todo": 0,
+      "key_compatibility_tests": 24,
+      "phase": "BEFORE_LEGACY_OFF_ADDITION"
+    },
+    {
+      "command": "node --test scripts/product-smoke.test.cjs scripts/context-cache-matrix.test.cjs scripts/taxonomy-compact-bypass.test.cjs scripts/r06-provider-dispatch-retention.test.cjs scripts/ai-role-handoff.test.cjs scripts/conversation-intent-integration.test.cjs scripts/media-handler-admission.test.cjs scripts/worker-output-diagnostic.test.cjs",
+      "passed": 146,
+      "failed": 0,
+      "skipped": 0,
+      "todo": 0,
+      "phase": "BEFORE_LEGACY_OFF_ADDITION"
+    },
+    {
+      "command": "npx tsc --noEmit",
+      "exit_code": 0,
+      "phase": "BEFORE_LEGACY_OFF_ADDITION"
+    },
+    {
+      "command": "git diff --check",
+      "exit_code": 0,
+      "phase": "BEFORE_LEGACY_OFF_ADDITION"
+    }
+  ],
+  "updated_at_utc": "2026-11-07T15:45:18Z",
+  "legacy_off_control": {
+    "flag": "USKOCI_LEGACY_SUPABASE_KEYS_ENABLED",
+    "missing_or_true": "intentional compatibility retained",
+    "false_or_other_present_value": "legacy env fallback and legacy internal equality both disabled",
+    "modern_public_plus_legacy_bearer_grants_internal_authority": false,
+    "valid_modern_default_secret_apikey_remains_required_for_internal_calls": true,
+    "platform_revocation": false
+  },
+  "verification": [
+    {
+      "command": "node --test --test-reporter=tap scripts/supabase-key-compatibility.test.cjs",
+      "exit_code": 0,
+      "passed": 32,
+      "failed": 0,
+      "skipped": 0,
+      "todo": 0,
+      "tap_file": "source-suite.tap",
+      "tap_sha256": "d32aebdd02ce1629436dc6cce80d4029e3b4df22ab819562e039fe9762f0542a"
+    },
+    {
+      "command": "node --test --test-reporter=tap /workspace/scratch/01f9acde8f88/evidence/verify-auth-candidates.cjs",
+      "exit_code": 0,
+      "passed": 32,
+      "failed": 0,
+      "skipped": 0,
+      "todo": 0,
+      "scope": "exact 12 candidate package source maps, including preserved live publication and QA drift",
+      "repository_fallback_for_edge_sources": false,
+      "tap_sha256": "a84a4bccfb23483e6f2cd53412605807dc574bb141c2e6a91286b469fcb3009a",
+      "coverage_sha256": "95cb16b52f33fe245790ff912dda1603e8e172a8e13cb38928b759e89a2f3f73"
+    },
+    {
+      "command": "npx tsc --noEmit",
+      "exit_code": 0
+    },
+    {
+      "command": "git diff --check",
+      "exit_code": 0
+    }
+  ],
+  "candidate_preparation": {
+    "directory": "evidence/edge-auth-candidate",
+    "manifest_sha256": "15be02d11643b899166943c2eddb67b525f7879693fec40d546b6c24356bbb04",
+    "verification_sha256": "a30ae1adfb4eac220098907f0b8503816c2dac4a03c2d776703512d839962873",
+    "packages": 12,
+    "worker_source_version": 144,
+    "unchanged_drift_packages": [
+      "uskoci-publication-evaluate@29",
+      "uskoci-qa-classify@27"
+    ],
+    "legacy_off_refresh_changed_only_helper": true,
+    "old_24_test_packages_preserved_in": "edge-auth-candidate-pre-legacy-off",
+    "deployed": false
+  }
+}

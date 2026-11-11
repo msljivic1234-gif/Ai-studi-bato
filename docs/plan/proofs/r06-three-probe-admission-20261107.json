@@ -1,0 +1,47 @@
+{
+  "schema": "USKOCI_R06_THREE_PROBE_ADMISSION_READINESS_V1",
+  "checked_at_utc": "2026-11-07T17:07:00Z",
+  "source_base": "94f2801db54bcbd7cb294cda983e048cd5885939",
+  "project": "leqcwgzvjsxugfgzdmth",
+  "method": "Read-only inspection of the live reserve/admission functions and schema by the AI specialist; no source or DEV change.",
+  "current": {
+    "ceiling_microusd": 5000000,
+    "ceiling_fixed_by_check_constraint": true,
+    "reservation_cap_enforced": true,
+    "reserved_microusd": 65486681,
+    "active_test_accounts": 12,
+    "currently_admitted_new_operations": 0,
+    "per_operation_permit_registry": false,
+    "non_refundable_attempt_counter": false
+  },
+  "owner_decision_proposal": {
+    "provider_attempts": 3,
+    "worker_attempts": 2,
+    "qa_attempts": 1,
+    "new_initial_reservation_microusd_max": 750000,
+    "no_replacement_attempts": true,
+    "no_automatic_retries": true,
+    "approved": false,
+    "reservation_is_not_verified_provider_invoice_or_absolute_usage_ceiling": true
+  },
+  "required_technical_change": {
+    "status": "NOT_IMPLEMENTED_NOT_DEPLOYED",
+    "approach": "Narrow forward extension of the existing admission writer plus private, closed-by-default permits. Atomic consume at most three specific permits and initial reservations. Settlement/release cannot restore permit count. Preserve old reservations, Auth/closure/price checks and replay protection.",
+    "worker_identity": "Bind exact TEST account, conversation, clientRequestId and request content/context.",
+    "qa_identity": "Bind approved clientRequestId to the ordinary claim-created qa_ai_commands classificationId; preserve claim -> reserve -> dispatch -> provider -> settlement.",
+    "prohibited_shortcuts": [
+      "Do not merely raise the global ceiling: settlement reopens space and all active test accounts could use it.",
+      "Do not manually preclaim QA or preinsert its reservation; claim replay and existing reservation must remain non-admitting.",
+      "Do not reset historical spend or release unknown holds without evidence."
+    ]
+  },
+  "execution_after_approval_and_tests": [
+    "Worker: explicit seven days and 09:00-17:00; verify full rule shape and no guessed removals.",
+    "Worker: every day without known hours; require clarification and no invented availability.",
+    "QA: one actual provider response, usage settlement and read-only/replay verification without another paid call.",
+    "Stop immediately on the first unknown provider outcome or unconfirmed accounting; no substitute attempt."
+  ],
+  "paid_calls": 0,
+  "dev_mutations": 0,
+  "native_claim": false
+}

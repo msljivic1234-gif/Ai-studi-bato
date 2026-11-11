@@ -1,0 +1,217 @@
+{
+  "format_version": 1,
+  "project": "leqcwgzvjsxugfgzdmth",
+  "observed_at_utc": "2026-11-07",
+  "base_commit": "259b451ae8963d1173466103c191b3c8be98fc55",
+  "migration": {
+    "version": "20261107100529",
+    "name": "r07b_price_snapshot_20261107",
+    "statement_count": 1,
+    "joined_md5": "d8307f8ed9d2e9f1363af3bd557d3d28",
+    "joined_sha256": "cd8ffcf51cf0d12d522125ff59938b424ba2e69d3a541752a5f95e6d7f6177f0",
+    "joined_bytes": 115752
+  },
+  "source": "scripts/sql/r07b_price_snapshot_20261107.sql",
+  "preflight": [
+    {
+      "observed_at": "2026-11-07 10:05:21.883812+00",
+      "database_name": "postgres",
+      "migration_count": 337,
+      "reader_absent": true,
+      "all_12_source_and_acl_match": true,
+      "price_constraints": [
+        {
+          "name": "marketplace_responses_price_basis_check",
+          "relation": "marketplace_responses",
+          "definition": "CHECK ((price_basis = ANY (ARRAY['TOTAL'::text, 'HOURLY'::text])))"
+        },
+        {
+          "name": "marketplace_response_versions_price_basis_check",
+          "relation": "marketplace_response_versions",
+          "definition": "CHECK ((price_basis = ANY (ARRAY['TOTAL'::text, 'HOURLY'::text])))"
+        }
+      ]
+    }
+  ],
+  "functions": [
+    {
+      "function": "private.assert_application_price_v5",
+      "bodyExact": true,
+      "metadataExact": true,
+      "bodyMd5": "2b4fef19b3fc70d57dca3144a63ca5e4",
+      "anonExecute": false,
+      "authenticatedExecute": false,
+      "serviceExecute": false
+    },
+    {
+      "function": "private.own_application_rows",
+      "bodyExact": true,
+      "metadataExact": true,
+      "bodyMd5": "3bb9a8c4150504f84b6657dd7a17aec4",
+      "anonExecute": false,
+      "authenticatedExecute": false,
+      "serviceExecute": false
+    },
+    {
+      "function": "public.rpc_ai_open_need_edit_conversation_v2",
+      "bodyExact": true,
+      "metadataExact": true,
+      "bodyMd5": "0e5211a136ad2be3afe25fde5f777ef6",
+      "anonExecute": false,
+      "authenticatedExecute": true,
+      "serviceExecute": true
+    },
+    {
+      "function": "public.rpc_list_my_applications",
+      "bodyExact": true,
+      "metadataExact": true,
+      "bodyMd5": "c10facf02e711f85373458edc3cde10c",
+      "anonExecute": false,
+      "authenticatedExecute": true,
+      "serviceExecute": true
+    },
+    {
+      "function": "public.rpc_list_my_applications_page",
+      "bodyExact": true,
+      "metadataExact": true,
+      "bodyMd5": "28e460ff8b0f140bc9b41d50fc8a7640",
+      "anonExecute": false,
+      "authenticatedExecute": true,
+      "serviceExecute": true
+    },
+    {
+      "function": "public.rpc_list_need_candidates",
+      "bodyExact": true,
+      "metadataExact": true,
+      "bodyMd5": "4096a29c4ef6dbaeb987a58a9c9dba32",
+      "anonExecute": false,
+      "authenticatedExecute": true,
+      "serviceExecute": true
+    },
+    {
+      "function": "public.rpc_list_need_candidates_page",
+      "bodyExact": true,
+      "metadataExact": true,
+      "bodyMd5": "11b6ca6fa48ac74b76c6e7cd09c25c3c",
+      "anonExecute": false,
+      "authenticatedExecute": true,
+      "serviceExecute": true
+    },
+    {
+      "function": "public.rpc_propose_agreement_change_v2",
+      "bodyExact": true,
+      "metadataExact": true,
+      "bodyMd5": "29c046b3e56c64d20e38d4144001201f",
+      "anonExecute": false,
+      "authenticatedExecute": true,
+      "serviceExecute": true
+    },
+    {
+      "function": "public.rpc_read_response_submit_result",
+      "bodyExact": true,
+      "metadataExact": true,
+      "bodyMd5": "f7e9160f6467549680dfc7633315c41c",
+      "anonExecute": false,
+      "authenticatedExecute": true,
+      "serviceExecute": true
+    },
+    {
+      "function": "public.rpc_resolve_stale_response_after_need_edit",
+      "bodyExact": true,
+      "metadataExact": true,
+      "bodyMd5": "fb8132db33279190478b5be0480721fa",
+      "anonExecute": false,
+      "authenticatedExecute": true,
+      "serviceExecute": true
+    },
+    {
+      "function": "public.rpc_respond_agreement_change",
+      "bodyExact": true,
+      "metadataExact": true,
+      "bodyMd5": "40bf812611f9bfb18524411c92b86641",
+      "anonExecute": false,
+      "authenticatedExecute": true,
+      "serviceExecute": true
+    },
+    {
+      "function": "public.rpc_select_response",
+      "bodyExact": true,
+      "metadataExact": true,
+      "bodyMd5": "02934f7831db821a7b33fd6d40289b9a",
+      "anonExecute": false,
+      "authenticatedExecute": true,
+      "serviceExecute": true
+    },
+    {
+      "function": "public.rpc_submit_response",
+      "bodyExact": true,
+      "metadataExact": true,
+      "bodyMd5": "398e85c4420da9c4765ae0ff6197a59e",
+      "anonExecute": false,
+      "authenticatedExecute": true,
+      "serviceExecute": true
+    }
+  ],
+  "live_pure_price_probes": [
+    {
+      "pricingMode": "MY_PRICE",
+      "priceBasis": "HOURLY",
+      "unitPriceRsd": 1200,
+      "requiredSlots": 5,
+      "coveredSlots": 2,
+      "sentPriceRsd": 1200,
+      "result": "PASS"
+    },
+    {
+      "pricingMode": "MY_PRICE",
+      "priceBasis": "HOURLY",
+      "unitPriceRsd": 1200,
+      "requiredSlots": 5,
+      "coveredSlots": 2,
+      "sentPriceRsd": 2400,
+      "result": "REJECTED",
+      "sqlstate": "22023",
+      "message": "FIXED_PRICE_MISMATCH"
+    }
+  ],
+  "live_history_aggregate_review": {
+    "observed_at_utc": "2026-11-07",
+    "evidence_source": "Coordinator read-only DEV aggregate confirmation; counts only, no user rows or private content.",
+    "agreement_versions_total": 5,
+    "covered_slots_missing": 0,
+    "covered_slots_null": 0,
+    "covered_slots_nonnumeric": 0,
+    "price_basis_unknown": 5,
+    "explicit_other_currency": 0,
+    "historical_basis_inferred_or_relabelled_total": false,
+    "historical_rows_backfilled": false
+  },
+  "proof_boundary": {
+    "all_13_full_prosrc_equal_reviewed_source": true,
+    "existing_metadata_unchanged_inside_atomic_migration": true,
+    "new_reader_anon_execute": false,
+    "new_reader_authenticated_and_service_execute": true,
+    "actual_user_data_mutation_tests": false,
+    "postgrest_schema_cache_checked": true,
+    "two_ordinary_user_e2e": false,
+    "native_e2e": false,
+    "full_canonical_database_replay": false,
+    "postgrest_schema_cache_scope": "Only the new receipt reader: anonymous routing and EXECUTE denial.",
+    "postgrest_authenticated_invocation_checked": false
+  },
+  "postgrest_anonymous_probe": {
+    "observed_at_utc": "2026-11-07T10:26:59.102392+00:00",
+    "method": "POST",
+    "rpc": "rpc_read_response_submit_result",
+    "credential_class": "Existing public preview publishable key; no user JWT, service role, or administrator credential.",
+    "synthetic_inputs_only": true,
+    "http_status": 401,
+    "sqlstate": "42501",
+    "schema_resolution_confirmed": true,
+    "execute_denial_for_named_reader_confirmed": true,
+    "authenticated_reader_invocation_tested": false,
+    "business_write_attempted": false,
+    "private_response_content_persisted": false,
+    "interpretation": "Expected anonymous PostgreSQL insufficient_privilege response; proves routing/schema resolution and denied anonymous EXECUTE only. It does not prove authenticated owner isolation or two-account/native E2E."
+  }
+}

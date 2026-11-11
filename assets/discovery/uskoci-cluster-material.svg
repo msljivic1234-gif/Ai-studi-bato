@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 48 48"><defs>
+ <linearGradient id="pearl" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#FFFFFF"/><stop offset=".7" stop-color="#FFFFFF"/><stop offset="1" stop-color="#F0F0ED"/></linearGradient>
+ <linearGradient id="emerald" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#16A97B"/><stop offset=".5" stop-color="#00845A"/><stop offset="1" stop-color="#006D49"/></linearGradient>
+ <linearGradient id="edge" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#FFFFFF"/><stop offset=".5" stop-color="#E4E6E2"/><stop offset="1" stop-color="#BFC7C2"/></linearGradient>
+ <filter id="shadow" x="-30%" y="-30%" width="160%" height="170%"><feDropShadow dx="0" dy="1.2" stdDeviation=".7" flood-color="#14271E" flood-opacity=".22"/></filter>
+</defs>
+ <circle cx="24" cy="24" r="22" fill="url(#edge)" filter="url(#shadow)"/>
+ <circle cx="24" cy="23.85" r="21" fill="url(#emerald)"/>
+ <circle cx="24" cy="23.65" r="19.9" fill="url(#pearl)"/>
+ <path d="M9.479999999999999 10.36 A20 20 0 0 1 38.52 10.36" fill="none" stroke="#FFFFFF" stroke-opacity="0.85" stroke-width=".8" stroke-linecap="round"/>
+ 
+ </svg>

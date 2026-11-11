@@ -1,0 +1,258 @@
+{
+  "scope": "Read-only canonical DEV trigger catalogue. Fixtures explicitly select the bounded triggers they execute; no private rows.",
+  "project": "leqcwgzvjsxugfgzdmth",
+  "triggers": [
+    {
+      "table_name": "public.access_grants",
+      "tgname": "pre_v3_closure_grant",
+      "tgenabled": "O",
+      "definition": "CREATE TRIGGER pre_v3_closure_grant BEFORE INSERT OR UPDATE ON public.access_grants FOR EACH ROW EXECUTE FUNCTION private.closure_guard_owned_write('PAIR', 'granted_by_account_id', 'granted_to_account_id')"
+    },
+    {
+      "table_name": "public.access_grants",
+      "tgname": "pre_v3_safety_grant",
+      "tgenabled": "O",
+      "definition": "CREATE TRIGGER pre_v3_safety_grant BEFORE INSERT OR UPDATE ON public.access_grants FOR EACH ROW EXECUTE FUNCTION private.safety_guard_interaction_write()"
+    },
+    {
+      "table_name": "public.agreement_change_proposals",
+      "tgname": "pre_v3_closure_proposal",
+      "tgenabled": "O",
+      "definition": "CREATE TRIGGER pre_v3_closure_proposal BEFORE INSERT OR UPDATE ON public.agreement_change_proposals FOR EACH ROW EXECUTE FUNCTION private.closure_guard_owned_write('AGREEMENT', 'agreement_id')"
+    },
+    {
+      "table_name": "public.agreement_change_proposals",
+      "tgname": "pre_v3_safety_proposal",
+      "tgenabled": "O",
+      "definition": "CREATE TRIGGER pre_v3_safety_proposal BEFORE INSERT OR UPDATE ON public.agreement_change_proposals FOR EACH ROW EXECUTE FUNCTION private.safety_guard_interaction_write()"
+    },
+    {
+      "table_name": "public.agreement_execution",
+      "tgname": "agreement_execution_set_updated_at",
+      "tgenabled": "O",
+      "definition": "CREATE TRIGGER agreement_execution_set_updated_at BEFORE UPDATE ON public.agreement_execution FOR EACH ROW EXECUTE FUNCTION private.set_updated_at()"
+    },
+    {
+      "table_name": "public.agreement_execution",
+      "tgname": "media_problem_evidence_v5",
+      "tgenabled": "O",
+      "definition": "CREATE TRIGGER media_problem_evidence_v5 AFTER INSERT OR UPDATE OF problem_opened_at ON public.agreement_execution FOR EACH ROW EXECUTE FUNCTION private.capture_case_media_trigger_v5()"
+    },
+    {
+      "table_name": "public.agreement_messages",
+      "tgname": "agreement_photo_link_guard_v5",
+      "tgenabled": "O",
+      "definition": "CREATE CONSTRAINT TRIGGER agreement_photo_link_guard_v5 AFTER INSERT ON public.agreement_messages DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION private.agreement_photo_link_guard_v5()"
+    },
+    {
+      "table_name": "public.agreement_messages",
+      "tgname": "agreement_photo_message_guard_v5",
+      "tgenabled": "O",
+      "definition": "CREATE TRIGGER agreement_photo_message_guard_v5 BEFORE INSERT OR UPDATE ON public.agreement_messages FOR EACH ROW EXECUTE FUNCTION private.agreement_photo_message_guard_v5()"
+    },
+    {
+      "table_name": "public.agreement_messages",
+      "tgname": "agreement_voice_link_guard_v1",
+      "tgenabled": "O",
+      "definition": "CREATE CONSTRAINT TRIGGER agreement_voice_link_guard_v1 AFTER INSERT ON public.agreement_messages DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION private.agreement_voice_link_guard_v1()"
+    },
+    {
+      "table_name": "public.agreement_messages",
+      "tgname": "agreement_voice_message_guard_v1",
+      "tgenabled": "O",
+      "definition": "CREATE TRIGGER agreement_voice_message_guard_v1 BEFORE INSERT OR UPDATE ON public.agreement_messages FOR EACH ROW EXECUTE FUNCTION private.agreement_voice_message_guard_v1()"
+    },
+    {
+      "table_name": "public.agreement_messages",
+      "tgname": "chat_b3c_invalidation_after_message",
+      "tgenabled": "O",
+      "definition": "CREATE TRIGGER chat_b3c_invalidation_after_message AFTER INSERT ON public.agreement_messages FOR EACH ROW EXECUTE FUNCTION private.agreement_message_invalidate_v1()"
+    },
+    {
+      "table_name": "public.agreement_messages",
+      "tgname": "pre_v3_closure_message",
+      "tgenabled": "O",
+      "definition": "CREATE TRIGGER pre_v3_closure_message BEFORE INSERT ON public.agreement_messages FOR EACH ROW EXECUTE FUNCTION private.closure_guard_owned_write('AGREEMENT', 'agreement_id')"
+    },
+    {
+      "table_name": "public.agreement_messages",
+      "tgname": "pre_v3_safety_message",
+      "tgenabled": "O",
+      "definition": "CREATE TRIGGER pre_v3_safety_message BEFORE INSERT ON public.agreement_messages FOR EACH ROW EXECUTE FUNCTION private.safety_guard_interaction_write()"
+    },
+    {
+      "table_name": "public.agreement_versions",
+      "tgname": "agreement_version_calendar_sync",
+      "tgenabled": "O",
+      "definition": "CREATE TRIGGER agreement_version_calendar_sync AFTER INSERT ON public.agreement_versions FOR EACH ROW EXECUTE FUNCTION private.tg_worker_calendar_version_insert()"
+    },
+    {
+      "table_name": "public.agreement_versions",
+      "tgname": "media_agreement_snapshot_v5",
+      "tgenabled": "O",
+      "definition": "CREATE TRIGGER media_agreement_snapshot_v5 AFTER INSERT ON public.agreement_versions FOR EACH ROW EXECUTE FUNCTION private.capture_agreement_media_trigger_v5()"
+    },
+    {
+      "table_name": "public.agreement_versions",
+      "tgname": "pre_v3_closure_terms",
+      "tgenabled": "O",
+      "definition": "CREATE TRIGGER pre_v3_closure_terms BEFORE INSERT OR UPDATE ON public.agreement_versions FOR EACH ROW EXECUTE FUNCTION private.closure_guard_owned_write('AGREEMENT', 'agreement_id')"
+    },
+    {
+      "table_name": "public.agreements",
+      "tgname": "agreement_calendar_sync",
+      "tgenabled": "O",
+      "definition": "CREATE TRIGGER agreement_calendar_sync AFTER UPDATE OF current_version, status ON public.agreements FOR EACH ROW EXECUTE FUNCTION private.tg_worker_calendar_agreement_update()"
+    },
+    {
+      "table_name": "public.agreements",
+      "tgname": "agreements_require_connection_activation_trg",
+      "tgenabled": "O",
+      "definition": "CREATE CONSTRAINT TRIGGER agreements_require_connection_activation_trg AFTER INSERT ON public.agreements DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION private.require_connection_activation_for_new_agreement()"
+    },
+    {
+      "table_name": "public.agreements",
+      "tgname": "agreements_set_updated_at",
+      "tgenabled": "O",
+      "definition": "CREATE TRIGGER agreements_set_updated_at BEFORE UPDATE ON public.agreements FOR EACH ROW EXECUTE FUNCTION private.set_updated_at()"
+    },
+    {
+      "table_name": "public.agreements",
+      "tgname": "chat_b3c_invalidation_lifecycle",
+      "tgenabled": "O",
+      "definition": "CREATE TRIGGER chat_b3c_invalidation_lifecycle AFTER UPDATE OF status, requester_account_id, worker_account_id ON public.agreements FOR EACH ROW EXECUTE FUNCTION private.agreement_invalidation_cleanup_v1()"
+    },
+    {
+      "table_name": "public.agreements",
+      "tgname": "pre_v3_closure_agreement",
+      "tgenabled": "O",
+      "definition": "CREATE TRIGGER pre_v3_closure_agreement BEFORE INSERT OR UPDATE ON public.agreements FOR EACH ROW EXECUTE FUNCTION private.closure_guard_owned_write('PAIR', 'requester_account_id', 'worker_account_id')"
+    },
+    {
+      "table_name": "public.agreements",
+      "tgname": "pre_v3_safety_agreement",
+      "tgenabled": "O",
+      "definition": "CREATE TRIGGER pre_v3_safety_agreement BEFORE INSERT ON public.agreements FOR EACH ROW EXECUTE FUNCTION private.safety_guard_interaction_write()"
+    },
+    {
+      "table_name": "public.agreements",
+      "tgname": "v5_group_agreement_admission",
+      "tgenabled": "O",
+      "definition": "CREATE TRIGGER v5_group_agreement_admission AFTER INSERT OR UPDATE OF status ON public.agreements FOR EACH ROW EXECUTE FUNCTION private.group_agreement_changed_v5()"
+    },
+    {
+      "table_name": "public.marketplace_responses",
+      "tgname": "guard_closed_remaining_search_response_trg",
+      "tgenabled": "O",
+      "definition": "CREATE TRIGGER guard_closed_remaining_search_response_trg BEFORE INSERT OR UPDATE OF status, submitted_against_need_revision, current_version ON public.marketplace_responses FOR EACH ROW EXECUTE FUNCTION private.guard_closed_remaining_search_response()"
+    },
+    {
+      "table_name": "public.marketplace_responses",
+      "tgname": "marketplace_responses_set_updated_at",
+      "tgenabled": "O",
+      "definition": "CREATE TRIGGER marketplace_responses_set_updated_at BEFORE UPDATE ON public.marketplace_responses FOR EACH ROW EXECUTE FUNCTION private.set_updated_at()"
+    },
+    {
+      "table_name": "public.marketplace_responses",
+      "tgname": "pre_v3_closure_response",
+      "tgenabled": "O",
+      "definition": "CREATE TRIGGER pre_v3_closure_response BEFORE INSERT OR UPDATE ON public.marketplace_responses FOR EACH ROW EXECUTE FUNCTION private.closure_guard_owned_write('APPLICATION')"
+    },
+    {
+      "table_name": "public.marketplace_responses",
+      "tgname": "pre_v3_safety_response",
+      "tgenabled": "O",
+      "definition": "CREATE TRIGGER pre_v3_safety_response BEFORE INSERT OR UPDATE ON public.marketplace_responses FOR EACH ROW EXECUTE FUNCTION private.safety_guard_interaction_write()"
+    },
+    {
+      "table_name": "public.need_selections",
+      "tgname": "need_selections_set_updated_at",
+      "tgenabled": "O",
+      "definition": "CREATE TRIGGER need_selections_set_updated_at BEFORE UPDATE ON public.need_selections FOR EACH ROW EXECUTE FUNCTION private.set_updated_at()"
+    },
+    {
+      "table_name": "public.need_selections",
+      "tgname": "pre_v3_closure_selection",
+      "tgenabled": "O",
+      "definition": "CREATE TRIGGER pre_v3_closure_selection BEFORE INSERT ON public.need_selections FOR EACH ROW EXECUTE FUNCTION private.closure_guard_owned_write('NEED', 'need_id')"
+    },
+    {
+      "table_name": "public.needs",
+      "tgname": "guard_remaining_search_close_fields_trg",
+      "tgenabled": "O",
+      "definition": "CREATE TRIGGER guard_remaining_search_close_fields_trg BEFORE UPDATE OF remaining_search_closed_at, remaining_search_closed_by_account_id, remaining_search_close_reason ON public.needs FOR EACH ROW EXECUTE FUNCTION private.guard_remaining_search_close_fields()"
+    },
+    {
+      "table_name": "public.needs",
+      "tgname": "guard_unavailable_identity_requirement_v5_trg",
+      "tgenabled": "O",
+      "definition": "CREATE TRIGGER guard_unavailable_identity_requirement_v5_trg BEFORE INSERT OR UPDATE ON public.needs FOR EACH ROW EXECUTE FUNCTION private.guard_unavailable_identity_requirement_v5()"
+    },
+    {
+      "table_name": "public.needs",
+      "tgname": "needs_after_revision",
+      "tgenabled": "O",
+      "definition": "CREATE TRIGGER needs_after_revision AFTER UPDATE ON public.needs FOR EACH ROW EXECUTE FUNCTION private.after_need_revision()"
+    },
+    {
+      "table_name": "public.needs",
+      "tgname": "needs_enqueue_dispatch",
+      "tgenabled": "O",
+      "definition": "CREATE TRIGGER needs_enqueue_dispatch AFTER INSERT OR UPDATE OF status, revision ON public.needs FOR EACH ROW EXECUTE FUNCTION private.enqueue_on_need_change()"
+    },
+    {
+      "table_name": "public.needs",
+      "tgname": "needs_guard_urgent",
+      "tgenabled": "O",
+      "definition": "CREATE TRIGGER needs_guard_urgent BEFORE INSERT OR UPDATE OF urgent ON public.needs FOR EACH ROW EXECUTE FUNCTION private.guard_urgent_need()"
+    },
+    {
+      "table_name": "public.needs",
+      "tgname": "needs_guard_write",
+      "tgenabled": "O",
+      "definition": "CREATE TRIGGER needs_guard_write BEFORE INSERT OR UPDATE ON public.needs FOR EACH ROW EXECUTE FUNCTION private.guard_need_write()"
+    },
+    {
+      "table_name": "public.needs",
+      "tgname": "needs_set_updated_at",
+      "tgenabled": "O",
+      "definition": "CREATE TRIGGER needs_set_updated_at BEFORE UPDATE ON public.needs FOR EACH ROW EXECUTE FUNCTION private.set_updated_at()"
+    },
+    {
+      "table_name": "public.needs",
+      "tgname": "needs_sync_taxonomy_category_trg",
+      "tgenabled": "O",
+      "definition": "CREATE TRIGGER needs_sync_taxonomy_category_trg BEFORE INSERT OR UPDATE OF category ON public.needs FOR EACH ROW EXECUTE FUNCTION private.needs_sync_taxonomy_category_trigger_fn()"
+    },
+    {
+      "table_name": "public.needs",
+      "tgname": "pre_v3_closure_need",
+      "tgenabled": "O",
+      "definition": "CREATE TRIGGER pre_v3_closure_need BEFORE INSERT OR UPDATE ON public.needs FOR EACH ROW EXECUTE FUNCTION private.closure_guard_owned_write('ACCOUNT', 'requester_account_id')"
+    },
+    {
+      "table_name": "public.needs",
+      "tgname": "resolved_location_need_binding_trg",
+      "tgenabled": "O",
+      "definition": "CREATE CONSTRAINT TRIGGER resolved_location_need_binding_trg AFTER INSERT OR UPDATE ON public.needs DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION private.check_need_resolved_location_binding()"
+    },
+    {
+      "table_name": "public.needs",
+      "tgname": "v5_group_need_lifecycle",
+      "tgenabled": "O",
+      "definition": "CREATE TRIGGER v5_group_need_lifecycle AFTER UPDATE OF status ON public.needs FOR EACH ROW EXECUTE FUNCTION private.group_need_changed_v5()"
+    },
+    {
+      "table_name": "public.notification_deliveries",
+      "tgname": "pre_v3_closure_delivery",
+      "tgenabled": "O",
+      "definition": "CREATE TRIGGER pre_v3_closure_delivery BEFORE INSERT ON public.notification_deliveries FOR EACH ROW EXECUTE FUNCTION private.closure_guard_delivery()"
+    },
+    {
+      "table_name": "public.notification_deliveries",
+      "tgname": "pre_v3_safety_delivery",
+      "tgenabled": "O",
+      "definition": "CREATE TRIGGER pre_v3_safety_delivery BEFORE INSERT ON public.notification_deliveries FOR EACH ROW EXECUTE FUNCTION private.safety_guard_delivery()"
+    }
+  ]
+}

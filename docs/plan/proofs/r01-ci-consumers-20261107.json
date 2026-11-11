@@ -1,0 +1,329 @@
+{
+  "schema": "R01_CI_CONSUMER_INVENTORY_V1",
+  "checked_at_utc": "2026-11-07T16:06:27.195375+00:00",
+  "scope": "Read-only, bounded inventory of tracked GitHub Actions, EAS/app build configuration and repository operational script callers; no repeated Edge audit.",
+  "repository": "uskocibusiness-boop/USKOCI-EAN",
+  "branch": "work/uskoci-cist-proizvod-20261104",
+  "source_head": "c049c1278ba997f80cd4ea93e213c0d70ed682a6",
+  "qa47_source": "ce1ad5e4d21b20bd21901ba42ad4e822843e3916",
+  "all_reviewed_files_match_qa47_source": true,
+  "remote_workflow_metadata": {
+    "endpoint": "GET /repos/uskocibusiness-boop/USKOCI-EAN/actions/runs?branch=work%2Fuskoci-cist-proizvod-20261104&per_page=3",
+    "run_id": 42388770988,
+    "run_number": 47,
+    "head_sha": "ce1ad5e4d21b20bd21901ba42ad4e822843e3916",
+    "path": ".github/workflows/uskoci-qa-apk.yml",
+    "event": "push",
+    "observed_status": "in_progress",
+    "observed_conclusion": null,
+    "run_created_at_utc": "2026-11-07T15:56:15Z",
+    "run_updated_at_utc": "2026-11-07T15:56:18Z",
+    "interpretation": "Confirms this workflow is actively used for the reviewed source; not a completed build or runtime-secret inventory."
+  },
+  "workflow": {
+    "tracked_workflows": [
+      ".github/workflows/uskoci-qa-apk.yml"
+    ],
+    "supabase_configuration_source": "eas.json -> build.preview.env -> GITHUB_ENV -> Expo embedded bundle",
+    "public_key_env_name": "EXPO_PUBLIC_SUPABASE_ANON_KEY",
+    "public_key_type": "modern_publishable",
+    "source_secret_expression_names": [],
+    "supabase_management_or_deploy_step_present": false,
+    "permissions": [
+      "contents:read"
+    ],
+    "checkout_persist_credentials": false,
+    "actual_local_script_callers": [
+      {
+        "caller": "npm ci -> package.json postinstall",
+        "scripts": [
+          "scripts/verify-native-patches.cjs",
+          "scripts/sync-entry-reference-assets.cjs"
+        ],
+        "supabase_credentials": "none"
+      },
+      {
+        "caller": "workflow regression gate",
+        "scripts": [
+          "npm test",
+          "npx tsc --noEmit",
+          "supabase/migrations/check_md5.sh"
+        ],
+        "supabase_credentials": "offline tests and local migration integrity; no hosted Supabase admin invocation"
+      },
+      {
+        "caller": "workflow preview environment / Expo configuration",
+        "scripts": [
+          "scripts/build-contract.cjs",
+          "app.config.js",
+          "scripts/build-identity.cjs"
+        ],
+        "supabase_credentials": "canonical public URL and modern publishable key from tracked preview config"
+      }
+    ]
+  },
+  "eas_and_app": {
+    "preview": {
+      "environment": "preview",
+      "credentials_source": "remote",
+      "distribution": "internal",
+      "public_key_type": "modern_publishable",
+      "legacy_name_only": true,
+      "backend": "canonical DEV leqcwgzvjsxugfgzdmth"
+    },
+    "production": {
+      "environment": "production",
+      "credentials_source": "remote",
+      "distribution": "store",
+      "source_supabase_key_configured": false,
+      "source_supabase_url_configured": false,
+      "gate": "scripts/build-contract.cjs rejects production build/OTA with USKOCI_PRODUCTION_NOT_CONFIGURED"
+    },
+    "eas_preinstall": {
+      "caller": "package.json eas-build-pre-install",
+      "script": "scripts/check-eas-preview.cjs",
+      "public_forms_accepted": [
+        "modern_publishable",
+        "legacy anon JWT restricted to canonical project"
+      ],
+      "meaning": "Legacy anon compatibility is accepted by the validator, but the checked preview source value is modern."
+    },
+    "native_public_config": {
+      "path": "src/data/publicSupabaseConfig.ts",
+      "default_key_type": "modern_publishable",
+      "default_equals_eas_preview_key": true,
+      "actual_public_env_consumers": [
+        "src/data/index.ts",
+        "src/data/publicSupabaseConfig.ts",
+        "src/data/dataExportDeliveryService.ts",
+        "src/data/mediaBinaryRead.ts",
+        "src/data/voiceBinaryRead.ts"
+      ]
+    },
+    "external_eas_environment_and_remote_credentials": "NOT_INSPECTED: no authorized metadata capability was used; source profiles do not prove deployed external EAS environment values or signing credentials."
+  },
+  "repository_operational_scripts": [
+    {
+      "path": "scripts/simulate_two_phones_e2e.mjs",
+      "invocation": "standalone manual; no package/workflow caller found",
+      "key_inputs": [
+        {
+          "name": "SUPABASE_SECRET_KEY",
+          "required_type": "modern_secret",
+          "legacy_service_role_jwt": "rejected before client creation"
+        },
+        {
+          "name": "eas.json preview EXPO_PUBLIC_SUPABASE_ANON_KEY",
+          "required_type": "modern_publishable"
+        }
+      ],
+      "transport": "custom fetch removes secret-key Bearer; SDK apikey retained",
+      "executed_in_this_inventory": false,
+      "acceptance_limit": "This administrative simulator is not evidence of ordinary two-account native acceptance."
+    },
+    {
+      "path": "scripts/live_gemini_interview_test.mjs",
+      "invocation": "standalone manual; no package/workflow caller found",
+      "key_inputs": [
+        {
+          "name": "eas.json preview EXPO_PUBLIC_SUPABASE_ANON_KEY",
+          "required_type": "modern_publishable"
+        }
+      ],
+      "transport": "public apikey plus actual user Auth bearer",
+      "executed_in_this_inventory": false
+    },
+    {
+      "path": "scripts/r07-selection-recovery-dev-20261107.py",
+      "invocation": "manual read-only hosted harness used in this development round; imports explicitly supplied private QA preflight",
+      "key_inputs": "Existing ordinary TEST Auth sessions and public key supplied by the external preflight; no service key env reference in this repository script",
+      "executed_in_this_inventory": false,
+      "external_harness_evidence": "scripts/r07-selection-recovery-dev-20261107.receipt.json and docs/plan/proofs/r01-runtime-auth-20261107.json"
+    },
+    {
+      "scope": "tracked repository deployment automation",
+      "finding": "No Supabase deployment/admin command in the only workflow or package script lifecycle. Standalone modern-secret simulator is the identified repository administrative consumer. External deployment tools and operator environments are outside this source-only proof."
+    }
+  ],
+  "scan": {
+    "tracked_non_test_config_and_script_files_scanned": 17,
+    "privileged_key_literal_count_in_scan": 0,
+    "source_env_identifier_matches": [
+      {
+        "path": "app.config.js",
+        "env_identifiers": [
+          "EXPO_PUBLIC_SUPABASE_URL"
+        ],
+        "literal_key_types": []
+      },
+      {
+        "path": "eas.json",
+        "env_identifiers": [
+          "EXPO_PUBLIC_SUPABASE_ANON_KEY",
+          "EXPO_PUBLIC_SUPABASE_URL"
+        ],
+        "literal_key_types": [
+          {
+            "line": 19,
+            "kind": "modern_publishable"
+          }
+        ]
+      },
+      {
+        "path": "scripts/build-contract.cjs",
+        "env_identifiers": [
+          "EXPO_PUBLIC_SUPABASE_URL"
+        ],
+        "literal_key_types": []
+      },
+      {
+        "path": "scripts/build-identity.cjs",
+        "env_identifiers": [
+          "EXPO_PUBLIC_SUPABASE_URL"
+        ],
+        "literal_key_types": []
+      },
+      {
+        "path": "scripts/check-eas-preview.cjs",
+        "env_identifiers": [
+          "EXPO_PUBLIC_SUPABASE_ANON_KEY",
+          "EXPO_PUBLIC_SUPABASE_URL",
+          "SUPABASE_REF"
+        ],
+        "literal_key_types": []
+      },
+      {
+        "path": "scripts/live_gemini_interview_test.mjs",
+        "env_identifiers": [
+          "EXPO_PUBLIC_SUPABASE_ANON_KEY",
+          "EXPO_PUBLIC_SUPABASE_URL",
+          "SUPABASE_URL"
+        ],
+        "literal_key_types": []
+      },
+      {
+        "path": "scripts/simulate_two_phones_e2e.mjs",
+        "env_identifiers": [
+          "EXPO_PUBLIC_SUPABASE_ANON_KEY",
+          "EXPO_PUBLIC_SUPABASE_URL",
+          "SUPABASE_SECRET_KEY",
+          "SUPABASE_URL"
+        ],
+        "literal_key_types": []
+      }
+    ],
+    "excluded_from_claim": "No whole-history secret scan, external runtime secret scan, prior installed APK inventory or new Edge-consumer audit was performed."
+  },
+  "metadata_access_limit": {
+    "github_tool": "mcp__codex_apps__github_fetch",
+    "documented_boundary": "Sensitive endpoint families, including secrets APIs, are not supported; unlisted API endpoints are rejected.",
+    "actions_secret_names": "NOT_INSPECTED",
+    "secrets_endpoint_attempted": false,
+    "cli_or_other_bypass_attempted": false,
+    "source_secret_references_only": true
+  },
+  "conclusion": {
+    "source_confirmed": "The active QA workflow and checked preview/native config use a modern public key. No current privileged or legacy JWT credential is required by their checked source paths.",
+    "source_legacy_compatibility_remaining": "EAS preflight still accepts a canonical legacy anon JWT if an external environment supplies one. This alone does not prove that such a key is deployed.",
+    "external_verification_remaining": [
+      "EAS preview/production external environment key type and actual overriding values, by an authorized administrator without sharing them",
+      "Other external CI/webhook/deployment operators and any old installed app versions before global legacy key deactivation",
+      "GitHub Actions secret metadata only through a separately authorized supported capability if needed"
+    ],
+    "revocation_claim": "No legacy-off environment toggle, project legacy-key revocation, signing-key rotation or secret mutation occurred; R01 final revocation remains separate."
+  },
+  "side_effects": {
+    "source_code_changes": 0,
+    "paid_model_calls": 0,
+    "hosted_business_writes": 0,
+    "environment_or_secret_mutations": 0,
+    "tests_run": "none: read-only inventory; no code changed"
+  },
+  "file_identity": [
+    {
+      "path": ".github/workflows/uskoci-qa-apk.yml",
+      "sha256": "a92433613716f0f16bf52ac73e17716bff961ec822abbcbd0ab9f2d43e831646",
+      "matches_qa47_source": true
+    },
+    {
+      "path": "eas.json",
+      "sha256": "fbacf72170fa3eab19e60420c5f444684df81e67293db880bebfcf17d8955c71",
+      "matches_qa47_source": true
+    },
+    {
+      "path": "app.json",
+      "sha256": "22d585e48ed8ab3099a3a79b9098901ddd0f5a660ad8ac1aeff7d9bb9c2eb53e",
+      "matches_qa47_source": true
+    },
+    {
+      "path": "app.config.js",
+      "sha256": "79a07f41499043b07137449a513c41b54ac4a3b58f64c27b319b6059f8e25fe1",
+      "matches_qa47_source": true
+    },
+    {
+      "path": "package.json",
+      "sha256": "3d10382c19be66e4b319ad5cd86451f9306402c06e9f78cae80f90263196a95e",
+      "matches_qa47_source": true
+    },
+    {
+      "path": "scripts/check-eas-preview.cjs",
+      "sha256": "da35342ca2514896aea665443e2f0ec1f977db563382ba4196543139909469b6",
+      "matches_qa47_source": true
+    },
+    {
+      "path": "scripts/build-contract.cjs",
+      "sha256": "222d1f8a71af5759f7359aacc17eacf933c90163e83a445351cac85f3594e140",
+      "matches_qa47_source": true
+    },
+    {
+      "path": "scripts/build-identity.cjs",
+      "sha256": "857fe667c8c674195c5d006b33739c3fa2bc373a7f2a272edac2adacad2d7959",
+      "matches_qa47_source": true
+    },
+    {
+      "path": "scripts/simulate_two_phones_e2e.mjs",
+      "sha256": "8a7abe4a3828df8022c304fb96fc4878254fdc41b56831f967673fe35c88b3b4",
+      "matches_qa47_source": true
+    },
+    {
+      "path": "scripts/live_gemini_interview_test.mjs",
+      "sha256": "3e1e976d043adab4423467be9ae46c9bdc1415606b5b79793c8f2ed8a64c5056",
+      "matches_qa47_source": true
+    },
+    {
+      "path": "scripts/r07-selection-recovery-dev-20261107.py",
+      "sha256": "df72bfe1ae27c38459dc695c206110185016c57c434ee3ea3fe45c90e3a2692b",
+      "matches_qa47_source": true
+    },
+    {
+      "path": "src/data/publicSupabaseConfig.ts",
+      "sha256": "34e981c2b44d9ac970b993e40ebdcdf70811187ae6e9fbea22c086c1a31de04c",
+      "matches_qa47_source": true
+    },
+    {
+      "path": "src/data/index.ts",
+      "sha256": "106953eac1a829637514c4a134039beeab527b035a3e61e3880774e3a5e489ad",
+      "matches_qa47_source": true
+    },
+    {
+      "path": "src/data/dataExportDeliveryService.ts",
+      "sha256": "dd42902db23e231553b1c32e3a984eaca81abac8fe56a4649fe8a4ee17d0f6ce",
+      "matches_qa47_source": true
+    },
+    {
+      "path": "src/data/mediaBinaryRead.ts",
+      "sha256": "450fe2024db050d0361eb844a3d113defdc602c86115aa0c623fe47da0ca9991",
+      "matches_qa47_source": true
+    },
+    {
+      "path": "src/data/voiceBinaryRead.ts",
+      "sha256": "b9e0a3e6a339a344cf827d064916ac0ed88a99f4b6799f4cd343007d81ec9487",
+      "matches_qa47_source": true
+    },
+    {
+      "path": "supabase/migrations/check_md5.sh",
+      "sha256": "37fcc112422d5afeed27c2b3abc0d437dec56b9308a8b97a0f2bc271f3db4765",
+      "matches_qa47_source": true
+    }
+  ]
+}

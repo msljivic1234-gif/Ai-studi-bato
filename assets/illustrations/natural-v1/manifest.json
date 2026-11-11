@@ -1,0 +1,334 @@
+{
+  "created": "2026-10-20",
+  "generator": "Built-in image_gen",
+  "purpose": "Original decorative USKOČI subjects; never evidence of people, tasks, reviews or payment.",
+  "processing": "Aspect-preserving fit within 384px, WebP quality92, alpha retained. Originals preserved in generated_images.",
+  "rejected": [
+    {
+      "source": "exec-43a6edf0-93a1-445d-a8b0-c11999aaf1f2.png",
+      "reason": "People too portrait-like; replaced by abstract busts."
+    }
+  ],
+  "records": [
+    {
+      "kind": "applications",
+      "source": "exec-4c89446f-19cd-4834-8cbe-44e610d822a8.png",
+      "sourceSha256": "9116147c648a5b0d953225168dbe2643ac6dc2b86a538c8e65148ca9487de1ae",
+      "original": {
+        "width": 1254,
+        "height": 1254
+      },
+      "asset": "assets/illustrations/natural-v1/applications.webp",
+      "width": 384,
+      "height": 384,
+      "hasAlpha": true,
+      "bytes": 16844,
+      "sha256": "03d40f8632b7622f51200205f533e05bdb1b19c4b67bdd4f6c1b2375aad44b96",
+      "inspected": true
+    },
+    {
+      "kind": "workbag",
+      "source": "exec-e85b2183-428e-4229-b956-14319c7d7cc7.png",
+      "sourceSha256": "6c8ad864a022e9d98a109ab0a661c17ae2b8f1d0e05f7b2ea947c5db0a696561",
+      "original": {
+        "width": 1374,
+        "height": 1145
+      },
+      "asset": "assets/illustrations/natural-v1/workbag.webp",
+      "width": 384,
+      "height": 320,
+      "hasAlpha": true,
+      "bytes": 17808,
+      "sha256": "6dbf830adf2dbc8687c52d19475cfcb9c756f92d55ae646bb8dd0557c8129938",
+      "inspected": true
+    },
+    {
+      "kind": "calendar",
+      "source": "exec-adbc1ca3-3605-4c7c-9a9a-1c04756e9001.png",
+      "sourceSha256": "2a3f7e6ac2cf30c1e2eedadb2808bf47321ec90222ce6f849bdc0c8d491de66a",
+      "original": {
+        "width": 1312,
+        "height": 1199
+      },
+      "asset": "assets/illustrations/natural-v1/calendar.webp",
+      "width": 384,
+      "height": 351,
+      "hasAlpha": true,
+      "bytes": 20612,
+      "sha256": "9bdd9a2bebd99274ef2ffe67d2a085ff770a4b3c2817ee745b0e4452c77ac4e1",
+      "inspected": true
+    },
+    {
+      "kind": "bell",
+      "source": "exec-e549a540-860c-438f-be2f-1ece6c6213ec.png",
+      "sourceSha256": "935de922eba4227325d0f76248da19496c18a84205a7e66c85392e2ea34ffdf5",
+      "original": {
+        "width": 1295,
+        "height": 1214
+      },
+      "asset": "assets/illustrations/natural-v1/bell.webp",
+      "width": 384,
+      "height": 360,
+      "hasAlpha": true,
+      "bytes": 14646,
+      "sha256": "f23ebc866d4787d2b05584fe0906672c257b1e1827b8d4662475d28a1637e82f",
+      "inspected": true
+    },
+    {
+      "kind": "tasks",
+      "source": "exec-67bde65b-a57d-4c82-9243-8a2febd3f816.png",
+      "sourceSha256": "bc0b9353123ada313a99fc6d9ee7803284fbc8163eae22ec2ec406b9c09b8a37",
+      "original": {
+        "width": 1254,
+        "height": 1254
+      },
+      "asset": "assets/illustrations/natural-v1/tasks.webp",
+      "width": 384,
+      "height": 384,
+      "hasAlpha": true,
+      "bytes": 21408,
+      "sha256": "62d21bd8ab8b7169d24a367b126961b184d1c1951256879d81543aacc44817d6",
+      "inspected": true
+    },
+    {
+      "kind": "chat",
+      "source": "exec-c035ee9f-19ad-4a12-ac75-07ae1c1a122a.png",
+      "sourceSha256": "c3058b2ceb7df5d4fee23e2c0b4b379c125fae2a1ef20e57b8024ea631344c25",
+      "original": {
+        "width": 1254,
+        "height": 1254
+      },
+      "asset": "assets/illustrations/natural-v1/chat.webp",
+      "width": 384,
+      "height": 384,
+      "hasAlpha": true,
+      "bytes": 16604,
+      "sha256": "0046090ab4f402933bc910238d63f80e226668c14a1745b513a826ff7c7ed638",
+      "inspected": true
+    },
+    {
+      "kind": "tool",
+      "source": "exec-f6c2668f-9114-421d-9e02-591b84de9621.png",
+      "sourceSha256": "9eb7439fe79d59130fec353170f008e69a0cbc059cb93f1c1a59da36dd2e6e8e",
+      "original": {
+        "width": 1254,
+        "height": 1254
+      },
+      "asset": "assets/illustrations/natural-v1/tool.webp",
+      "width": 384,
+      "height": 384,
+      "hasAlpha": true,
+      "bytes": 27232,
+      "sha256": "4ac6c5472a681070b1bbfc3396d7db5b66d2bd114bc95be5ad3b5dc928415f31",
+      "inspected": true
+    },
+    {
+      "kind": "users",
+      "source": "exec-f8102388-4738-43be-9baf-c41511136075.png",
+      "sourceSha256": "846a0f55f49f67f9c3c2513973d00154225c07120c74b68c579f971faa0a1347",
+      "original": {
+        "width": 1254,
+        "height": 1254
+      },
+      "asset": "assets/illustrations/natural-v1/users.webp",
+      "width": 384,
+      "height": 384,
+      "hasAlpha": true,
+      "bytes": 20044,
+      "sha256": "684c73f4f19fd64da816ababe7aed3a098b434615228a99d0c3ea64ff7346bf1",
+      "inspected": true
+    },
+    {
+      "kind": "home",
+      "source": "exec-410dd098-e169-4f39-97c4-9c3fc8ec2691.png",
+      "sourceSha256": "80baa402ba9d41916cdfc1ea11cfd15973dc9b16ae50e7d86465d8e11793d1fb",
+      "original": {
+        "width": 1254,
+        "height": 1254
+      },
+      "asset": "assets/illustrations/natural-v1/home.webp",
+      "width": 384,
+      "height": 384,
+      "hasAlpha": true,
+      "bytes": 29578,
+      "sha256": "f1871fdd86eddb7fd01a6098c702c73136634d5ac7188c45c77bf896e4b1a5ed",
+      "inspected": true
+    },
+    {
+      "kind": "pin",
+      "source": "exec-ec2a4742-4613-4fc8-b941-c0a0166ed688.png",
+      "sourceSha256": "e499a5ac36726c284266003ad41a3a11b50765278af544dc139e92659a809a9f",
+      "original": {
+        "width": 1254,
+        "height": 1254
+      },
+      "asset": "assets/illustrations/natural-v1/pin.webp",
+      "width": 384,
+      "height": 384,
+      "hasAlpha": true,
+      "bytes": 16554,
+      "sha256": "f3e1cbf0cb1839eeb4d3acaa0efa8e38b9f81b7e44524fb6cae6ebaf98057d80",
+      "inspected": true
+    },
+    {
+      "kind": "money",
+      "source": "exec-1ad969e4-49ab-44ae-8a26-da2175acb5a9.png",
+      "sourceSha256": "929c3061a77925d774be66408d1ef1a43403215e8d27d0d481e64f662bc82422",
+      "original": {
+        "width": 1254,
+        "height": 1254
+      },
+      "asset": "assets/illustrations/natural-v1/money.webp",
+      "width": 384,
+      "height": 384,
+      "hasAlpha": true,
+      "bytes": 31596,
+      "sha256": "faf643f1f324ffc4029cef2a7d3acc02a9da2faf5d49d74692ad5159df004625",
+      "inspected": true
+    },
+    {
+      "kind": "clock",
+      "source": "exec-80d3c5e3-dc2f-4d44-8a7a-f9220ed9de72.png",
+      "sourceSha256": "1437401fec9a1e529cf70d1bb330dca95d66b8e62ccf0ba2c0ca3d4093e95a57",
+      "original": {
+        "width": 1254,
+        "height": 1254
+      },
+      "asset": "assets/illustrations/natural-v1/clock.webp",
+      "width": 384,
+      "height": 384,
+      "hasAlpha": true,
+      "bytes": 22770,
+      "sha256": "ca20b3618f7d8f4f245f3dddcf06069437704c85b1bed49f53588b2ec073ed8e",
+      "inspected": true
+    },
+    {
+      "kind": "agreements",
+      "source": "exec-d4b491d6-58d4-4591-9517-bfb20b8be8f1.png",
+      "sourceSha256": "4a48a63472c97f0072c90d2d4c4ae2b6e3f4b2e39e4cef2effd323aaea4a89b1",
+      "original": {
+        "width": 1254,
+        "height": 1254
+      },
+      "asset": "assets/illustrations/natural-v1/agreements.webp",
+      "width": 384,
+      "height": 384,
+      "hasAlpha": true,
+      "bytes": 16852,
+      "sha256": "746bb28ae898124495628e601d48b0662f1a321427257712f07dda466500b4b0",
+      "inspected": true
+    },
+    {
+      "kind": "remote",
+      "source": "exec-d9f084dd-9e59-4b6a-988e-b440042ff870.png",
+      "sourceSha256": "d3cc2275816ef9fe8b595d0a400a0e396f31c3b7e9805af5588a6df460683f9b",
+      "original": {
+        "width": 1254,
+        "height": 1254
+      },
+      "asset": "assets/illustrations/natural-v1/remote.webp",
+      "width": 384,
+      "height": 384,
+      "hasAlpha": true,
+      "bytes": 27126,
+      "sha256": "096b5cab94ea608dfdc029cccb5f953a7d35e61eca41f99c298ed5f4e88a5fb1",
+      "inspected": true
+    },
+    {
+      "kind": "vehicle",
+      "source": "exec-6819e754-90f9-47c9-853c-bfa65ad89ea9.png",
+      "sourceSha256": "66c56e6d12759a1d99f333b6227f196412b68bfbc147fbaaa35e0eafc48f5853",
+      "original": {
+        "width": 1254,
+        "height": 1254
+      },
+      "asset": "assets/illustrations/natural-v1/vehicle.webp",
+      "width": 384,
+      "height": 384,
+      "hasAlpha": true,
+      "bytes": 25656,
+      "sha256": "80483c430bcfdf980e98473185fb7a04a65b3e323d2dc6aa5724642f5a2008b8",
+      "inspected": true
+    },
+    {
+      "kind": "map",
+      "source": "exec-9f0d1405-bbb3-4708-9458-ca308cc85eb9.png",
+      "sourceSha256": "4a546a334485a0c6694b7c45c8745d74a87a93f926c480a337b28000a16f99c3",
+      "original": {
+        "width": 1383,
+        "height": 1137
+      },
+      "asset": "assets/illustrations/natural-v1/map.webp",
+      "width": 384,
+      "height": 316,
+      "hasAlpha": true,
+      "bytes": 20146,
+      "sha256": "b12c9d434ada1beea2038014e50e73abf621b81e53c7028f466de8f4d27bf372",
+      "inspected": true
+    },
+    {
+      "kind": "offers",
+      "source": "exec-340489d9-6e6e-409d-85d9-58ce44bccbdc.png",
+      "sourceSha256": "491f90a84d8fad578909b54a0551225ba0071a76b58de6395b885897f4711ab7",
+      "original": {
+        "width": 1254,
+        "height": 1254
+      },
+      "asset": "assets/illustrations/natural-v1/offers.webp",
+      "width": 384,
+      "height": 384,
+      "hasAlpha": true,
+      "bytes": 16792,
+      "sha256": "329c27a68aa5d89908b65e377985500fbf6088dd2336b5381b1b1872b96209b2",
+      "inspected": true
+    },
+    {
+      "kind": "document",
+      "source": "exec-e2f40beb-5ba0-4e7d-aa41-cedb1d33ee3d.png",
+      "sourceSha256": "aec3489670fdfe9a166149fa3d972592803b41a6bdd1646dedb3c5535acb94fb",
+      "original": {
+        "width": 1254,
+        "height": 1254
+      },
+      "asset": "assets/illustrations/natural-v1/document.webp",
+      "width": 384,
+      "height": 384,
+      "hasAlpha": true,
+      "bytes": 14574,
+      "sha256": "a2ccfeefe58ef72bf139f1a9d06904a1923ae81f7b816fba1ed3719e68b41908",
+      "inspected": true
+    },
+    {
+      "kind": "support",
+      "source": "exec-e54d005e-8313-4123-bd9d-28d75dc8c997.png",
+      "sourceSha256": "e927036466dc4dff1a39f8cf39bb250620f29c9ae93d2092fa8178c7b7b337ec",
+      "original": {
+        "width": 1254,
+        "height": 1254
+      },
+      "asset": "assets/illustrations/natural-v1/support.webp",
+      "width": 384,
+      "height": 384,
+      "hasAlpha": true,
+      "bytes": 27424,
+      "sha256": "401ea8855e14ef6d99292e0eabe29a096b0f45ac690a80316cb2e1bffd22d6e4",
+      "inspected": true
+    },
+    {
+      "kind": "publish",
+      "source": "exec-a5b8848b-f842-496b-b817-2661325a3283.png",
+      "sourceSha256": "455f4f79c981ba81dabe80cb98004edc7e114ae45a8d64a3391b1da807903412",
+      "original": {
+        "width": 1254,
+        "height": 1254
+      },
+      "asset": "assets/illustrations/natural-v1/publish.webp",
+      "width": 384,
+      "height": 384,
+      "hasAlpha": true,
+      "bytes": 20926,
+      "sha256": "4a68478a46d4afce517083d9e41c58253dd25afa1f17a38505a06d490bcd0329",
+      "inspected": true
+    }
+  ]
+}

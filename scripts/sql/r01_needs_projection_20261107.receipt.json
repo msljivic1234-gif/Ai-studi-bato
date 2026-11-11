@@ -1,0 +1,255 @@
+{
+  "format_version": 1,
+  "project": "leqcwgzvjsxugfgzdmth",
+  "observed_at_utc": "2026-11-07T11:45:17.336181+00:00",
+  "base_commit": "20903892d7f5def28ce33a15027918e5ca19c342",
+  "source": "scripts/sql/r01_needs_projection_20261107.sql",
+  "canonical_file": "supabase/migrations/20261107114458_r01_needs_projection_20261107.sql",
+  "migration": {
+    "version": "20261107114458",
+    "name": "r01_needs_projection_20261107",
+    "statement_count": 1,
+    "joined_md5": "300aacd085335b4dc847646a2bc65ecc",
+    "joined_sha256": "f79cebd5df556a4f8c107c5696702cd42bbd3d9d38b003cd6c3487d561cc5fa3",
+    "joined_bytes": 18460
+  },
+  "after_migration_count": 340,
+  "preflight": {
+    "exact_relation_acl": true,
+    "exact_42_columns_and_acls": true,
+    "exact_6_policies": true,
+    "exact_12_function_bodies_and_metadata": true,
+    "unreviewed_invoker_or_view_dependencies": false
+  },
+  "readback": {
+    "all_12_full_function_definitions_identical": true,
+    "all_function_owner_security_search_path_acl_identical": true,
+    "all_6_rls_policies_identical": true,
+    "relation": {
+      "acl": "{postgres=arwdDxtm/postgres,anon=Dxtm/postgres,authenticated=awDxtm/postgres,service_role=arwdDxtm/postgres}",
+      "rls": true,
+      "kind": "r",
+      "owner": "postgres",
+      "forceRls": false
+    },
+    "authenticated_allowed_columns": [
+      "id",
+      "requester_account_id",
+      "requester_profile_id",
+      "status",
+      "title",
+      "description",
+      "category",
+      "approximate_city",
+      "approximate_area",
+      "approximate_lat",
+      "approximate_lng",
+      "schedule_kind",
+      "starts_at",
+      "ends_at",
+      "required_slots",
+      "mode",
+      "requester_price_rsd",
+      "required_skills",
+      "required_tools",
+      "required_vehicles",
+      "verified_identity_required",
+      "urgent",
+      "public_photo_paths",
+      "revision",
+      "published_at",
+      "created_at",
+      "updated_at",
+      "response_deadline",
+      "urgent_activated_at",
+      "urgent_expires_at",
+      "urgent_policy_version",
+      "minimum_experience_years",
+      "execution_location_mode",
+      "approx_geog",
+      "required_licenses",
+      "remaining_search_closed_at",
+      "task_country_code",
+      "task_timezone",
+      "price_basis",
+      "category_id"
+    ],
+    "authenticated_denied_columns": [
+      "remaining_search_closed_by_account_id",
+      "remaining_search_close_reason"
+    ],
+    "anon_allowed_column_count": 0,
+    "service_role_allowed_column_count": 42,
+    "non_select_grants_unchanged": true,
+    "schema_columns_types_generated_and_notnull_unchanged": true,
+    "exact_source_ledger_canonical_bytes": true
+  },
+  "local_verification": {
+    "command": "node --test scripts/r01-needs-projection.test.cjs",
+    "tests": 11,
+    "passed": 11,
+    "postgres_runtime": "PGlite/PostgreSQL 18",
+    "synthetic_internal_reason_exposure_reproduced": true,
+    "private_columns_star_and_full_row_denied": true,
+    "actual_reader_bodies_exercised": [
+      "rpc_read_task",
+      "rpc_list_my_tasks",
+      "fn_need_urgency",
+      "rpc_discovery_v1",
+      "rpc_list_open_tasks_v3",
+      "rpc_resolve_activity_event"
+    ],
+    "public_column_count_retained": 40,
+    "rls_draft_world_participant_closure_checks_passed": true,
+    "fixture_limits": "PGlite tests real grants, RLS, captured readers and computed-field owner boundaries. PostGIS geography uses an inert test domain. Auth JWT, PostgREST, live safety/lineage services, maps and native behavior remain separate proof."
+  },
+  "ordinary_jwt_probe": {
+    "before_apply": "QA ordinary B -> A owned TEST published task: row visible, internal fields present but null, need_sensitive relation empty; rpc_read_task succeeded.",
+    "after_apply": {"same_test_subject_and_ordinary_accounts":true,"requester_internal_columns":{"http_status":403,"sqlstate":"42501"},"requester_select_star":{"http_status":403,"sqlstate":"42501"},"worker_internal_columns":{"http_status":403,"sqlstate":"42501"},"worker_select_star":{"http_status":403,"sqlstate":"42501"},"worker_public_columns_http_status":200,"worker_rpc_read_task_http_status":200,"public_reader_omits_internal_columns":true,"probe_owner":"product_qa","native":false},
+    "evidence": "conversation-intent-qa/ordinary-api-e2e.receipt.json"
+  },
+  "proof_boundary": {
+    "source_implemented": true,
+    "dev_sql_confirmed": true,
+    "ci_confirmed": false,
+    "native_e2e": false,
+    "historical_nonempty_private_leak_proven": false,
+    "legacy_privileged_key_revoked": false,
+    "historical_rows_rewritten": false,
+    "two_ordinary_user_projection_confirmed": true
+  },
+  "function_readback": [
+    {
+      "signature": "public.covered_slots(public.needs)",
+      "body_md5": "ac09f84c85ff8ae237c8db463a43d547",
+      "full_definition_identical": true,
+      "owner": "postgres",
+      "definer": true,
+      "config": [
+        "search_path=public, pg_temp"
+      ],
+      "acl": "{postgres=X/postgres,service_role=X/postgres,authenticated=X/postgres}"
+    },
+    {
+      "signature": "public.fn_need_urgency(uuid)",
+      "body_md5": "8845c7ad50ab5e64aa853043c113a15a",
+      "full_definition_identical": true,
+      "owner": "postgres",
+      "definer": false,
+      "config": [
+        "search_path=pg_catalog"
+      ],
+      "acl": "{postgres=X/postgres,authenticated=X/postgres,service_role=X/postgres}"
+    },
+    {
+      "signature": "public.is_my_task(uuid)",
+      "body_md5": "42b6802d2f3114d1e211025c4c475e55",
+      "full_definition_identical": true,
+      "owner": "postgres",
+      "definer": true,
+      "config": [
+        "search_path=pg_catalog"
+      ],
+      "acl": "{postgres=X/postgres,service_role=X/postgres,authenticated=X/postgres}"
+    },
+    {
+      "signature": "public.rpc_discovery_v1(jsonb)",
+      "body_md5": "a5ce63c8874fbd3550730dd46d4044d7",
+      "full_definition_identical": true,
+      "owner": "postgres",
+      "definer": false,
+      "config": [
+        "search_path=pg_catalog"
+      ],
+      "acl": "{postgres=X/postgres,authenticated=X/postgres,service_role=X/postgres}"
+    },
+    {
+      "signature": "public.rpc_list_my_tasks()",
+      "body_md5": "2a8ff0fa8a1211414e5e1fc69c6fb4f7",
+      "full_definition_identical": true,
+      "owner": "postgres",
+      "definer": true,
+      "config": [
+        "search_path=pg_catalog"
+      ],
+      "acl": "{postgres=X/postgres,service_role=X/postgres,authenticated=X/postgres}"
+    },
+    {
+      "signature": "public.rpc_list_open_tasks_v3(jsonb,jsonb,integer,timestamp with time zone,uuid)",
+      "body_md5": "7c1d9a979585deae6c2bc2c1b9d597b1",
+      "full_definition_identical": true,
+      "owner": "postgres",
+      "definer": false,
+      "config": [
+        "search_path=pg_catalog"
+      ],
+      "acl": "{postgres=X/postgres,authenticated=X/postgres,service_role=X/postgres}"
+    },
+    {
+      "signature": "public.rpc_read_task(uuid)",
+      "body_md5": "1e01db5140248f27ab374187f01fded3",
+      "full_definition_identical": true,
+      "owner": "postgres",
+      "definer": false,
+      "config": [
+        "search_path=pg_catalog"
+      ],
+      "acl": "{postgres=X/postgres,service_role=X/postgres,authenticated=X/postgres}"
+    },
+    {
+      "signature": "public.rpc_resolve_activity_event(uuid)",
+      "body_md5": "e5dc05773da08471db572194caf467e2",
+      "full_definition_identical": true,
+      "owner": "postgres",
+      "definer": false,
+      "config": [
+        "search_path=pg_catalog"
+      ],
+      "acl": "{postgres=X/postgres,authenticated=X/postgres,service_role=X/postgres}"
+    },
+    {
+      "signature": "public.rpc_storage_account_open()",
+      "body_md5": "7350621ef256678e209aa6a28c79b58b",
+      "full_definition_identical": true,
+      "owner": "postgres",
+      "definer": true,
+      "config": [
+        "search_path=pg_catalog"
+      ],
+      "acl": "{postgres=X/postgres,authenticated=X/postgres,service_role=X/postgres}"
+    },
+    {
+      "signature": "public.selectable_application_count(public.needs)",
+      "body_md5": "fe53442f8b661d6f33d22a54e2a468a8",
+      "full_definition_identical": true,
+      "owner": "postgres",
+      "definer": true,
+      "config": [
+        "search_path=pg_catalog"
+      ],
+      "acl": "{postgres=X/postgres,authenticated=X/postgres,service_role=X/postgres}"
+    },
+    {
+      "signature": "rls_private.need_participant_can_read(uuid)",
+      "body_md5": "c23e2bbab829ad716435e56862a495b6",
+      "full_definition_identical": true,
+      "owner": "postgres",
+      "definer": true,
+      "config": [
+        "search_path=pg_catalog"
+      ],
+      "acl": "{postgres=X/postgres,authenticated=X/postgres}"
+    },
+    {
+      "signature": "rls_private.p6_discovery_test_world_accounts()",
+      "body_md5": "6193869dd532dbe5d2723c078940d10e",
+      "full_definition_identical": true,
+      "owner": "postgres",
+      "definer": true,
+      "config": [
+        "search_path=pg_catalog"
+      ],
+      "acl": "{postgres=X/postgres,authenticated=X/postgres}"
+    }
+  ]
+}

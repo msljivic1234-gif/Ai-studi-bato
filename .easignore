@@ -1,0 +1,75 @@
+# Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
+
+# dependencies
+node_modules/
+
+# Expo
+.expo/
+dist/
+web-build/
+expo-env.d.ts
+
+# Native
+.kotlin/
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+
+# Metro
+.metro-health-check*
+
+# debug
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# macOS
+.DS_Store
+*.pem
+
+# local env files
+.env*.local
+
+# typescript
+*.tsbuildinfo
+
+example
+
+# generated native folders
+/ios
+/android
+
+# canonical HTML-derived native entry artifacts
+/assets/generated/
+/src/ui/referenceEntry/entryReferenceData.ts
+
+# lokalni env (anon key je public-by-design, ali ne ide u git)
+.env
+
+# Supabase CLI scratch
+supabase/.temp/
+/proof-out/
+
+# Disposable CI proof outputs and Python bytecode (retained evidence lives in docs/)
+/artifacts/
+/dist-w01/
+__pycache__/
+
+# Local scratch and disposable logs; retained evidence belongs in docs/.
+/work/
+
+# EAS project transfer only: retain all gitignore rules above.
+/docs/
+/tests/
+/__mocks__/
+/supabase/candidates/
+/supabase/proofs/
+/supabase/operations/
+/supabase/migrations/
+/src/designLab/
+**/__tests__/
+**/*.test.*
+**/*.spec.*

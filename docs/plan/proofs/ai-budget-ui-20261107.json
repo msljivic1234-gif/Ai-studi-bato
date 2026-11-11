@@ -1,0 +1,51 @@
+{
+  "task": "R06/R09 client recovery for unavailable AI and speech",
+  "capturedAt": "2026-11-07T15:45:46.981674+00:00",
+  "sourceBaseCommit": "833885296d6e4bad0e49acb58ac72a247df911aa",
+  "status": [
+    "SOURCE_IMPLEMENTED",
+    "LOCAL_TESTED"
+  ],
+  "before": {
+    "sameNewTests": 15,
+    "passed": 9,
+    "failed": 6,
+    "expectedReproduction": true,
+    "defects": [
+      "Worker readback masked a refused new AI turn in four cases.",
+      "Speech error/close before ready claimed an established connection had failed."
+    ]
+  },
+  "after": {
+    "targetedPassed": 15,
+    "targetedFailed": 0,
+    "relatedPassed": 69,
+    "relatedFailed": 0,
+    "integratedActivePassedBeforeFinalKeyFlag": 573,
+    "typescriptExitCode": 0
+  },
+  "behavior": [
+    "Worker keeps fresh readback, the refused-turn message and unsubmitted text. Only the same canonical SUCCEEDED/PROCESSING request supersedes a lost response.",
+    "The explicit conversation check does not resend. Save, activation and publication remain separately confirmed.",
+    "Speech service unavailable before ready does not start the microphone or reconnect. A later connection failure preserves recognized words."
+  ],
+  "files": [
+    {
+      "path": "src/app/(app)/profil/razgovor.tsx",
+      "sha256": "bdb0854ac807ba9c328d8c644434dfbc24557b2ee4dc8163841a5d52d6463b72"
+    },
+    {
+      "path": "src/features/voice/nativeSpeechAdapter.ts",
+      "sha256": "917200cd267564c22470ebcc33ebb47420fd98f247e40a2752e7c0ed5e141b4c"
+    },
+    {
+      "path": "scripts/ai-budget-client-recovery.test.cjs",
+      "sha256": "c155d7efe59c4547507b850d4d52a45820fd4b17899778a4fb453b2bb7dfcfe6"
+    }
+  ],
+  "paidProviderCalls": 0,
+  "nativeConfirmed": false,
+  "limits": [
+    "Runtime tests use real client modules and screen callbacks with controlled network/native boundaries. No installed APK, live microphone or new model success is claimed."
+  ]
+}

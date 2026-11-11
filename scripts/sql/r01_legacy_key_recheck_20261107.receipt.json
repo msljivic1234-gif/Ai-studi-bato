@@ -1,0 +1,29 @@
+{
+  "schema": "R01_LEGACY_KEY_RECHECK_V1",
+  "capturedAt": "2026-11-07T15:25:28.184542+00:00",
+  "project": "leqcwgzvjsxugfgzdmth",
+  "scope": "GET needs select=id limit=0 only; no user rows, no mutation",
+  "keySha256": "3a130d7a360260e307ae11b95db987b27c1d73d9232a59a7720b3d28c22c9776",
+  "historicalKeyAndBearer": {
+    "httpStatus": 200,
+    "emptyArray": true,
+    "rowsReturned": 0
+  },
+  "modernPublicAndHistoricalBearer": {
+    "httpStatus": 200,
+    "emptyArray": true,
+    "rowsReturned": 0
+  },
+  "invalidBearerNegative": {
+    "httpStatus": 401,
+    "errorCode": "PGRST301",
+    "rowsReturned": 0
+  },
+  "secretValuesIncluded": false,
+  "keyRevoked": false,
+  "managementAccess": {
+    "apiKeyWriteTool": false,
+    "connectedExtension": false,
+    "authenticatedDashboardObserved": false
+  }
+}

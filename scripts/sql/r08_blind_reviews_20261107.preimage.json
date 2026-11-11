@@ -1,0 +1,1655 @@
+{
+  "scope": "Read-only canonical DEV function definitions and catalog metadata; no review records/comments.",
+  "project": "leqcwgzvjsxugfgzdmth",
+  "sourceCommit": "20903892d7f5def28ce33a15027918e5ca19c342",
+  "functions": [
+    {
+      "name": "private.account_reputation",
+      "signature": "private.account_reputation(uuid)",
+      "args": "account_id uuid",
+      "result": "jsonb",
+      "definition": "CREATE OR REPLACE FUNCTION private.account_reputation(account_id uuid)\n RETURNS jsonb\n LANGUAGE sql\n STABLE SECURITY DEFINER\n SET search_path TO 'pg_catalog'\nAS $function$\n select jsonb_build_object('accountId',account_id,'reviewCount',count(*),\n 'averageRating',case when count(*)=0 then null else round(avg(rating),2) end,\n 'state',case when count(*)=0 then 'NO_REVIEWS' else 'RATED' end,'authoritative',true)\n from private.agreement_reviews where target_account_id=account_id;\n$function$\n",
+      "body_md5": "f03e558ff56a31a0b49e394714b628cd",
+      "owner": "postgres",
+      "acl": "{postgres=X/postgres}",
+      "config": [
+        "search_path=pg_catalog"
+      ],
+      "definer": true,
+      "strict": false,
+      "volatility": "s",
+      "catalog_attributes": {
+        "oid": "22763",
+        "proacl": [
+          "postgres=X/postgres"
+        ],
+        "probin": null,
+        "procost": 100,
+        "prokind": "f",
+        "prolang": "14",
+        "proname": "account_reputation",
+        "prorows": 0,
+        "pronargs": 1,
+        "proowner": "16388",
+        "proconfig": [
+          "search_path=pg_catalog"
+        ],
+        "proretset": false,
+        "prosecdef": true,
+        "prorettype": "3802",
+        "prosqlbody": null,
+        "prosupport": "-",
+        "proargmodes": null,
+        "proargnames": [
+          "account_id"
+        ],
+        "proargtypes": [
+          "2950"
+        ],
+        "proisstrict": false,
+        "proparallel": "u",
+        "protrftypes": null,
+        "provariadic": "0",
+        "provolatile": "s",
+        "proleakproof": false,
+        "pronamespace": "18078",
+        "proallargtypes": null,
+        "proargdefaults": null,
+        "pronargdefaults": 0
+      }
+    },
+    {
+      "name": "private.accounts_same_world",
+      "signature": "private.accounts_same_world(uuid,uuid)",
+      "args": "p_a uuid, p_b uuid",
+      "result": "boolean",
+      "definition": "CREATE OR REPLACE FUNCTION private.accounts_same_world(p_a uuid, p_b uuid)\n RETURNS boolean\n LANGUAGE sql\n STABLE SECURITY DEFINER\n SET search_path TO 'pg_catalog'\nAS $function$\n  select private.account_visibility_world(p_a) = private.account_visibility_world(p_b);\n$function$\n",
+      "body_md5": "16f541f952d4e1e2dbb4fc87e594d572",
+      "owner": "postgres",
+      "acl": "{postgres=X/postgres}",
+      "config": [
+        "search_path=pg_catalog"
+      ],
+      "definer": true,
+      "strict": false,
+      "volatility": "s",
+      "catalog_attributes": {
+        "oid": "24330",
+        "proacl": [
+          "postgres=X/postgres"
+        ],
+        "probin": null,
+        "procost": 100,
+        "prokind": "f",
+        "prolang": "14",
+        "proname": "accounts_same_world",
+        "prorows": 0,
+        "pronargs": 2,
+        "proowner": "16388",
+        "proconfig": [
+          "search_path=pg_catalog"
+        ],
+        "proretset": false,
+        "prosecdef": true,
+        "prorettype": "16",
+        "prosqlbody": null,
+        "prosupport": "-",
+        "proargmodes": null,
+        "proargnames": [
+          "p_a",
+          "p_b"
+        ],
+        "proargtypes": [
+          "2950",
+          "2950"
+        ],
+        "proisstrict": false,
+        "proparallel": "u",
+        "protrftypes": null,
+        "provariadic": "0",
+        "provolatile": "s",
+        "proleakproof": false,
+        "pronamespace": "18078",
+        "proallargtypes": null,
+        "proargdefaults": null,
+        "pronargdefaults": 0
+      }
+    },
+    {
+      "name": "private.audit_marketplace",
+      "signature": "private.audit_marketplace(uuid,text,text,uuid,integer,jsonb)",
+      "args": "p_actor uuid, p_event_type text, p_entity_type text, p_entity_id uuid, p_entity_version integer DEFAULT NULL::integer, p_detail jsonb DEFAULT '{}'::jsonb",
+      "result": "void",
+      "definition": "CREATE OR REPLACE FUNCTION private.audit_marketplace(p_actor uuid, p_event_type text, p_entity_type text, p_entity_id uuid, p_entity_version integer DEFAULT NULL::integer, p_detail jsonb DEFAULT '{}'::jsonb)\n RETURNS void\n LANGUAGE sql\n SECURITY DEFINER\n SET search_path TO 'pg_catalog'\nAS $function$\n  insert into private.marketplace_audit_log (\n    actor_user_id, event_type, entity_type, entity_id, entity_version, detail\n  ) values (\n    p_actor, p_event_type, p_entity_type, p_entity_id, p_entity_version,\n    coalesce(p_detail, '{}'::jsonb)\n  );\n$function$\n",
+      "body_md5": "ef33e1d34afb1507071c47253a13c9b2",
+      "owner": "postgres",
+      "acl": "{postgres=X/postgres}",
+      "config": [
+        "search_path=pg_catalog"
+      ],
+      "definer": true,
+      "strict": false,
+      "volatility": "v",
+      "catalog_attributes": {
+        "oid": "20786",
+        "proacl": [
+          "postgres=X/postgres"
+        ],
+        "probin": null,
+        "procost": 100,
+        "prokind": "f",
+        "prolang": "14",
+        "proname": "audit_marketplace",
+        "prorows": 0,
+        "pronargs": 6,
+        "proowner": "16388",
+        "proconfig": [
+          "search_path=pg_catalog"
+        ],
+        "proretset": false,
+        "prosecdef": true,
+        "prorettype": "2278",
+        "prosqlbody": null,
+        "prosupport": "-",
+        "proargmodes": null,
+        "proargnames": [
+          "p_actor",
+          "p_event_type",
+          "p_entity_type",
+          "p_entity_id",
+          "p_entity_version",
+          "p_detail"
+        ],
+        "proargtypes": [
+          "2950",
+          "25",
+          "25",
+          "2950",
+          "23",
+          "3802"
+        ],
+        "proisstrict": false,
+        "proparallel": "u",
+        "protrftypes": null,
+        "provariadic": "0",
+        "provolatile": "v",
+        "proleakproof": false,
+        "pronamespace": "18078",
+        "proallargtypes": null,
+        "proargdefaults": "({CONST :consttype 23 :consttypmod -1 :constcollid 0 :constlen 4 :constbyval true :constisnull true :location -1 :constvalue <>} {CONST :consttype 3802 :consttypmod -1 :constcollid 0 :constlen -1 :constbyval false :constisnull false :location -1 :constvalue 8 [ 32 0 0 0 0 0 0 32 ]})",
+        "pronargdefaults": 2
+      }
+    },
+    {
+      "name": "private.closure_redaction_relations_v5",
+      "signature": "private.closure_redaction_relations_v5()",
+      "args": "",
+      "result": "text[]",
+      "definition": "CREATE OR REPLACE FUNCTION private.closure_redaction_relations_v5()\n RETURNS text[]\n LANGUAGE sql\n IMMUTABLE SECURITY DEFINER\n SET search_path TO 'pg_catalog'\nAS $function$ SELECT ARRAY['private.work_taxonomy_review_outbox_v1','private.work_taxonomy_pending_reviews_v1','private.work_taxonomy_gemini_turn_hints_v1','private.work_taxonomy_admissions_v1','private.work_taxonomy_review_batches_v1','private.work_taxonomy_related_acceptances','private.taxonomy_confirmed_worker_modes_v1','private.work_taxonomy_worker_capabilities','private.worker_execution_mode_choices','private.work_taxonomy_need_skills','private.work_taxonomy_need_snapshots','private.work_taxonomy_need_bindings_v1','private.work_taxonomy_worker_bindings_v1','private.dev_phase1_20261014_worker_capabilities_snapshot','private.dev_phase1_20261014_opportunity_snapshot','private.dev_phase1_20261014_dispatch_snapshot','private.dev_test101_owner_worker_profile_backup','private.dev_test101_owner_profile_backup_20261014','private.dev_worker_profile_reset_snapshots_v1','private.dev_phase1_20261014_needs_snapshot','private.requester_identity_commands','private.worker_ai_saves','private.ai_task_review_commands','private.ai_task_reviews','private.worker_ai_reviews','private.worker_ai_sessions','public.ai_action_proposals','public.ai_structured_facts','public.ai_messages','private.ai_need_turn_commands','private.worker_ai_turns','public.ai_conversations','private.need_draft_save_commands','private.need_edit_commands','private.need_publish_commands','private.response_submit_commands','private.response_withdraw_commands','private.response_revision_resolution_commands','private.remaining_search_close_commands','private.preselection_qa_commands','private.qa_ai_commands','private.need_publication_decisions','private.need_revision_events','private.preselection_qa_answer_versions','private.preselection_qa_questions','private.preselection_qa_policy_decisions','private.preselection_qa_materiality_decisions','private.response_application_snapshots','public.marketplace_response_versions','public.marketplace_responses','public.agreement_invalidations_v1','public.agreement_messages','private.group_messages_v5','public.agreement_versions','public.agreement_change_proposals','public.agreement_execution','private.agreement_location_points','private.agreement_location_commands','public.need_sensitive','public.need_geography','public.need_requirement_details','public.needs','public.data_export_requests','private.data_export_artifacts','public.notification_push_attempts','public.notification_deliveries','public.user_activity_events','public.notification_push_devices','public.notification_preferences','public.opportunity_deliveries','private.dispatch_schedule','public.dispatch_rounds','public.access_grants','public.profile_availability_rules','public.profile_availability_windows','public.worker_match_preferences','private.worker_calendar_events','private.worker_calendar_serialization','private.support_read_markers_v5','private.owned_media_assets','private.agreement_photo_uploads_v5','private.agreement_voice_uploads_v1','private.account_block_commands','private.marketplace_audit_log','private.retention_jobs','private.retention_holds','private.support_commands_v5','private.support_grant_commands_v5','private.account_lineage_events_v5','private.account_lineage_v5','private.group_message_visibility_v5','private.ai_test_accounts_v5','private.support_operator_grants_v5','public.app_profiles','public.app_accounts','private.agreement_review_comments_v1']::text[]; $function$\n",
+      "body_md5": "102e417ab6d52ab0eec421a8bda5c0c4",
+      "owner": "postgres",
+      "acl": "{postgres=X/postgres}",
+      "config": [
+        "search_path=pg_catalog"
+      ],
+      "definer": true,
+      "strict": false,
+      "volatility": "i",
+      "catalog_attributes": {
+        "oid": "24172",
+        "proacl": [
+          "postgres=X/postgres"
+        ],
+        "probin": null,
+        "procost": 100,
+        "prokind": "f",
+        "prolang": "14",
+        "proname": "closure_redaction_relations_v5",
+        "prorows": 0,
+        "pronargs": 0,
+        "proowner": "16388",
+        "proconfig": [
+          "search_path=pg_catalog"
+        ],
+        "proretset": false,
+        "prosecdef": true,
+        "prorettype": "1009",
+        "prosqlbody": null,
+        "prosupport": "-",
+        "proargmodes": null,
+        "proargnames": null,
+        "proargtypes": [],
+        "proisstrict": false,
+        "proparallel": "u",
+        "protrftypes": null,
+        "provariadic": "0",
+        "provolatile": "i",
+        "proleakproof": false,
+        "pronamespace": "18078",
+        "proallargtypes": null,
+        "proargdefaults": null,
+        "pronargdefaults": 0
+      }
+    },
+    {
+      "name": "private.closure_redaction_scope_v5",
+      "signature": "private.closure_redaction_scope_v5(text)",
+      "args": "r text",
+      "result": "text",
+      "definition": "CREATE OR REPLACE FUNCTION private.closure_redaction_scope_v5(r text)\n RETURNS text\n LANGUAGE plpgsql\n IMMUTABLE SECURITY DEFINER\n SET search_path TO 'pg_catalog'\nAS $function$\nbegin\n if r=ANY(ARRAY['private.work_taxonomy_review_outbox_v1','private.work_taxonomy_pending_reviews_v1','private.work_taxonomy_gemini_turn_hints_v1','private.work_taxonomy_admissions_v1','private.work_taxonomy_review_batches_v1','private.work_taxonomy_related_acceptances','private.taxonomy_confirmed_worker_modes_v1','private.work_taxonomy_worker_capabilities','private.worker_execution_mode_choices','private.work_taxonomy_need_skills','private.work_taxonomy_need_snapshots','private.work_taxonomy_need_bindings_v1','private.work_taxonomy_worker_bindings_v1','private.dev_phase1_20261014_worker_capabilities_snapshot','private.dev_phase1_20261014_opportunity_snapshot','private.dev_phase1_20261014_dispatch_snapshot','private.dev_test101_owner_worker_profile_backup','private.dev_test101_owner_profile_backup_20261014','private.dev_worker_profile_reset_snapshots_v1','private.dev_phase1_20261014_needs_snapshot']::text[]) then return private.closure_taxonomy_scope_v1(r);end if;\n if not(r=any(private.closure_redaction_relations_v5())) then raise exception 'ERASURE_RELATION_NOT_ADMITTED';end if;\n return case\n when r='public.agreement_invalidations_v1' then\n  't.agreement_id in(select id from public.agreements where requester_account_id=$1 or worker_account_id=$1)'\n when r='public.app_accounts' then 't.id=$1'\n when r in('public.app_profiles','public.ai_conversations','public.ai_messages','public.ai_structured_facts','public.ai_action_proposals',\n  'private.requester_identity_commands','private.worker_ai_saves','private.ai_task_review_commands','private.ai_task_reviews','private.worker_ai_reviews',\n  'private.worker_ai_sessions','private.ai_need_turn_commands','private.worker_ai_turns','private.need_draft_save_commands','private.qa_ai_commands',\n  'private.data_export_artifacts','public.data_export_requests','private.owned_media_assets','private.agreement_photo_uploads_v5','private.agreement_voice_uploads_v1',\n  'private.retention_jobs','private.retention_holds','private.support_commands_v5','private.support_grant_commands_v5',\n  'private.group_message_visibility_v5','private.ai_test_accounts_v5','private.support_operator_grants_v5','private.support_read_markers_v5','private.account_lineage_v5','private.account_lineage_events_v5') then 't.account_id=$1'\n when r='private.agreement_review_comments_v1' then 't.author_account_id=$1' when r in('private.need_edit_commands','private.need_publish_commands','private.remaining_search_close_commands') then 't.requester_account_id=$1'\n when r in('private.response_submit_commands','private.response_withdraw_commands','private.response_revision_resolution_commands',\n  'public.marketplace_responses','public.worker_match_preferences','private.worker_calendar_events','public.opportunity_deliveries') then 't.worker_account_id=$1'\n when r in('public.profile_availability_rules','public.profile_availability_windows') then 't.profile_id in(select id from public.app_profiles where account_id=$1)'\n when r='private.worker_calendar_serialization' then 't.worker_profile_id in(select id from public.app_profiles where account_id=$1)'\n when r in('public.need_sensitive','public.need_geography','public.need_requirement_details','private.need_revision_events','private.need_publication_decisions',\n  'private.dispatch_schedule','public.dispatch_rounds') then 't.need_id in(select id from public.needs where requester_account_id=$1)'\n when r='public.needs' then 't.requester_account_id=$1'\n when r in('private.response_application_snapshots','public.marketplace_response_versions') then 't.response_id in(select id from public.marketplace_responses where worker_account_id=$1)'\n when r='private.preselection_qa_questions' then 't.asker_account_id=$1'\n when r='private.preselection_qa_answer_versions' then 't.answered_by_account_id=$1'\n when r='private.preselection_qa_policy_decisions' then\n  '(t.question_id in(select id from private.preselection_qa_questions where asker_account_id=$1) or t.need_id in(select id from public.needs where requester_account_id=$1) or t.id in(select policy_decision_id from private.qa_ai_commands where account_id=$1))'\n when r='private.preselection_qa_materiality_decisions' then\n  '(t.question_id in(select id from private.preselection_qa_questions where asker_account_id=$1) or t.need_id in(select id from public.needs where requester_account_id=$1) or t.id in(select materiality_decision_id from private.qa_ai_commands where account_id=$1))'\n when r in('private.preselection_qa_commands','private.account_block_commands','private.agreement_location_commands','private.agreement_location_points') then 't.actor_account_id=$1'\n when r in('public.agreement_messages','private.group_messages_v5') then 't.sender_account_id=$1'\n when r='public.agreement_change_proposals' then 't.agreement_id in(select id from public.agreements where $1 in(requester_account_id,worker_account_id))'\n when r='public.agreement_versions' then 't.agreement_id in(select id from public.agreements where $1 in(requester_account_id,worker_account_id))'\n when r='public.agreement_execution' then 't.problem_opened_by=$1'\n when r='public.access_grants' then '$1 in(t.granted_by_account_id,t.granted_to_account_id)'\n when r in('public.notification_preferences','public.notification_push_devices') then 't.user_id=$1'\n when r='public.notification_push_attempts' then 't.delivery_id in(select id from public.notification_deliveries where recipient_user_id=$1) or t.device_id in(select id from public.notification_push_devices where user_id=$1)'\n when r='public.notification_deliveries' then 't.recipient_user_id=$1'\n when r='public.user_activity_events' then 't.recipient_user_id=$1 or t.entity_id in(select id from public.needs where requester_account_id=$1)'\n when r='private.marketplace_audit_log' then 't.actor_user_id=$1 or t.entity_id in(select id from public.needs where requester_account_id=$1) or t.entity_id in(select id from public.marketplace_responses where worker_account_id=$1)'\n else null end;\nend $function$\n",
+      "body_md5": "81dbe706544b14990da7fe2bebb6bbb2",
+      "owner": "postgres",
+      "acl": "{postgres=X/postgres}",
+      "config": [
+        "search_path=pg_catalog"
+      ],
+      "definer": true,
+      "strict": false,
+      "volatility": "i",
+      "catalog_attributes": {
+        "oid": "24177",
+        "proacl": [
+          "postgres=X/postgres"
+        ],
+        "probin": null,
+        "procost": 100,
+        "prokind": "f",
+        "prolang": "13619",
+        "proname": "closure_redaction_scope_v5",
+        "prorows": 0,
+        "pronargs": 1,
+        "proowner": "16388",
+        "proconfig": [
+          "search_path=pg_catalog"
+        ],
+        "proretset": false,
+        "prosecdef": true,
+        "prorettype": "25",
+        "prosqlbody": null,
+        "prosupport": "-",
+        "proargmodes": null,
+        "proargnames": [
+          "r"
+        ],
+        "proargtypes": [
+          "25"
+        ],
+        "proisstrict": false,
+        "proparallel": "u",
+        "protrftypes": null,
+        "provariadic": "0",
+        "provolatile": "i",
+        "proleakproof": false,
+        "pronamespace": "18078",
+        "proallargtypes": null,
+        "proargdefaults": null,
+        "pronargdefaults": 0
+      }
+    },
+    {
+      "name": "private.guard_review_comment_mutation",
+      "signature": "private.guard_review_comment_mutation()",
+      "args": "",
+      "result": "trigger",
+      "definition": "CREATE OR REPLACE FUNCTION private.guard_review_comment_mutation()\n RETURNS trigger\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO 'pg_catalog'\nAS $function$\nbegin\n -- The comment is part of an immutable review: no author edit, no author delete, for every role. Exactly two paths exist, both service-owned and both narrower than the table.\n if auth.role()='service_role' then\n  -- 1. The account-closure erasure certificate (one locked row, one fixed DELETE patch, inside the service-owned SQL transaction): the author's own text goes, the review row stays.\n  if tg_op='DELETE' and private.closure_redaction_allowed_v5(tg_relid,tg_op,to_jsonb(old),null) then return old; end if;\n  -- 2. The audited moderation function: ONLY the two hide columns, ONLY while its transaction-local marker is on, and nothing else of the row may change.\n  if tg_op='UPDATE' and current_setting('uskoci.review_comment_moderation',true) is not distinct from 'on'\n   and (to_jsonb(new)-array['hidden_at','hidden_reason_code']) is not distinct from (to_jsonb(old)-array['hidden_at','hidden_reason_code']) then\n   return new;\n  end if;\n end if;\n raise exception 'REVIEW_COMMENT_IMMUTABLE' using errcode='42501';\nend;\n$function$\n",
+      "body_md5": "5280b99f20c4a7be695d7e16402b3f43",
+      "owner": "postgres",
+      "acl": "{postgres=X/postgres}",
+      "config": [
+        "search_path=pg_catalog"
+      ],
+      "definer": true,
+      "strict": false,
+      "volatility": "v",
+      "catalog_attributes": {
+        "oid": "27102",
+        "proacl": [
+          "postgres=X/postgres"
+        ],
+        "probin": null,
+        "procost": 100,
+        "prokind": "f",
+        "prolang": "13619",
+        "proname": "guard_review_comment_mutation",
+        "prorows": 0,
+        "pronargs": 0,
+        "proowner": "16388",
+        "proconfig": [
+          "search_path=pg_catalog"
+        ],
+        "proretset": false,
+        "prosecdef": true,
+        "prorettype": "2279",
+        "prosqlbody": null,
+        "prosupport": "-",
+        "proargmodes": null,
+        "proargnames": null,
+        "proargtypes": [],
+        "proisstrict": false,
+        "proparallel": "u",
+        "protrftypes": null,
+        "provariadic": "0",
+        "provolatile": "v",
+        "proleakproof": false,
+        "pronamespace": "18078",
+        "proallargtypes": null,
+        "proargdefaults": null,
+        "pronargdefaults": 0
+      }
+    },
+    {
+      "name": "private.guard_review_immutable",
+      "signature": "private.guard_review_immutable()",
+      "args": "",
+      "result": "trigger",
+      "definition": "CREATE OR REPLACE FUNCTION private.guard_review_immutable()\n RETURNS trigger\n LANGUAGE plpgsql\n SET search_path TO 'pg_catalog'\nAS $function$\nbegin raise exception 'REVIEW_IMMUTABLE' using errcode='42501'; end;\n$function$\n",
+      "body_md5": "f883b4ed1be3dfa5401f98f9bdfe1960",
+      "owner": "postgres",
+      "acl": "{postgres=X/postgres}",
+      "config": [
+        "search_path=pg_catalog"
+      ],
+      "definer": false,
+      "strict": false,
+      "volatility": "v",
+      "catalog_attributes": {
+        "oid": "22760",
+        "proacl": [
+          "postgres=X/postgres"
+        ],
+        "probin": null,
+        "procost": 100,
+        "prokind": "f",
+        "prolang": "13619",
+        "proname": "guard_review_immutable",
+        "prorows": 0,
+        "pronargs": 0,
+        "proowner": "16388",
+        "proconfig": [
+          "search_path=pg_catalog"
+        ],
+        "proretset": false,
+        "prosecdef": false,
+        "prorettype": "2279",
+        "prosqlbody": null,
+        "prosupport": "-",
+        "proargmodes": null,
+        "proargnames": null,
+        "proargtypes": [],
+        "proisstrict": false,
+        "proparallel": "u",
+        "protrftypes": null,
+        "provariadic": "0",
+        "provolatile": "v",
+        "proleakproof": false,
+        "pronamespace": "18078",
+        "proallargtypes": null,
+        "proargdefaults": null,
+        "pronargdefaults": 0
+      }
+    },
+    {
+      "name": "private.my_application_state",
+      "signature": "private.my_application_state(text,integer,integer,text,boolean)",
+      "args": "p_raw_status text, p_submitted_revision integer, p_current_revision integer, p_need_status text, p_has_agreement boolean",
+      "result": "text",
+      "definition": "CREATE OR REPLACE FUNCTION private.my_application_state(p_raw_status text, p_submitted_revision integer, p_current_revision integer, p_need_status text, p_has_agreement boolean)\n RETURNS text\n LANGUAGE sql\n IMMUTABLE\n SET search_path TO 'pg_catalog'\nAS $function$\n  select case\n    when p_has_agreement or p_raw_status = 'SELECTED' then 'SELECTED'\n    when p_raw_status = 'WITHDRAWN' then 'WITHDRAWN'\n    when p_raw_status in ('STALE','STALE_REVIEW_REQUIRED')\n         or p_submitted_revision is distinct from p_current_revision then 'STALE_REVIEW_REQUIRED'\n    when p_raw_status in ('NOT_SELECTED','EXPIRED')\n         or p_need_status not in ('PUBLISHED','SELECTION') then 'CLOSED'\n    when p_raw_status = 'VIEWED' then 'VIEWED'\n    when p_raw_status = 'SHORTLISTED' then 'SHORTLISTED'\n    when p_raw_status in ('SUBMITTED','DELIVERED') then 'SUBMITTED'\n    else 'CLOSED'\n  end\n$function$\n",
+      "body_md5": "236c6c9c9625e4fb92522c6c3a1bfe03",
+      "owner": "postgres",
+      "acl": "{postgres=X/postgres}",
+      "config": [
+        "search_path=pg_catalog"
+      ],
+      "definer": false,
+      "strict": false,
+      "volatility": "i",
+      "catalog_attributes": {
+        "oid": "24408",
+        "proacl": [
+          "postgres=X/postgres"
+        ],
+        "probin": null,
+        "procost": 100,
+        "prokind": "f",
+        "prolang": "14",
+        "proname": "my_application_state",
+        "prorows": 0,
+        "pronargs": 5,
+        "proowner": "16388",
+        "proconfig": [
+          "search_path=pg_catalog"
+        ],
+        "proretset": false,
+        "prosecdef": false,
+        "prorettype": "25",
+        "prosqlbody": null,
+        "prosupport": "-",
+        "proargmodes": null,
+        "proargnames": [
+          "p_raw_status",
+          "p_submitted_revision",
+          "p_current_revision",
+          "p_need_status",
+          "p_has_agreement"
+        ],
+        "proargtypes": [
+          "25",
+          "23",
+          "23",
+          "25",
+          "16"
+        ],
+        "proisstrict": false,
+        "proparallel": "u",
+        "protrftypes": null,
+        "provariadic": "0",
+        "provolatile": "i",
+        "proleakproof": false,
+        "pronamespace": "18078",
+        "proallargtypes": null,
+        "proargdefaults": null,
+        "pronargdefaults": 0
+      }
+    },
+    {
+      "name": "private.received_reviews_detail_v1",
+      "signature": "private.received_reviews_detail_v1()",
+      "args": "",
+      "result": "text",
+      "definition": "CREATE OR REPLACE FUNCTION private.received_reviews_detail_v1()\n RETURNS text\n LANGUAGE sql\n STABLE SECURITY DEFINER\n SET search_path TO 'pg_catalog'\nAS $function$\n  -- PROFILE-TRUST (2026-10-07): which of the caller's received reviews are listed one by one. One data row,\n  -- private.marketplace_config 'received_reviews_detail' {\"mode\": \"COMMENTED_ONLY\" | \"ALL\"}. The accepted D12 default keeps a\n  -- star-only review aggregate-only (its author was never told the reviewed person would see it individually); listing every\n  -- review is the owner's decision, so anything other than exactly \"ALL\" reads as COMMENTED_ONLY.\n  select case when (select c.value->>'mode' from private.marketplace_config c where c.key = 'received_reviews_detail') = 'ALL'\n    then 'ALL' else 'COMMENTED_ONLY' end;\n$function$\n",
+      "body_md5": "990523c10a4e40152068570cdb71371d",
+      "owner": "postgres",
+      "acl": "{postgres=X/postgres}",
+      "config": [
+        "search_path=pg_catalog"
+      ],
+      "definer": true,
+      "strict": false,
+      "volatility": "s",
+      "catalog_attributes": {
+        "oid": "27707",
+        "proacl": [
+          "postgres=X/postgres"
+        ],
+        "probin": null,
+        "procost": 100,
+        "prokind": "f",
+        "prolang": "14",
+        "proname": "received_reviews_detail_v1",
+        "prorows": 0,
+        "pronargs": 0,
+        "proowner": "16388",
+        "proconfig": [
+          "search_path=pg_catalog"
+        ],
+        "proretset": false,
+        "prosecdef": true,
+        "prorettype": "25",
+        "prosqlbody": null,
+        "prosupport": "-",
+        "proargmodes": null,
+        "proargnames": null,
+        "proargtypes": [],
+        "proisstrict": false,
+        "proparallel": "u",
+        "protrftypes": null,
+        "provariadic": "0",
+        "provolatile": "s",
+        "proleakproof": false,
+        "pronamespace": "18078",
+        "proallargtypes": null,
+        "proargdefaults": null,
+        "pronargdefaults": 0
+      }
+    },
+    {
+      "name": "private.review_comment_input_v1",
+      "signature": "private.review_comment_input_v1(jsonb)",
+      "args": "p_comment jsonb",
+      "result": "text",
+      "definition": "CREATE OR REPLACE FUNCTION private.review_comment_input_v1(p_comment jsonb)\n RETURNS text\n LANGUAGE plpgsql\n STABLE\n SET search_path TO 'pg_catalog'\nAS $function$\ndeclare v text; n text;\nbegin\n -- Absent: SQL NULL, JSON null, or a string with nothing but white space. Nothing is stored for an absent comment and a later comment can never be added (the review is immutable).\n if p_comment is null or jsonb_typeof(p_comment)='null' then return null; end if;\n if jsonb_typeof(p_comment)<>'string' then raise exception 'REVIEW_COMMENT_INVALID' using errcode='22023'; end if;\n if octet_length(p_comment::text)>8192 then raise exception 'REVIEW_COMMENT_TOO_LONG' using errcode='22023'; end if;\n v:=p_comment#>>'{}';\n -- \"No comment\": white space (an EXPLICIT class: ASCII white space U+0009..U+000D and U+0020, U+0085 and the Unicode separators; never the locale dependent POSIX class, so U+001C..U+001F are not blank and a lone one is INVALID in every\n -- locale), characters that render as nothing but are tolerated inside a sentence (soft hyphen, combining grapheme joiner, braille blank), the two joiners and ALL sixteen variation selectors ONLY. Every class below is built from chr() pieces:\n -- no escape text, no invisible character in this source. The forbidden class below is every default-ignorable code point of Unicode 17.0 except those allowed-inside groups, plus the controls (see README_D12_CANDIDATE.md, Text rules).\n if btrim(v,E' \\n')='' or v ~ ('^[' || chr(9) || '-' || chr(13) || chr(32) || chr(133) || chr(160) || chr(173) || chr(847) || chr(5760) || chr(8192) || '-' || chr(8202) || chr(8204) || '-' || chr(8205) || chr(8232) || '-' || chr(8233) || chr(8239) || chr(8287) || chr(10240) || chr(12288) || chr(65024) || '-' || chr(65039) || ']*$') then return null; end if;\n -- The length is counted in code points of the text as sent; the octet cap is defence in depth (500 code points are at most 2000 octets, so it can never fire first). The server REJECTS, it never normalises (the client compares the echoed text).\n if char_length(v)>500 or octet_length(v)>2000 then raise exception 'REVIEW_COMMENT_TOO_LONG' using errcode='22023'; end if;\n if v<>btrim(v,E' \\n') or v ~ ('[' || chr(1) || '-' || chr(9) || chr(11) || '-' || chr(31) || chr(127) || '-' || chr(159) || chr(1564) || chr(4447) || '-' || chr(4448) || chr(6068) || '-' || chr(6069) || chr(6155) || '-' || chr(6159) || chr(8203) || chr(8206) || '-' || chr(8207) || chr(8232) || '-' || chr(8238) || chr(8288) || '-' || chr(8303) || chr(12644) || chr(65279) || chr(65440) || chr(65520) || '-' || chr(65531) || chr(78896) || '-' || chr(78911) || chr(113824) || '-' || chr(113827) || chr(119155) || '-' || chr(119162) || chr(917504) || '-' || chr(921599) || ']') then raise exception 'REVIEW_COMMENT_INVALID' using errcode='22023'; end if;\n -- Deterministic contact floor (no AI, no provider): e-mail, link, @handle and a phone number that starts with 0, 00, + or 381 (8 to 13 digits, not a date shape) are refused with ONE plain code (the live PKG-029c floor). It runs on the text as sent\n -- AND on an NFKC-normalised copy without invisible characters and with Arabic-Indic and Persian digits mapped to ASCII, so full-width digits or '@', a soft hyphen or a zero-width joiner inside a number do not hide it; the STORED text is the original.\n -- It is a screen against careless contact details, NOT privacy protection: a number without its leading 0 or 381, 7-digit runs, digits split by letters or by combining marks, digits of other numeral systems (for example Devanagari),\n -- spelled-out numbers, bare domains, short links and handles without @ pass.\n n:=translate(regexp_replace(normalize(v,NFKC),('[' || chr(173) || chr(847) || chr(8204) || '-' || chr(8205) || chr(10240) || chr(65024) || '-' || chr(65039) || ']'),'','g'),chr(1632) || chr(1633) || chr(1634) || chr(1635) || chr(1636) || chr(1637) || chr(1638) || chr(1639) || chr(1640) || chr(1641) || chr(1776) || chr(1777) || chr(1778) || chr(1779) || chr(1780) || chr(1781) || chr(1782) || chr(1783) || chr(1784) || chr(1785),'01234567890123456789');\n if private.ru4b_public_floor_reason(v) is not null or private.ru4b_public_floor_reason(n) is not null then raise exception 'REVIEW_COMMENT_CONTACT_NOT_PUBLIC' using errcode='22023'; end if;\n return v;\nend;\n$function$\n",
+      "body_md5": "130692c918a53e26f1d911bbb6482029",
+      "owner": "postgres",
+      "acl": "{postgres=X/postgres}",
+      "config": [
+        "search_path=pg_catalog"
+      ],
+      "definer": false,
+      "strict": false,
+      "volatility": "s",
+      "catalog_attributes": {
+        "oid": "27105",
+        "proacl": [
+          "postgres=X/postgres"
+        ],
+        "probin": null,
+        "procost": 100,
+        "prokind": "f",
+        "prolang": "13619",
+        "proname": "review_comment_input_v1",
+        "prorows": 0,
+        "pronargs": 1,
+        "proowner": "16388",
+        "proconfig": [
+          "search_path=pg_catalog"
+        ],
+        "proretset": false,
+        "prosecdef": false,
+        "prorettype": "25",
+        "prosqlbody": null,
+        "prosupport": "-",
+        "proargmodes": null,
+        "proargnames": [
+          "p_comment"
+        ],
+        "proargtypes": [
+          "3802"
+        ],
+        "proisstrict": false,
+        "proparallel": "u",
+        "protrftypes": null,
+        "provariadic": "0",
+        "provolatile": "s",
+        "proleakproof": false,
+        "pronamespace": "18078",
+        "proallargtypes": null,
+        "proargdefaults": null,
+        "pronargdefaults": 0
+      }
+    },
+    {
+      "name": "private.review_receipt",
+      "signature": "private.review_receipt(private.agreement_reviews,boolean)",
+      "args": "r private.agreement_reviews, replayed boolean",
+      "result": "jsonb",
+      "definition": "CREATE OR REPLACE FUNCTION private.review_receipt(r private.agreement_reviews, replayed boolean)\n RETURNS jsonb\n LANGUAGE plpgsql\n STABLE\n SET search_path TO 'pg_catalog'\nAS $function$\nbegin\n return jsonb_build_object('reviewId',r.id,'agreementId',r.agreement_id,\n 'reviewerAccountId',r.reviewer_account_id,'targetAccountId',r.target_account_id,\n 'rating',r.rating,'tags',to_jsonb(r.tags),'createdAt',r.created_at,\n 'clientRequestId',r.client_request_id,'idempotentReplay',replayed,'authoritative',true);\nend;\n$function$\n",
+      "body_md5": "7058b3cc23f853edaea9cb21cdb865b1",
+      "owner": "postgres",
+      "acl": "{postgres=X/postgres}",
+      "config": [
+        "search_path=pg_catalog"
+      ],
+      "definer": false,
+      "strict": false,
+      "volatility": "s",
+      "catalog_attributes": {
+        "oid": "22762",
+        "proacl": [
+          "postgres=X/postgres"
+        ],
+        "probin": null,
+        "procost": 100,
+        "prokind": "f",
+        "prolang": "13619",
+        "proname": "review_receipt",
+        "prorows": 0,
+        "pronargs": 2,
+        "proowner": "16388",
+        "proconfig": [
+          "search_path=pg_catalog"
+        ],
+        "proretset": false,
+        "prosecdef": false,
+        "prorettype": "3802",
+        "prosqlbody": null,
+        "prosupport": "-",
+        "proargmodes": null,
+        "proargnames": [
+          "r",
+          "replayed"
+        ],
+        "proargtypes": [
+          "22729",
+          "16"
+        ],
+        "proisstrict": false,
+        "proparallel": "u",
+        "protrftypes": null,
+        "provariadic": "0",
+        "provolatile": "s",
+        "proleakproof": false,
+        "pronamespace": "18078",
+        "proallargtypes": null,
+        "proargdefaults": null,
+        "pronargdefaults": 0
+      }
+    },
+    {
+      "name": "private.review_tag_catalog",
+      "signature": "private.review_tag_catalog()",
+      "args": "",
+      "result": "text[]",
+      "definition": "CREATE OR REPLACE FUNCTION private.review_tag_catalog()\n RETURNS text[]\n LANGUAGE sql\n IMMUTABLE\n SET search_path TO 'pg_catalog'\nAS $function$ select array['AS_AGREED','CAREFUL','CLEAR_COMMUNICATION','ON_TIME','RELIABLE','RESPECTFUL']::text[]; $function$\n",
+      "body_md5": "2b2ccb8e1c2672d091c3e319e4b1ea49",
+      "owner": "postgres",
+      "acl": "{postgres=X/postgres}",
+      "config": [
+        "search_path=pg_catalog"
+      ],
+      "definer": false,
+      "strict": false,
+      "volatility": "i",
+      "catalog_attributes": {
+        "oid": "22725",
+        "proacl": [
+          "postgres=X/postgres"
+        ],
+        "probin": null,
+        "procost": 100,
+        "prokind": "f",
+        "prolang": "14",
+        "proname": "review_tag_catalog",
+        "prorows": 0,
+        "pronargs": 0,
+        "proowner": "16388",
+        "proconfig": [
+          "search_path=pg_catalog"
+        ],
+        "proretset": false,
+        "prosecdef": false,
+        "prorettype": "1009",
+        "prosqlbody": null,
+        "prosupport": "-",
+        "proargmodes": null,
+        "proargnames": null,
+        "proargtypes": [],
+        "proisstrict": false,
+        "proparallel": "u",
+        "protrftypes": null,
+        "provariadic": "0",
+        "provolatile": "i",
+        "proleakproof": false,
+        "pronamespace": "18078",
+        "proallargtypes": null,
+        "proargdefaults": null,
+        "pronargdefaults": 0
+      }
+    },
+    {
+      "name": "private.review_tags_valid",
+      "signature": "private.review_tags_valid(text[])",
+      "args": "tags text[]",
+      "result": "boolean",
+      "definition": "CREATE OR REPLACE FUNCTION private.review_tags_valid(tags text[])\n RETURNS boolean\n LANGUAGE sql\n IMMUTABLE\n SET search_path TO 'pg_catalog'\nAS $function$ select tags is not null and coalesce(array_ndims(tags),1)=1\n and cardinality(tags) between 0 and 3 and array_position(tags,null) is null\n and tags <@ private.review_tag_catalog()\n and cardinality(tags)=(select count(distinct t) from unnest(tags) t); $function$\n",
+      "body_md5": "69ca0f79f5869c13bcfaa392cc0ac6fa",
+      "owner": "postgres",
+      "acl": "{postgres=X/postgres}",
+      "config": [
+        "search_path=pg_catalog"
+      ],
+      "definer": false,
+      "strict": false,
+      "volatility": "i",
+      "catalog_attributes": {
+        "oid": "22726",
+        "proacl": [
+          "postgres=X/postgres"
+        ],
+        "probin": null,
+        "procost": 100,
+        "prokind": "f",
+        "prolang": "14",
+        "proname": "review_tags_valid",
+        "prorows": 0,
+        "pronargs": 1,
+        "proowner": "16388",
+        "proconfig": [
+          "search_path=pg_catalog"
+        ],
+        "proretset": false,
+        "prosecdef": false,
+        "prorettype": "16",
+        "prosqlbody": null,
+        "prosupport": "-",
+        "proargmodes": null,
+        "proargnames": [
+          "tags"
+        ],
+        "proargtypes": [
+          "1009"
+        ],
+        "proisstrict": false,
+        "proparallel": "u",
+        "protrftypes": null,
+        "provariadic": "0",
+        "provolatile": "i",
+        "proleakproof": false,
+        "pronamespace": "18078",
+        "proallargtypes": null,
+        "proargdefaults": null,
+        "pronargdefaults": 0
+      }
+    },
+    {
+      "name": "private.safety_grant_valid",
+      "signature": "private.safety_grant_valid(uuid,uuid,timestamp with time zone)",
+      "args": "a uuid, b uuid, granted timestamp with time zone",
+      "result": "boolean",
+      "definition": "CREATE OR REPLACE FUNCTION private.safety_grant_valid(a uuid, b uuid, granted timestamp with time zone)\n RETURNS boolean\n LANGUAGE sql\n STABLE SECURITY DEFINER\n SET search_path TO 'pg_catalog'\nAS $function$ select granted is not null and not private.closure_account_restricted(a) and not private.closure_account_restricted(b)\n and not exists(select 1 from private.account_blocks x\n where ((x.blocker_account_id=a and x.blocked_account_id=b) or (x.blocker_account_id=b and x.blocked_account_id=a))\n and (x.active or x.last_blocked_at>=granted)); $function$\n",
+      "body_md5": "5d658dd5d719427b0ee0b03a5d872866",
+      "owner": "postgres",
+      "acl": "{postgres=X/postgres}",
+      "config": [
+        "search_path=pg_catalog"
+      ],
+      "definer": true,
+      "strict": false,
+      "volatility": "s",
+      "catalog_attributes": {
+        "oid": "22700",
+        "proacl": [
+          "postgres=X/postgres"
+        ],
+        "probin": null,
+        "procost": 100,
+        "prokind": "f",
+        "prolang": "14",
+        "proname": "safety_grant_valid",
+        "prorows": 0,
+        "pronargs": 3,
+        "proowner": "16388",
+        "proconfig": [
+          "search_path=pg_catalog"
+        ],
+        "proretset": false,
+        "prosecdef": true,
+        "prorettype": "16",
+        "prosqlbody": null,
+        "prosupport": "-",
+        "proargmodes": null,
+        "proargnames": [
+          "a",
+          "b",
+          "granted"
+        ],
+        "proargtypes": [
+          "2950",
+          "2950",
+          "1184"
+        ],
+        "proisstrict": false,
+        "proparallel": "u",
+        "protrftypes": null,
+        "provariadic": "0",
+        "provolatile": "s",
+        "proleakproof": false,
+        "pronamespace": "18078",
+        "proallargtypes": null,
+        "proargdefaults": null,
+        "pronargdefaults": 0
+      }
+    },
+    {
+      "name": "public.covered_slots",
+      "signature": "covered_slots(needs)",
+      "args": "n needs",
+      "result": "integer",
+      "definition": "CREATE OR REPLACE FUNCTION public.covered_slots(n needs)\n RETURNS integer\n LANGUAGE sql\n STABLE SECURITY DEFINER\n SET search_path TO 'public', 'pg_temp'\nAS $function$\r\n  select coalesce(sum(s.covered_slots), 0)::integer\r\n    from public.need_selections s\r\n   where s.need_id = n.id and s.status = 'SELECTED';\r\n$function$\n",
+      "body_md5": "ac09f84c85ff8ae237c8db463a43d547",
+      "owner": "postgres",
+      "acl": "{postgres=X/postgres,service_role=X/postgres,authenticated=X/postgres}",
+      "config": [
+        "search_path=public, pg_temp"
+      ],
+      "definer": true,
+      "strict": false,
+      "volatility": "s",
+      "catalog_attributes": {
+        "oid": "20877",
+        "proacl": [
+          "postgres=X/postgres",
+          "service_role=X/postgres",
+          "authenticated=X/postgres"
+        ],
+        "probin": null,
+        "procost": 100,
+        "prokind": "f",
+        "prolang": "14",
+        "proname": "covered_slots",
+        "prorows": 0,
+        "pronargs": 1,
+        "proowner": "16388",
+        "proconfig": [
+          "search_path=public, pg_temp"
+        ],
+        "proretset": false,
+        "prosecdef": true,
+        "prorettype": "23",
+        "prosqlbody": null,
+        "prosupport": "-",
+        "proargmodes": null,
+        "proargnames": [
+          "n"
+        ],
+        "proargtypes": [
+          "17658"
+        ],
+        "proisstrict": false,
+        "proparallel": "u",
+        "protrftypes": null,
+        "provariadic": "0",
+        "provolatile": "s",
+        "proleakproof": false,
+        "pronamespace": "2200",
+        "proallargtypes": null,
+        "proargdefaults": null,
+        "pronargdefaults": 0
+      }
+    },
+    {
+      "name": "public.rpc_confirm_completion",
+      "signature": "rpc_confirm_completion(uuid)",
+      "args": "p_agreement_id uuid",
+      "result": "jsonb",
+      "definition": "CREATE OR REPLACE FUNCTION public.rpc_confirm_completion(p_agreement_id uuid)\n RETURNS jsonb\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO 'pg_catalog'\nAS $function$\ndeclare\n  uid uuid:=auth.uid();\n  v_need_id uuid;\n  n public.needs%rowtype;\n  a public.agreements%rowtype;\n  x public.agreement_execution%rowtype;\n  v_completed_at timestamptz;\n  need_completed boolean;\nbegin\n  if uid is null then raise exception 'AUTH_REQUIRED' using errcode='28000'; end if;\n\n  select ag.need_id into v_need_id from public.agreements ag where ag.id=p_agreement_id;\n  if not found then raise exception 'AGREEMENT_NOT_FOUND' using errcode='P0002'; end if;\n\n  select * into n from public.needs nd where nd.id=v_need_id for update;\n  if not found then raise exception 'NEED_NOT_FOUND' using errcode='P0002'; end if;\n\n  select * into a from public.agreements ag where ag.id=p_agreement_id for update;\n  if not found then raise exception 'AGREEMENT_NOT_FOUND' using errcode='P0002'; end if;\n  if a.need_id<>n.id then raise exception 'AGREEMENT_NEED_MISMATCH' using errcode='P0001'; end if;\n  if a.requester_account_id<>uid then\n    raise exception 'ONLY_REQUESTER_CAN_CONFIRM_COMPLETION' using errcode='42501';\n  end if;\n\n  select * into x from public.agreement_execution ex where ex.agreement_id=a.id for update;\n  if not found then raise exception 'EXECUTION_NOT_FOUND' using errcode='P0002'; end if;\n  if x.agreement_version<>a.current_version then\n    raise exception 'EXECUTION_VERSION_MISMATCH' using errcode='P0001';\n  end if;\n\n  if a.status='COMPLETED' and x.state='COMPLETED' then\n    return jsonb_build_object(\n      'agreementId',a.id,'state','COMPLETED',\n      'completedAt',x.completed_at,\n      'idempotentReplay',true,'authoritative',true\n    );\n  end if;\n\n  if a.status='CANCELLED' or x.state='CANCELLED' then\n    raise exception 'AGREEMENT_CANCELLED' using errcode='P0001';\n  end if;\n\n  if a.status<>'CONFIRMED'\n     or x.state not in ('CONFIRMED','AWAITING_REQUESTER') then\n    raise exception 'COMPLETION_NOT_CONFIRMABLE'\n      using errcode='P0001',\n            detail=jsonb_build_object('agreementStatus',a.status,'executionState',x.state)::text;\n  end if;\n\n  if exists(select 1 from public.agreement_change_proposals where agreement_id=a.id and status='PENDING') then\n    raise exception 'AGREEMENT_CHANGE_PENDING' using errcode='P0001';\n  end if;\n\n  v_completed_at:=statement_timestamp();\n\n  update public.agreement_execution ex\n     set state='COMPLETED',\n         completed_at=coalesce(ex.completed_at,v_completed_at),\n         requester_deadline_at=null,\n         updated_at=statement_timestamp()\n   where ex.agreement_id=a.id\n  returning ex.* into x;\n\n  update public.agreements ag\n     set status='COMPLETED',updated_at=statement_timestamp()\n   where ag.id=a.id;\n\n  need_completed:=private.sync_need_completion(n.id);\n\n  perform private.emit_event(\n    a.worker_account_id,'WORKER','EXECUTION_STATE_CHANGED',\n    'AGREEMENT',a.id,a.current_version,\n    'Dogovor je završen',\n    'Naručilac je potvrdio završetak.',\n    'completed:worker:'||a.id::text||':'||a.current_version::text,\n    'NORMAL',\n    jsonb_build_object('completedAt',x.completed_at),\n    null\n  );\n\n  return jsonb_build_object(\n    'agreementId',a.id,\n    'state','COMPLETED',\n    'completedAt',x.completed_at,\n    'needCompleted',need_completed,\n    'problemWasPreviouslyReported',x.problem_opened_at is not null,\n    'idempotentReplay',false,\n    'authoritative',true\n  );\nend;\n$function$\n",
+      "body_md5": "658006c318c3847ab7a9f80706ef3003",
+      "owner": "postgres",
+      "acl": "{postgres=X/postgres,authenticated=X/postgres,service_role=X/postgres}",
+      "config": [
+        "search_path=pg_catalog"
+      ],
+      "definer": true,
+      "strict": false,
+      "volatility": "v",
+      "catalog_attributes": {
+        "oid": "21890",
+        "proacl": [
+          "postgres=X/postgres",
+          "authenticated=X/postgres",
+          "service_role=X/postgres"
+        ],
+        "probin": null,
+        "procost": 100,
+        "prokind": "f",
+        "prolang": "13619",
+        "proname": "rpc_confirm_completion",
+        "prorows": 0,
+        "pronargs": 1,
+        "proowner": "16388",
+        "proconfig": [
+          "search_path=pg_catalog"
+        ],
+        "proretset": false,
+        "prosecdef": true,
+        "prorettype": "3802",
+        "prosqlbody": null,
+        "prosupport": "-",
+        "proargmodes": null,
+        "proargnames": [
+          "p_agreement_id"
+        ],
+        "proargtypes": [
+          "2950"
+        ],
+        "proisstrict": false,
+        "proparallel": "u",
+        "protrftypes": null,
+        "provariadic": "0",
+        "provolatile": "v",
+        "proleakproof": false,
+        "pronamespace": "2200",
+        "proallargtypes": null,
+        "proargdefaults": null,
+        "pronargdefaults": 0
+      }
+    },
+    {
+      "name": "public.rpc_get_account_reputation",
+      "signature": "rpc_get_account_reputation(uuid)",
+      "args": "p_account_id uuid",
+      "result": "jsonb",
+      "definition": "CREATE OR REPLACE FUNCTION public.rpc_get_account_reputation(p_account_id uuid)\n RETURNS jsonb\n LANGUAGE plpgsql\n STABLE SECURITY DEFINER\n SET search_path TO 'pg_catalog'\nAS $function$\nbegin\n if auth.uid() is null then raise exception 'AUTH_REQUIRED' using errcode='42501'; end if;\n if p_account_id is null or not exists(select 1 from public.app_accounts where id=p_account_id)\n or private.closure_account_restricted(auth.uid()) or private.closure_account_restricted(p_account_id)\n or (auth.uid()<>p_account_id and private.safety_pair_blocked(auth.uid(),p_account_id)) then\n  raise exception 'REPUTATION_NOT_AVAILABLE' using errcode='42501';\n end if;\n return private.account_reputation(p_account_id);\nend;\n$function$\n",
+      "body_md5": "4166221185edf108338898ba04f5e48a",
+      "owner": "postgres",
+      "acl": "{postgres=X/postgres,authenticated=X/postgres,service_role=X/postgres}",
+      "config": [
+        "search_path=pg_catalog"
+      ],
+      "definer": true,
+      "strict": false,
+      "volatility": "s",
+      "catalog_attributes": {
+        "oid": "22767",
+        "proacl": [
+          "postgres=X/postgres",
+          "authenticated=X/postgres",
+          "service_role=X/postgres"
+        ],
+        "probin": null,
+        "procost": 100,
+        "prokind": "f",
+        "prolang": "13619",
+        "proname": "rpc_get_account_reputation",
+        "prorows": 0,
+        "pronargs": 1,
+        "proowner": "16388",
+        "proconfig": [
+          "search_path=pg_catalog"
+        ],
+        "proretset": false,
+        "prosecdef": true,
+        "prorettype": "3802",
+        "prosqlbody": null,
+        "prosupport": "-",
+        "proargmodes": null,
+        "proargnames": [
+          "p_account_id"
+        ],
+        "proargtypes": [
+          "2950"
+        ],
+        "proisstrict": false,
+        "proparallel": "u",
+        "protrftypes": null,
+        "provariadic": "0",
+        "provolatile": "s",
+        "proleakproof": false,
+        "pronamespace": "2200",
+        "proallargtypes": null,
+        "proargdefaults": null,
+        "pronargdefaults": 0
+      }
+    },
+    {
+      "name": "public.rpc_get_my_agreement_review",
+      "signature": "rpc_get_my_agreement_review(uuid)",
+      "args": "p_agreement_id uuid",
+      "result": "jsonb",
+      "definition": "CREATE OR REPLACE FUNCTION public.rpc_get_my_agreement_review(p_agreement_id uuid)\n RETURNS jsonb\n LANGUAGE plpgsql\n STABLE SECURITY DEFINER\n SET search_path TO 'pg_catalog'\nAS $function$\ndeclare u uuid:=auth.uid(); a public.agreements; r private.agreement_reviews; own_review jsonb;\nbegin\n if u is null then raise exception 'AUTH_REQUIRED' using errcode='42501'; end if;\n select * into a from public.agreements where id=p_agreement_id and u in(requester_account_id,worker_account_id);\n if not found then raise exception 'REVIEW_NOT_ALLOWED' using errcode='42501'; end if;\n select * into r from private.agreement_reviews where agreement_id=a.id and reviewer_account_id=u;\n own_review:=case when found then private.review_receipt(r,false) else null end;\n return jsonb_build_object('accountId',u,'agreementId',a.id,\n 'targetAccountId',case when u=a.requester_account_id then a.worker_account_id else a.requester_account_id end,\n 'eligible',own_review is null and not private.closure_account_restricted(u) and a.status='COMPLETED' and exists(select 1 from public.agreement_execution where agreement_id=a.id and state='COMPLETED'),\n 'review',own_review,'tagCatalog',jsonb_build_object('version','PRE_V3_REVIEW_TAGS_V1','maxTags',3,'tags',to_jsonb(private.review_tag_catalog())),\n 'authoritative',true);\nend;\n$function$\n",
+      "body_md5": "75a8b78ec8a5e6334f42366b4461c14c",
+      "owner": "postgres",
+      "acl": "{postgres=X/postgres,authenticated=X/postgres,service_role=X/postgres}",
+      "config": [
+        "search_path=pg_catalog"
+      ],
+      "definer": true,
+      "strict": false,
+      "volatility": "s",
+      "catalog_attributes": {
+        "oid": "22766",
+        "proacl": [
+          "postgres=X/postgres",
+          "authenticated=X/postgres",
+          "service_role=X/postgres"
+        ],
+        "probin": null,
+        "procost": 100,
+        "prokind": "f",
+        "prolang": "13619",
+        "proname": "rpc_get_my_agreement_review",
+        "prorows": 0,
+        "pronargs": 1,
+        "proowner": "16388",
+        "proconfig": [
+          "search_path=pg_catalog"
+        ],
+        "proretset": false,
+        "prosecdef": true,
+        "prorettype": "3802",
+        "prosqlbody": null,
+        "prosupport": "-",
+        "proargmodes": null,
+        "proargnames": [
+          "p_agreement_id"
+        ],
+        "proargtypes": [
+          "2950"
+        ],
+        "proisstrict": false,
+        "proparallel": "u",
+        "protrftypes": null,
+        "provariadic": "0",
+        "provolatile": "s",
+        "proleakproof": false,
+        "pronamespace": "2200",
+        "proallargtypes": null,
+        "proargdefaults": null,
+        "pronargdefaults": 0
+      }
+    },
+    {
+      "name": "public.rpc_get_my_agreement_review_v2",
+      "signature": "rpc_get_my_agreement_review_v2(uuid)",
+      "args": "p_agreement_id uuid",
+      "result": "jsonb",
+      "definition": "CREATE OR REPLACE FUNCTION public.rpc_get_my_agreement_review_v2(p_agreement_id uuid)\n RETURNS jsonb\n LANGUAGE plpgsql\n STABLE SECURITY DEFINER\n SET search_path TO 'pg_catalog'\nAS $function$\ndeclare u uuid:=auth.uid(); a public.agreements; r private.agreement_reviews; own_review jsonb; own_comment text;\nbegin\n -- D12: the legacy context (same participant gate, same eligibility incl. the closure restriction, same tag catalog) plus the author's OWN comment inside the review and the comment policy.\n -- The presence of THIS function is the capability a new client tests; an older server answers PGRST202 and the client falls back to the legacy pair.\n if u is null then raise exception 'AUTH_REQUIRED' using errcode='42501'; end if;\n select * into a from public.agreements where id=p_agreement_id and u in(requester_account_id,worker_account_id);\n if not found then raise exception 'REVIEW_NOT_ALLOWED' using errcode='42501'; end if;\n select * into r from private.agreement_reviews where agreement_id=a.id and reviewer_account_id=u;\n if found then\n  select c.comment into own_comment from private.agreement_review_comments_v1 c where c.review_id=r.id;\n  own_review:=private.review_receipt(r,false)||jsonb_build_object('comment',own_comment);\n end if;\n return jsonb_build_object('accountId',u,'agreementId',a.id,\n 'targetAccountId',case when u=a.requester_account_id then a.worker_account_id else a.requester_account_id end,\n 'eligible',own_review is null and not private.closure_account_restricted(u) and a.status='COMPLETED' and exists(select 1 from public.agreement_execution where agreement_id=a.id and state='COMPLETED'),\n 'review',own_review,'tagCatalog',jsonb_build_object('version','PRE_V3_REVIEW_TAGS_V1','maxTags',3,'tags',to_jsonb(private.review_tag_catalog())),\n 'commentPolicy',jsonb_build_object('supported',true,'maxLength',500,'version','REVIEW_COMMENT_V1'),\n 'authoritative',true);\nend;\n$function$\n",
+      "body_md5": "60fb54e25317d6c2873321e66588dbeb",
+      "owner": "postgres",
+      "acl": "{postgres=X/postgres,authenticated=X/postgres,service_role=X/postgres}",
+      "config": [
+        "search_path=pg_catalog"
+      ],
+      "definer": true,
+      "strict": false,
+      "volatility": "s",
+      "catalog_attributes": {
+        "oid": "27109",
+        "proacl": [
+          "postgres=X/postgres",
+          "authenticated=X/postgres",
+          "service_role=X/postgres"
+        ],
+        "probin": null,
+        "procost": 100,
+        "prokind": "f",
+        "prolang": "13619",
+        "proname": "rpc_get_my_agreement_review_v2",
+        "prorows": 0,
+        "pronargs": 1,
+        "proowner": "16388",
+        "proconfig": [
+          "search_path=pg_catalog"
+        ],
+        "proretset": false,
+        "prosecdef": true,
+        "prorettype": "3802",
+        "prosqlbody": null,
+        "prosupport": "-",
+        "proargmodes": null,
+        "proargnames": [
+          "p_agreement_id"
+        ],
+        "proargtypes": [
+          "2950"
+        ],
+        "proisstrict": false,
+        "proparallel": "u",
+        "protrftypes": null,
+        "provariadic": "0",
+        "provolatile": "s",
+        "proleakproof": false,
+        "pronamespace": "2200",
+        "proallargtypes": null,
+        "proargdefaults": null,
+        "pronargdefaults": 0
+      }
+    },
+    {
+      "name": "public.rpc_get_public_profile",
+      "signature": "rpc_get_public_profile(uuid)",
+      "args": "p_profile_id uuid",
+      "result": "jsonb",
+      "definition": "CREATE OR REPLACE FUNCTION public.rpc_get_public_profile(p_profile_id uuid)\n RETURNS jsonb\n LANGUAGE plpgsql\n STABLE SECURITY DEFINER\n SET search_path TO 'pg_catalog'\nAS $function$\ndeclare\n  v_actor uuid := auth.uid();\n  v_profile public.app_profiles;\n  v_completed bigint := 0;\n  v_reputation jsonb;\nbegin\n  if v_actor is null then\n    raise exception 'AUTH_REQUIRED' using errcode = '42501';\n  end if;\n\n  if p_profile_id is null then\n    raise exception 'PROFILE_ID_REQUIRED' using errcode = '22023';\n  end if;\n\n  select p.*\n  into v_profile\n  from public.app_profiles p\n  where p.id = p_profile_id\n    and p.profile_status = 'ACTIVE'\n    and p.kind in ('REQUESTER', 'WORKER');\n\n  if not found then\n    return null;\n  end if;\n\n  if private.closure_account_restricted(v_actor) or private.closure_account_restricted(v_profile.account_id) then return null; end if;\n  if private.safety_pair_blocked(v_actor,v_profile.account_id) then return null; end if;\n  if not private.accounts_same_world(v_actor, v_profile.account_id) then return null; end if;\n  if v_profile.kind = 'REQUESTER' then\n    select count(*)\n    into v_completed\n    from public.agreements a\n    where a.requester_profile_id = v_profile.id\n      and a.status = 'COMPLETED';\n  else\n    select count(*)\n    into v_completed\n    from public.agreements a\n    where a.worker_profile_id = v_profile.id\n      and a.status = 'COMPLETED';\n  end if;\n\n  v_reputation:=private.account_reputation(v_profile.account_id);\n  return jsonb_build_object(\n    'profileId', v_profile.id,\n    'role', v_profile.kind,\n    'displayName', nullif(btrim(v_profile.display_name), ''),\n    'avatarPath', v_profile.avatar_path,\n    'city', nullif(btrim(v_profile.city), ''),\n    'publicSummary', jsonb_build_object(\n      'headline', case when v_profile.kind = 'WORKER' then nullif(btrim(v_profile.headline), '') else null end,\n      'bio', case when v_profile.kind = 'WORKER' then nullif(btrim(v_profile.bio), '') else null end\n    ),\n    'trust', jsonb_build_object(\n      'ratingAverage', v_reputation->'averageRating',\n      'reviewCount', v_reputation->'reviewCount',\n      'completedCount', v_completed,\n      'identityVerified', false,\n      'ratingAvailable', (v_reputation->>'reviewCount')::bigint>0,\n      'reviewsAvailable', true,\n      'identityVerificationAvailable', false\n    )\n  );\nend;\n$function$\n",
+      "body_md5": "9ecc0b69096f1167d02e0bb7b9656bc0",
+      "owner": "postgres",
+      "acl": "{postgres=X/postgres,service_role=X/postgres,authenticated=X/postgres}",
+      "config": [
+        "search_path=pg_catalog"
+      ],
+      "definer": true,
+      "strict": false,
+      "volatility": "s",
+      "catalog_attributes": {
+        "oid": "21608",
+        "proacl": [
+          "postgres=X/postgres",
+          "service_role=X/postgres",
+          "authenticated=X/postgres"
+        ],
+        "probin": null,
+        "procost": 100,
+        "prokind": "f",
+        "prolang": "13619",
+        "proname": "rpc_get_public_profile",
+        "prorows": 0,
+        "pronargs": 1,
+        "proowner": "16388",
+        "proconfig": [
+          "search_path=pg_catalog"
+        ],
+        "proretset": false,
+        "prosecdef": true,
+        "prorettype": "3802",
+        "prosqlbody": null,
+        "prosupport": "-",
+        "proargmodes": null,
+        "proargnames": [
+          "p_profile_id"
+        ],
+        "proargtypes": [
+          "2950"
+        ],
+        "proisstrict": false,
+        "proparallel": "u",
+        "protrftypes": null,
+        "provariadic": "0",
+        "provolatile": "s",
+        "proleakproof": false,
+        "pronamespace": "2200",
+        "proallargtypes": null,
+        "proargdefaults": null,
+        "pronargdefaults": 0
+      }
+    },
+    {
+      "name": "public.rpc_home_attention",
+      "signature": "rpc_home_attention()",
+      "args": "",
+      "result": "jsonb",
+      "definition": "CREATE OR REPLACE FUNCTION public.rpc_home_attention()\n RETURNS jsonb\n LANGUAGE plpgsql\n STABLE SECURITY DEFINER\n SET search_path TO 'pg_catalog'\nAS $function$\ndeclare\n  v_uid uuid := auth.uid();\n  v_result jsonb;\n  v_restricted boolean;\nbegin\n  if v_uid is null then raise exception 'AUTH_REQUIRED' using errcode = '28000'; end if;\n  -- Match the restrictive direct-read fence, including its denial for a closed account.\n  -- Definer is required for own applications on non-public tasks, just like the existing readers.\n  -- Never accept a caller-supplied account, and never grant private-schema access to the client.\n  if not public.rpc_storage_account_open() then\n    raise exception 'ACCOUNT_NOT_OPEN' using errcode = '42501';\n  end if;\n  v_restricted := private.closure_account_restricted(v_uid);\n\n  with own_needs as materialized (\n    select n.id, n.title, n.status, n.created_at,\n      greatest(1, n.required_slots) - greatest(0, least(greatest(1, n.required_slots), public.covered_slots(n))) as remaining,\n      -- PKG-035: attention means an application the owner can currently select, not history.\n      public.selectable_application_count(n)::bigint as application_count\n    from public.needs n where n.requester_account_id = v_uid\n      and n.status not in ('COMPLETED','CANCELLED','EXPIRED','ARCHIVED')\n  ), own_applications as materialized (\n    select r.id, r.need_id, n.title, r.submitted_at,\n      private.my_application_state(r.status, r.submitted_against_need_revision, n.revision, n.status,\n        exists(select 1 from public.agreements a where a.selected_response_id = r.id and a.status <> 'CANCELLED')) as state\n    from public.marketplace_responses r join public.needs n on n.id = r.need_id\n    where r.worker_account_id = v_uid and r.status <> 'DRAFT'\n  ), flagged_applications as (\n    select o.*, state = 'STALE_REVIEW_REQUIRED' as requires_stale_review,\n      state in ('STALE_REVIEW_REQUIRED','SELECTED') as attention_required\n    from own_applications o\n  ), own_agreements as materialized (\n    select a.id, a.need_id, n.title, a.created_at, a.requester_account_id,\n      coalesce(ae.state, a.status) as state, ae.problem_opened_at is not null as problem_opened\n    from public.agreements a\n    join public.agreement_versions av on av.agreement_id = a.id and av.version = a.current_version\n    join public.needs n on n.id = a.need_id\n    join public.app_profiles rp on rp.id = a.requester_profile_id\n    join public.app_profiles wp on wp.id = a.worker_profile_id\n    left join public.agreement_execution ae on ae.agreement_id = a.id\n    where v_uid in (a.requester_account_id, a.worker_account_id)\n      and coalesce(ae.state, a.status) in ('CONFIRMED','AWAITING_REQUESTER')\n  ), rating_due as materialized (\n    -- EX-04 S3 (RC-03): the finished Dogovori that wait for MY rating, by the answer of rpc_get_my_agreement_review(...).eligible, in one bounded pass.\n    select a.id from public.agreements a\n      join public.agreement_execution ae on ae.agreement_id = a.id and ae.state = 'COMPLETED'\n    where v_uid in (a.requester_account_id, a.worker_account_id) and a.status = 'COMPLETED' and not v_restricted\n      and not exists (select 1 from private.agreement_reviews rv where rv.agreement_id = a.id and rv.reviewer_account_id = v_uid)\n  ), attention as materialized (\n    select 1 as priority, 'AGREEMENT_CONFIRM_COMPLETION'::text as reason,\n      a.id as subject_id, a.need_id as task_id, a.id as agreement_id, null::uuid as application_id,\n      a.title as task_title, null::bigint as application_count, a.created_at as sort_at\n    from own_agreements a where a.state = 'AWAITING_REQUESTER' and a.requester_account_id = v_uid\n    union all\n    select 2, 'AGREEMENT_OPEN_PROBLEM', a.id, a.need_id, a.id, null::uuid, a.title, null::bigint, a.created_at\n    from own_agreements a where a.problem_opened\n    union all\n    select 3, case when a.state = 'STALE_REVIEW_REQUIRED' or a.requires_stale_review\n        then 'APPLICATION_STALE' else 'APPLICATION_ATTENTION' end,\n      a.id, a.need_id, null::uuid, a.id, a.title, null::bigint, a.submitted_at\n    from flagged_applications a\n    where a.state in ('SUBMITTED','VIEWED','SHORTLISTED','STALE_REVIEW_REQUIRED')\n      and (a.state = 'STALE_REVIEW_REQUIRED' or a.requires_stale_review or a.attention_required)\n    union all\n    select 4, 'TASK_APPLICATIONS', n.id, n.id, null::uuid, null::uuid, n.title, n.application_count, n.created_at\n    from own_needs n where n.status <> 'DRAFT' and n.remaining > 0 and n.application_count > 0\n  ), preview as (\n    select * from attention\n    order by priority, sort_at desc nulls last,\n      case when priority = 3 then subject_id end asc,\n      case when priority <> 3 then subject_id end desc\n    limit 3\n  ), totals as (\n    select (select count(*) from attention) as attention_count,\n      (select count(*) from own_agreements) as agreement_count,\n      (select count(*) from own_needs) as need_count,\n      (select count(*) from own_applications where state in\n        ('SUBMITTED','VIEWED','SHORTLISTED','STALE_REVIEW_REQUIRED')) as application_count,\n      (select count(*) from rating_due) as ratings_due,\n      (select case when count(*) = 1 then (array_agg(id))[1] end from rating_due) as rating_due_agreement_id\n  )\n  select jsonb_build_object(\n    'schemaVersion', 1,\n    'asOf', statement_timestamp(),\n    'items', (select coalesce(jsonb_agg(jsonb_build_object(\n      'reason', reason, 'subjectId', subject_id, 'taskId', task_id,\n      'agreementId', agreement_id, 'applicationId', application_id,\n      'taskTitle', task_title, 'applicationCount', application_count, 'sortAt', sort_at\n    ) order by priority, sort_at desc nulls last,\n      case when priority = 3 then subject_id end asc,\n      case when priority <> 3 then subject_id end desc), '[]'::jsonb) from preview),\n    'counts', jsonb_build_object(\n      'attention', t.attention_count, 'attentionMore', greatest(0, t.attention_count - 3),\n      'activeAgreements', t.agreement_count, 'agreementsMore', greatest(0, t.agreement_count - 2),\n      'ownActiveTasks', t.need_count, 'activeApplications', t.application_count,\n      'activities', t.need_count + t.application_count,\n      'activitiesMore', greatest(0, t.need_count + t.application_count - 5)),\n    'ratings', jsonb_build_object('due', t.ratings_due, 'dueAgreementId', t.rating_due_agreement_id)\n  ) into v_result from totals t;\n  return v_result;\nend\n$function$\n",
+      "body_md5": "1703b04e248759a19cbcc539621ed906",
+      "owner": "postgres",
+      "acl": "{postgres=X/postgres,authenticated=X/postgres,service_role=X/postgres}",
+      "config": [
+        "search_path=pg_catalog"
+      ],
+      "definer": true,
+      "strict": false,
+      "volatility": "s",
+      "catalog_attributes": {
+        "oid": "24570",
+        "proacl": [
+          "postgres=X/postgres",
+          "authenticated=X/postgres",
+          "service_role=X/postgres"
+        ],
+        "probin": null,
+        "procost": 100,
+        "prokind": "f",
+        "prolang": "13619",
+        "proname": "rpc_home_attention",
+        "prorows": 0,
+        "pronargs": 0,
+        "proowner": "16388",
+        "proconfig": [
+          "search_path=pg_catalog"
+        ],
+        "proretset": false,
+        "prosecdef": true,
+        "prorettype": "3802",
+        "prosqlbody": null,
+        "prosupport": "-",
+        "proargmodes": null,
+        "proargnames": null,
+        "proargtypes": [],
+        "proisstrict": false,
+        "proparallel": "u",
+        "protrftypes": null,
+        "provariadic": "0",
+        "provolatile": "s",
+        "proleakproof": false,
+        "pronamespace": "2200",
+        "proallargtypes": null,
+        "proargdefaults": null,
+        "pronargdefaults": 0
+      }
+    },
+    {
+      "name": "public.rpc_list_my_agreements_page",
+      "signature": "rpc_list_my_agreements_page(text,integer,timestamp with time zone,uuid)",
+      "args": "p_scope text DEFAULT 'ALL'::text, p_limit integer DEFAULT 30, p_before_at timestamp with time zone DEFAULT NULL::timestamp with time zone, p_before_id uuid DEFAULT NULL::uuid",
+      "result": "jsonb",
+      "definition": "CREATE OR REPLACE FUNCTION public.rpc_list_my_agreements_page(p_scope text DEFAULT 'ALL'::text, p_limit integer DEFAULT 30, p_before_at timestamp with time zone DEFAULT NULL::timestamp with time zone, p_before_id uuid DEFAULT NULL::uuid)\n RETURNS jsonb\n LANGUAGE plpgsql\n STABLE SECURITY DEFINER\n SET search_path TO 'pg_catalog'\nAS $function$\ndeclare\n  v_uid uuid := auth.uid();\n  v_items jsonb;\n  v_restricted boolean;\nbegin\n  if v_uid is null then raise exception 'AUTH_REQUIRED' using errcode = '28000'; end if;\n  if p_limit is null or p_limit < 1 or p_limit > 100 or (p_before_at is null) <> (p_before_id is null) then\n    raise exception 'INVALID_PAGE' using errcode = '22023';\n  end if;\n  if p_scope is null or p_scope not in ('ALL','ACTIVE','HISTORY') then\n    raise exception 'INVALID_SCOPE' using errcode = '22023';\n  end if;\n\n  -- EX-04 S3 (RC-03): whether MY rating of a finished Dogovor is still due is part of the page, so the client never has to ask once per Dogovor. It is exactly the answer of\n  -- rpc_get_my_agreement_review(...).eligible: no review of mine yet, my account is not under a closure restriction, and the Dogovor and its execution are COMPLETED.\n  v_restricted := private.closure_account_restricted(v_uid);\n  select coalesce(jsonb_agg(x.payload order by x.created_at desc, x.id desc), '[]'::jsonb) into v_items\n  from (\n    select a.created_at, a.id,\n      jsonb_build_object(\n        'id', a.id, 'sortAt', a.created_at,\n        'currentVersion', a.current_version,\n        'status', coalesce(ae.state, a.status),\n        'agreementStatus', a.status,\n        'title', n.title,\n        'approximateArea', n.approximate_area,\n        'approximateCity', n.approximate_city,\n        'requiredSlots', n.required_slots,\n        'startsAt', n.starts_at,\n        'terms', av.terms,\n        'requesterAccountId', a.requester_account_id,\n        'workerAccountId', a.worker_account_id, 'requesterProfileId', a.requester_profile_id, 'workerProfileId', a.worker_profile_id,\n        'requesterName', rp.display_name,\n        'workerName', wp.display_name,\n        'executionMode', ae.mode,\n        'requesterDeadlineAt', ae.requester_deadline_at,\n        'problemOpened', (ae.problem_opened_at is not null),\n        'myPhoneShared', exists (\n          select 1 from public.access_grants g\n           where g.agreement_id = a.id and g.channel = 'PHONE' and g.granted_by_account_id = v_uid\n             and g.status = 'GRANTED'\n             and private.safety_grant_valid(g.granted_by_account_id, g.granted_to_account_id, g.granted_at) and (g.expires_at is null or g.expires_at > statement_timestamp())),\n        'theirPhone', case\n          when a.status = 'CONFIRMED' and exists (\n            select 1 from public.access_grants g\n             where g.agreement_id = a.id and g.channel = 'PHONE' and g.granted_to_account_id = v_uid\n               and g.status = 'GRANTED'\n             and private.safety_grant_valid(g.granted_by_account_id, g.granted_to_account_id, g.granted_at) and (g.expires_at is null or g.expires_at > statement_timestamp())\n          ) then (\n            select nullif(btrim(acc.phone), '') from public.app_accounts acc\n             where acc.id = case when v_uid = a.requester_account_id then a.worker_account_id else a.requester_account_id end)\n          else null\n        end,\n        'pendingChange', (\n          select jsonb_build_object('id', c.id, 'proposedByMe', c.proposed_by_account_id = v_uid, 'createdAt', c.created_at)\n            from public.agreement_change_proposals c\n           where c.agreement_id = a.id and c.status = 'PENDING'\n           order by c.created_at desc, c.id desc\n           limit 1),\n        'createdAt', a.created_at,\n        'ratingDue', coalesce(a.status = 'COMPLETED' and ae.state = 'COMPLETED' and not v_restricted\n          and not exists (select 1 from private.agreement_reviews rv where rv.agreement_id = a.id and rv.reviewer_account_id = v_uid), false)\n      ) as payload\n    from public.agreements a\n    join public.agreement_versions av on av.agreement_id = a.id and av.version = a.current_version\n    join public.needs n on n.id = a.need_id\n    join public.app_profiles rp on rp.id = a.requester_profile_id\n    join public.app_profiles wp on wp.id = a.worker_profile_id\n    left join public.agreement_execution ae on ae.agreement_id = a.id\n    where v_uid in (a.requester_account_id, a.worker_account_id)\n      and (p_scope = 'ALL' or (p_scope = 'ACTIVE') = (coalesce(ae.state, a.status) in ('CONFIRMED','AWAITING_REQUESTER')))\n      and (p_before_at is null or (a.created_at, a.id) < (p_before_at, p_before_id))\n    order by a.created_at desc, a.id desc\n    limit p_limit + 1\n  ) x;\n\n  return jsonb_build_object(\n    'items', case when jsonb_array_length(v_items) > p_limit then v_items - p_limit else v_items end,\n    'hasMore', jsonb_array_length(v_items) > p_limit,\n    'asOf', statement_timestamp());\nend\n$function$\n",
+      "body_md5": "02c73cc4db95c2198f54888d7a377003",
+      "owner": "postgres",
+      "acl": "{postgres=X/postgres,authenticated=X/postgres,service_role=X/postgres}",
+      "config": [
+        "search_path=pg_catalog"
+      ],
+      "definer": true,
+      "strict": false,
+      "volatility": "s",
+      "catalog_attributes": {
+        "oid": "24412",
+        "proacl": [
+          "postgres=X/postgres",
+          "authenticated=X/postgres",
+          "service_role=X/postgres"
+        ],
+        "probin": null,
+        "procost": 100,
+        "prokind": "f",
+        "prolang": "13619",
+        "proname": "rpc_list_my_agreements_page",
+        "prorows": 0,
+        "pronargs": 4,
+        "proowner": "16388",
+        "proconfig": [
+          "search_path=pg_catalog"
+        ],
+        "proretset": false,
+        "prosecdef": true,
+        "prorettype": "3802",
+        "prosqlbody": null,
+        "prosupport": "-",
+        "proargmodes": null,
+        "proargnames": [
+          "p_scope",
+          "p_limit",
+          "p_before_at",
+          "p_before_id"
+        ],
+        "proargtypes": [
+          "25",
+          "23",
+          "1184",
+          "2950"
+        ],
+        "proisstrict": false,
+        "proparallel": "u",
+        "protrftypes": null,
+        "provariadic": "0",
+        "provolatile": "s",
+        "proleakproof": false,
+        "pronamespace": "2200",
+        "proallargtypes": null,
+        "proargdefaults": "({CONST :consttype 25 :consttypmod -1 :constcollid 100 :constlen -1 :constbyval false :constisnull false :location -1 :constvalue 7 [ 28 0 0 0 65 76 76 ]} {CONST :consttype 23 :consttypmod -1 :constcollid 0 :constlen 4 :constbyval true :constisnull false :location -1 :constvalue 4 [ 30 0 0 0 0 0 0 0 ]} {CONST :consttype 1184 :consttypmod -1 :constcollid 0 :constlen 8 :constbyval true :constisnull true :location -1 :constvalue <>} {CONST :consttype 2950 :consttypmod -1 :constcollid 0 :constlen 16 :constbyval false :constisnull true :location -1 :constvalue <>})",
+        "pronargdefaults": 4
+      }
+    },
+    {
+      "name": "public.rpc_list_received_reviews_v1",
+      "signature": "rpc_list_received_reviews_v1(integer,text)",
+      "args": "p_limit integer DEFAULT 20, p_after text DEFAULT NULL::text",
+      "result": "jsonb",
+      "definition": "CREATE OR REPLACE FUNCTION public.rpc_list_received_reviews_v1(p_limit integer DEFAULT 20, p_after text DEFAULT NULL::text)\n RETURNS jsonb\n LANGUAGE plpgsql\n STABLE SECURITY DEFINER\n SET search_path TO 'pg_catalog'\nAS $function$\ndeclare\n  v_actor uuid := auth.uid();\n  v_limit integer;\n  v_after_at timestamptz;\n  v_after_id uuid;\n  v_mode text;\n  v_page jsonb;\n  v_items jsonb;\n  v_more boolean;\n  v_total bigint;\n  v_listed bigint;\nbegin\n  -- PROFILE-TRUST (2026-10-07): the CALLER's received reviews, newest first, keyset paged (createdAt, reviewId), at most 50 a page.\n  -- Every item is the caller's own Dogovor (agreementId, taskTitle). Which reviews are listed one by one is the owner's open\n  -- decision (private.received_reviews_detail_v1(), default COMMENTED_ONLY: the accepted D12 default keeps star-only reviews\n  -- aggregate-only); totalCount and notListedCount make the list add up to the public reviewCount.\n  -- The comment follows the D12 reader rules (public.rpc_list_review_comments_v1) for the reviewed person as viewer, with the owner's\n  -- decision A09 (2026-10-02): a hidden (moderated) comment, an author under a closure restriction, an author in another world and an\n  -- author whose profile is not ACTIVE show no comment and no face; a comment whose AUTHOR blocked the caller IS shown with the\n  -- author's face masked (agreementId stays, so it can be reported); a comment by someone the CALLER blocked is not shown and the\n  -- face is masked. The stars of every review count in the aggregate whatever is shown here.\n  if v_actor is null then raise exception 'AUTH_REQUIRED' using errcode = '42501'; end if;\n  if private.closure_account_restricted(v_actor) then raise exception 'ACCOUNT_CLOSING' using errcode = '42501'; end if;\n  v_limit := least(greatest(coalesce(p_limit, 20), 1), 50);\n  if p_after is not null then\n    if p_after !~ '^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}[.][0-9]{6}Z[|][0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$' then\n      raise exception 'INVALID_PAGE' using errcode = '22023';\n    end if;\n    begin\n      v_after_at := split_part(p_after, '|', 1)::timestamptz;\n      v_after_id := split_part(p_after, '|', 2)::uuid;\n    exception when data_exception then\n      raise exception 'INVALID_PAGE' using errcode = '22023';\n    end;\n  end if;\n  v_mode := private.received_reviews_detail_v1();\n  with base as (\n    select rv.id, rv.created_at, rv.rating, rv.tags, rv.agreement_id,\n      rv.reviewer_account_id = ag.requester_account_id as by_requester,\n      n.title,\n      ap.id as author_profile_id, ap.display_name as author_name, ap.avatar_path as author_avatar,\n      coalesce(ap.profile_status = 'ACTIVE' and ap.kind in ('REQUESTER', 'WORKER'), false) as author_active,\n      cm.review_id is not null as has_comment, cm.comment, cm.hidden_at,\n      exists(select 1 from private.account_blocks b where b.active\n              and b.blocker_account_id = rv.reviewer_account_id and b.blocked_account_id = v_actor) as author_blocked_me,\n      exists(select 1 from private.account_blocks b where b.active\n              and b.blocker_account_id = v_actor and b.blocked_account_id = rv.reviewer_account_id) as i_blocked_author,\n      private.closure_account_restricted(rv.reviewer_account_id) as author_restricted,\n      private.accounts_same_world(v_actor, rv.reviewer_account_id) as same_world\n    from private.agreement_reviews rv\n    join public.agreements ag on ag.id = rv.agreement_id\n    join public.needs n on n.id = ag.need_id\n    left join public.app_profiles ap\n      on ap.id = case when rv.reviewer_account_id = ag.requester_account_id then ag.requester_profile_id else ag.worker_profile_id end\n     and ap.account_id = rv.reviewer_account_id\n    left join private.agreement_review_comments_v1 cm\n      on cm.review_id = rv.id and cm.author_account_id = rv.reviewer_account_id and cm.target_account_id = rv.target_account_id\n    where rv.target_account_id = v_actor\n  ), decided as (\n    select b.*,\n      (b.author_active and not b.author_restricted and b.same_world and not b.author_blocked_me and not b.i_blocked_author) as face_visible,\n      (b.has_comment and b.hidden_at is null and b.author_active and not b.author_restricted and b.same_world\n        and not b.i_blocked_author) as comment_visible\n    from base b\n  ), listed as (\n    select d.* from decided d where v_mode = 'ALL' or d.comment_visible\n  ), page as (\n    select l.* from listed l\n     where v_after_at is null or (l.created_at, l.id) < (v_after_at, v_after_id)\n     order by l.created_at desc, l.id desc\n     limit v_limit + 1\n  )\n  select\n    (select coalesce(jsonb_agg(jsonb_build_object(\n        'reviewId', p.id,\n        'rating', p.rating,\n        'tags', to_jsonb(p.tags),\n        'createdAt', p.created_at,\n        'agreementId', p.agreement_id,\n        'taskTitle', p.title,\n        'receivedAs', case when p.by_requester then 'WORKER' else 'REQUESTER' end,\n        'reviewer', case when p.face_visible\n          then jsonb_build_object('profileId', p.author_profile_id, 'role', case when p.by_requester then 'REQUESTER' else 'WORKER' end,\n                                  'displayName', nullif(btrim(p.author_name), ''), 'avatarPath', p.author_avatar, 'masked', false)\n          else jsonb_build_object('profileId', null, 'role', case when p.by_requester then 'REQUESTER' else 'WORKER' end,\n                                  'displayName', null, 'avatarPath', null, 'masked', true) end,\n        'comment', case when p.comment_visible then p.comment end,\n        'cursor', to_char(p.created_at at time zone 'UTC', 'YYYY-MM-DD\"T\"HH24:MI:SS.US\"Z\"') || '|' || p.id::text)\n        order by p.created_at desc, p.id desc), '[]'::jsonb) from page p),\n    (select count(*) from decided),\n    (select count(*) from listed)\n  into v_page, v_total, v_listed;\n  v_more := jsonb_array_length(v_page) > v_limit;\n  if v_more then v_page := v_page - v_limit; end if;\n  select coalesce(jsonb_agg(e.item - 'cursor' order by e.ord), '[]'::jsonb) into v_items\n    from jsonb_array_elements(v_page) with ordinality e(item, ord);\n  return jsonb_build_object(\n    'schema', 'RECEIVED_REVIEWS_V1',\n    'mode', v_mode,\n    'items', v_items,\n    'hasMore', v_more,\n    'nextAfter', case when v_more then v_page->(v_limit - 1)->>'cursor' end,\n    'limit', v_limit,\n    'totalCount', v_total,\n    'notListedCount', v_total - v_listed,\n    'asOf', statement_timestamp(),\n    'authoritative', true);\nend;\n$function$\n",
+      "body_md5": "9462ed163b1e4a465c68ad72d18f0e3d",
+      "owner": "postgres",
+      "acl": "{postgres=X/postgres,authenticated=X/postgres,service_role=X/postgres}",
+      "config": [
+        "search_path=pg_catalog"
+      ],
+      "definer": true,
+      "strict": false,
+      "volatility": "s",
+      "catalog_attributes": {
+        "oid": "27711",
+        "proacl": [
+          "postgres=X/postgres",
+          "authenticated=X/postgres",
+          "service_role=X/postgres"
+        ],
+        "probin": null,
+        "procost": 100,
+        "prokind": "f",
+        "prolang": "13619",
+        "proname": "rpc_list_received_reviews_v1",
+        "prorows": 0,
+        "pronargs": 2,
+        "proowner": "16388",
+        "proconfig": [
+          "search_path=pg_catalog"
+        ],
+        "proretset": false,
+        "prosecdef": true,
+        "prorettype": "3802",
+        "prosqlbody": null,
+        "prosupport": "-",
+        "proargmodes": null,
+        "proargnames": [
+          "p_limit",
+          "p_after"
+        ],
+        "proargtypes": [
+          "23",
+          "25"
+        ],
+        "proisstrict": false,
+        "proparallel": "u",
+        "protrftypes": null,
+        "provariadic": "0",
+        "provolatile": "s",
+        "proleakproof": false,
+        "pronamespace": "2200",
+        "proallargtypes": null,
+        "proargdefaults": "({CONST :consttype 23 :consttypmod -1 :constcollid 0 :constlen 4 :constbyval true :constisnull false :location -1 :constvalue 4 [ 20 0 0 0 0 0 0 0 ]} {CONST :consttype 25 :consttypmod -1 :constcollid 100 :constlen -1 :constbyval false :constisnull true :location -1 :constvalue <>})",
+        "pronargdefaults": 2
+      }
+    },
+    {
+      "name": "public.rpc_list_review_comments_v1",
+      "signature": "rpc_list_review_comments_v1(uuid,integer,jsonb)",
+      "args": "p_profile_id uuid, p_limit integer DEFAULT 20, p_after jsonb DEFAULT NULL::jsonb",
+      "result": "jsonb",
+      "definition": "CREATE OR REPLACE FUNCTION public.rpc_list_review_comments_v1(p_profile_id uuid, p_limit integer DEFAULT 20, p_after jsonb DEFAULT NULL::jsonb)\n RETURNS jsonb\n LANGUAGE plpgsql\n STABLE SECURITY DEFINER\n SET search_path TO 'pg_catalog'\nAS $function$\ndeclare v_actor uuid:=auth.uid(); v_profile public.app_profiles; v_limit integer; v_after_at timestamptz; v_after_id uuid; v_items jsonb; v_more boolean;\nbegin\n -- D12: the gated reader of the written comments ABOUT the person whose public profile is open. One paged, account-level list (a review is account-level reputation, both roles pooled);\n -- only reviews that carry a visible comment appear (a star-only review has no text row, but the public count and average still include it, so for a small count the rating of a star-only review can be inferred by subtraction from the\n -- listed ratings: an owner-visible consequence, README_D12_CANDIDATE.md); stars, the count and the average are never changed by anything here.\n -- DESIGN DEFAULT D-DEC-7 (the owner accepted the defaults of the design): ONE account-level list usable from both profile kinds, so the same reviewIds and texts appear under the REQUESTER and the WORKER profile of one person and each item names the role\n -- of its author: an observer who has seen both faces can LINK them by comparing lists. A role-scoped list is a function-only change (add: and the target role of the Agreement equals v_profile.kind) that needs no certificate move; it is NOT implemented here.\n if v_actor is null then raise exception 'AUTH_REQUIRED' using errcode='42501'; end if;\n if p_profile_id is null then raise exception 'PROFILE_ID_REQUIRED' using errcode='22023'; end if;\n v_limit:=least(greatest(coalesce(p_limit,20),1),50);\n if p_after is not null and jsonb_typeof(p_after)<>'null' then\n  if jsonb_typeof(p_after)<>'object' or jsonb_typeof(p_after->'createdAt') is distinct from 'string' or jsonb_typeof(p_after->'reviewId') is distinct from 'string' then\n   raise exception 'INVALID_PAGE' using errcode='22023';\n  end if;\n  begin\n   v_after_at:=(p_after->>'createdAt')::timestamptz; v_after_id:=(p_after->>'reviewId')::uuid;\n  exception when data_exception then raise exception 'INVALID_PAGE' using errcode='22023';\n  end;\n end if;\n -- The gate stack of rpc_get_public_profile, in the same order and with the same safe failure: an ACTIVE profile only, closure-restricted viewer or subject, a blocked pair and another world all read as \"nothing here\".\n select p.* into v_profile from public.app_profiles p where p.id=p_profile_id and p.profile_status='ACTIVE' and p.kind in('REQUESTER','WORKER');\n if not found then return null; end if;\n if private.closure_account_restricted(v_actor) or private.closure_account_restricted(v_profile.account_id) then return null; end if;\n if private.safety_pair_blocked(v_actor,v_profile.account_id) then return null; end if;\n if not private.accounts_same_world(v_actor,v_profile.account_id) then return null; end if;\n -- Read-time gating of every row: a hidden comment, an author under a closure restriction, a pair VIEWER/author that is blocked either way (the viewer-versus-subject pair is gated above), another world, or an author profile that is not ACTIVE is not listed.\n -- DELIBERATELY NO viewer-independent block gate: a block between the author and the reviewed person must NOT remove the comment for third viewers, otherwise either party could censor or re-publish the text for everybody by toggling a block (the author edit/delete path\n -- the owner forbade, through a side door). It still hides the text from the one person who blocked its author, because that person is the VIEWER here. Hiding for everyone is the audited moderation HIDE only.\n -- KNOWN CONSEQUENCE (owner-visible, NOT decided here): the block is symmetric, so when the AUTHOR blocks the reviewed person (or blocked them before writing) that person is the viewer of a blocked pair and no longer sees the comment\n -- about them (nor its agreementId, so they cannot report it from here), is not notified, and every third viewer still sees it; the block costs the author nothing and the only remedy is the audited service-role HIDE. Options: README_D12_CANDIDATE.md.\n -- No write-time refusal exists for any of this (it would reveal a block); the author's profile is the face of the Agreement role in which the review was written. The only place an account id can appear is inside avatarPath, exactly as rpc_get_public_profile returns it.\n select coalesce(jsonb_agg(x.item order by x.created_at desc,x.review_id desc),'[]'::jsonb) into v_items from (\n  select c.created_at,c.review_id,\n   jsonb_build_object('reviewId',c.review_id,'rating',rv.rating,'comment',c.comment,'createdAt',c.created_at,\n    'agreementId',case when v_actor=c.target_account_id then rv.agreement_id else null end,\n    'author',jsonb_build_object('profileId',ap.id,'role',ap.kind,'displayName',nullif(btrim(ap.display_name),''),'avatarPath',ap.avatar_path)) as item\n  from private.agreement_review_comments_v1 c\n  join private.agreement_reviews rv on rv.id=c.review_id\n  join public.agreements ag on ag.id=rv.agreement_id\n  join public.app_profiles ap on ap.id=case when ag.requester_account_id=c.author_account_id then ag.requester_profile_id else ag.worker_profile_id end\n   and ap.account_id=c.author_account_id\n  where c.target_account_id=v_profile.account_id and c.hidden_at is null\n   and ap.profile_status='ACTIVE' and ap.kind in('REQUESTER','WORKER')\n   and not private.closure_account_restricted(c.author_account_id)\n   and not private.safety_pair_blocked(v_actor,c.author_account_id)\n   and private.accounts_same_world(v_actor,c.author_account_id)\n   and (v_after_at is null or (c.created_at,c.review_id)<(v_after_at,v_after_id))\n  order by c.created_at desc,c.review_id desc\n  limit v_limit+1\n ) x;\n v_more:=jsonb_array_length(v_items)>v_limit;\n if v_more then v_items:=v_items-v_limit; end if;\n return jsonb_build_object('profileId',v_profile.id,'items',v_items,'hasMore',v_more,\n  'nextAfter',case when v_more then jsonb_build_object('createdAt',v_items->(v_limit-1)->'createdAt','reviewId',v_items->(v_limit-1)->'reviewId') else null end,\n  'authoritative',true);\nend;\n$function$\n",
+      "body_md5": "0712dcb3bfb25ec782f40c0fe47f17c3",
+      "owner": "postgres",
+      "acl": "{postgres=X/postgres,authenticated=X/postgres,service_role=X/postgres}",
+      "config": [
+        "search_path=pg_catalog"
+      ],
+      "definer": true,
+      "strict": false,
+      "volatility": "s",
+      "catalog_attributes": {
+        "oid": "27110",
+        "proacl": [
+          "postgres=X/postgres",
+          "authenticated=X/postgres",
+          "service_role=X/postgres"
+        ],
+        "probin": null,
+        "procost": 100,
+        "prokind": "f",
+        "prolang": "13619",
+        "proname": "rpc_list_review_comments_v1",
+        "prorows": 0,
+        "pronargs": 3,
+        "proowner": "16388",
+        "proconfig": [
+          "search_path=pg_catalog"
+        ],
+        "proretset": false,
+        "prosecdef": true,
+        "prorettype": "3802",
+        "prosqlbody": null,
+        "prosupport": "-",
+        "proargmodes": null,
+        "proargnames": [
+          "p_profile_id",
+          "p_limit",
+          "p_after"
+        ],
+        "proargtypes": [
+          "2950",
+          "23",
+          "3802"
+        ],
+        "proisstrict": false,
+        "proparallel": "u",
+        "protrftypes": null,
+        "provariadic": "0",
+        "provolatile": "s",
+        "proleakproof": false,
+        "pronamespace": "2200",
+        "proallargtypes": null,
+        "proargdefaults": "({CONST :consttype 23 :consttypmod -1 :constcollid 0 :constlen 4 :constbyval true :constisnull false :location -1 :constvalue 4 [ 20 0 0 0 0 0 0 0 ]} {CONST :consttype 3802 :consttypmod -1 :constcollid 0 :constlen -1 :constbyval false :constisnull true :location -1 :constvalue <>})",
+        "pronargdefaults": 2
+      }
+    },
+    {
+      "name": "public.rpc_storage_account_open",
+      "signature": "rpc_storage_account_open()",
+      "args": "",
+      "result": "boolean",
+      "definition": "CREATE OR REPLACE FUNCTION public.rpc_storage_account_open()\n RETURNS boolean\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO 'pg_catalog'\nAS $function$\n begin if auth.uid() is null then return false;end if;perform private.closure_assert_open(auth.uid());return true;end;\n$function$\n",
+      "body_md5": "7350621ef256678e209aa6a28c79b58b",
+      "owner": "postgres",
+      "acl": "{postgres=X/postgres,authenticated=X/postgres,service_role=X/postgres}",
+      "config": [
+        "search_path=pg_catalog"
+      ],
+      "definer": true,
+      "strict": false,
+      "volatility": "v",
+      "catalog_attributes": {
+        "oid": "23212",
+        "proacl": [
+          "postgres=X/postgres",
+          "authenticated=X/postgres",
+          "service_role=X/postgres"
+        ],
+        "probin": null,
+        "procost": 100,
+        "prokind": "f",
+        "prolang": "13619",
+        "proname": "rpc_storage_account_open",
+        "prorows": 0,
+        "pronargs": 0,
+        "proowner": "16388",
+        "proconfig": [
+          "search_path=pg_catalog"
+        ],
+        "proretset": false,
+        "prosecdef": true,
+        "prorettype": "16",
+        "prosqlbody": null,
+        "prosupport": "-",
+        "proargmodes": null,
+        "proargnames": null,
+        "proargtypes": [],
+        "proisstrict": false,
+        "proparallel": "u",
+        "protrftypes": null,
+        "provariadic": "0",
+        "provolatile": "v",
+        "proleakproof": false,
+        "pronamespace": "2200",
+        "proallargtypes": null,
+        "proargdefaults": null,
+        "pronargdefaults": 0
+      }
+    },
+    {
+      "name": "public.rpc_submit_agreement_review",
+      "signature": "rpc_submit_agreement_review(uuid,uuid,jsonb,jsonb,uuid)",
+      "args": "p_agreement_id uuid, p_target_account_id uuid, p_rating jsonb, p_tags jsonb, p_client_request_id uuid",
+      "result": "jsonb",
+      "definition": "CREATE OR REPLACE FUNCTION public.rpc_submit_agreement_review(p_agreement_id uuid, p_target_account_id uuid, p_rating jsonb, p_tags jsonb, p_client_request_id uuid)\n RETURNS jsonb\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO 'pg_catalog'\nAS $function$\ndeclare u uuid:=auth.uid(); a public.agreements; r private.agreement_reviews;\n rating_value numeric; tags_value text[]; h text; target_role text;\nbegin\n if u is null then raise exception 'AUTH_REQUIRED' using errcode='42501'; end if;\n if p_agreement_id is null or p_target_account_id is null or p_target_account_id=u or p_client_request_id is null\n or jsonb_typeof(p_rating) is distinct from 'number' or length(p_rating::text)>30 then\n  raise exception 'REVIEW_INPUT_INVALID' using errcode='22023';\n end if;\n rating_value:=(p_rating#>>'{}')::numeric;\n if rating_value not between 1 and 5 or trunc(rating_value)<>rating_value then\n  raise exception 'REVIEW_INPUT_INVALID' using errcode='22023';\n end if;\n if jsonb_typeof(p_tags) is distinct from 'array' then raise exception 'REVIEW_TAGS_INVALID' using errcode='22023'; end if;\n if jsonb_array_length(p_tags)>3 or exists(select 1 from jsonb_array_elements(p_tags) t\n  where jsonb_typeof(t.value)<>'string' or not (t.value#>>'{}'=any(private.review_tag_catalog()))) then\n  raise exception 'REVIEW_TAGS_INVALID' using errcode='22023';\n end if;\n tags_value:=array(select t.value#>>'{}' from jsonb_array_elements(p_tags) t order by (t.value#>>'{}') collate \"C\");\n if not private.review_tags_valid(tags_value) then raise exception 'REVIEW_TAGS_INVALID' using errcode='22023'; end if;\n h:=encode(extensions.digest(jsonb_build_object('agreementId',p_agreement_id,'target',p_target_account_id,\n  'rating',rating_value::integer,'tags',to_jsonb(tags_value))::text,'sha256'),'hex');\n -- Same successful command remains an immutable read, even after a later block.\n perform pg_advisory_xact_lock(hashtextextended('uskoci:review-command:'||u::text||':'||p_client_request_id::text,9120));\n select * into r from private.agreement_reviews where reviewer_account_id=u and client_request_id=p_client_request_id;\n if found then\n  if r.input_hash<>h then raise exception 'REQUEST_ID_REUSED' using errcode='22023'; end if;\n  return private.review_receipt(r,true);\n end if;\n select * into a from public.agreements where id=p_agreement_id and u in(requester_account_id,worker_account_id) for share;\n if not found then raise exception 'REVIEW_NOT_ALLOWED' using errcode='42501'; end if;\n if p_target_account_id<>(case when u=a.requester_account_id then a.worker_account_id else a.requester_account_id end) then\n  raise exception 'REVIEW_NOT_ALLOWED' using errcode='42501';\n end if;\n if a.status<>'COMPLETED' or not exists(select 1 from public.agreement_execution where agreement_id=a.id and state='COMPLETED') then\n  raise exception 'REVIEW_NOT_COMPLETED' using errcode='55000';\n end if;\n perform pg_advisory_xact_lock(hashtextextended('uskoci:review-agreement:'||a.id::text||':'||u::text,9120));\n if exists(select 1 from private.agreement_reviews where agreement_id=a.id and reviewer_account_id=u) then\n  raise exception 'REVIEW_ALREADY_SUBMITTED' using errcode='55000';\n end if;\n -- A block cannot remove the counterpart's completed-work review entitlement.\n -- P8 suppresses ordinary deliveries, including this event, for blocked pairs.\n insert into private.agreement_reviews(agreement_id,reviewer_account_id,target_account_id,rating,tags,client_request_id,input_hash)\n values(a.id,u,p_target_account_id,rating_value::integer,tags_value,p_client_request_id,h) returning * into r;\n perform private.audit_marketplace(u,'AGREEMENT_REVIEW_SUBMITTED','AGREEMENT',a.id,a.current_version,jsonb_build_object('reviewId',r.id));\n target_role:=case when u=a.requester_account_id then 'WORKER' else 'REQUESTER' end;\n perform private.emit_event(p_target_account_id,target_role,'REVIEW_RECEIVED','AGREEMENT',a.id,a.current_version,\n  'Nova ocena','Dobili ste ocenu za završen Dogovor.','agreement-review:'||r.id::text,'NORMAL','{}'::jsonb,null);\n return private.review_receipt(r,false);\nend;\n$function$\n",
+      "body_md5": "ff68b552c4f972e5d58a632672bc359e",
+      "owner": "postgres",
+      "acl": "{postgres=X/postgres,authenticated=X/postgres,service_role=X/postgres}",
+      "config": [
+        "search_path=pg_catalog"
+      ],
+      "definer": true,
+      "strict": false,
+      "volatility": "v",
+      "catalog_attributes": {
+        "oid": "22764",
+        "proacl": [
+          "postgres=X/postgres",
+          "authenticated=X/postgres",
+          "service_role=X/postgres"
+        ],
+        "probin": null,
+        "procost": 100,
+        "prokind": "f",
+        "prolang": "13619",
+        "proname": "rpc_submit_agreement_review",
+        "prorows": 0,
+        "pronargs": 5,
+        "proowner": "16388",
+        "proconfig": [
+          "search_path=pg_catalog"
+        ],
+        "proretset": false,
+        "prosecdef": true,
+        "prorettype": "3802",
+        "prosqlbody": null,
+        "prosupport": "-",
+        "proargmodes": null,
+        "proargnames": [
+          "p_agreement_id",
+          "p_target_account_id",
+          "p_rating",
+          "p_tags",
+          "p_client_request_id"
+        ],
+        "proargtypes": [
+          "2950",
+          "2950",
+          "3802",
+          "3802",
+          "2950"
+        ],
+        "proisstrict": false,
+        "proparallel": "u",
+        "protrftypes": null,
+        "provariadic": "0",
+        "provolatile": "v",
+        "proleakproof": false,
+        "pronamespace": "2200",
+        "proallargtypes": null,
+        "proargdefaults": null,
+        "pronargdefaults": 0
+      }
+    },
+    {
+      "name": "public.rpc_submit_agreement_review_v2",
+      "signature": "rpc_submit_agreement_review_v2(uuid,uuid,jsonb,jsonb,uuid,jsonb)",
+      "args": "p_agreement_id uuid, p_target_account_id uuid, p_rating jsonb, p_tags jsonb, p_client_request_id uuid, p_comment jsonb DEFAULT NULL::jsonb",
+      "result": "jsonb",
+      "definition": "CREATE OR REPLACE FUNCTION public.rpc_submit_agreement_review_v2(p_agreement_id uuid, p_target_account_id uuid, p_rating jsonb, p_tags jsonb, p_client_request_id uuid, p_comment jsonb DEFAULT NULL::jsonb)\n RETURNS jsonb\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO 'pg_catalog'\nAS $function$\ndeclare u uuid:=auth.uid(); a public.agreements; r private.agreement_reviews;\n rating_value numeric; tags_value text[]; h text; target_role text;\n comment_value text; comment_sha text; stored_comment text; stored_sha text;\nbegin\n -- D12: the legacy review command (same auth, validation order, locks, eligibility, star hash, audit row and REVIEW_RECEIVED event, byte for byte in behaviour) plus ONE optional comment\n -- that is stored in the SAME transaction as the stars and never later. The legacy function stays untouched and keeps serving every installed build.\n if u is null then raise exception 'AUTH_REQUIRED' using errcode='42501'; end if;\n if p_agreement_id is null or p_target_account_id is null or p_target_account_id=u or p_client_request_id is null\n or jsonb_typeof(p_rating) is distinct from 'number' or length(p_rating::text)>30 then\n  raise exception 'REVIEW_INPUT_INVALID' using errcode='22023';\n end if;\n rating_value:=(p_rating#>>'{}')::numeric;\n if rating_value not between 1 and 5 or trunc(rating_value)<>rating_value then\n  raise exception 'REVIEW_INPUT_INVALID' using errcode='22023';\n end if;\n if jsonb_typeof(p_tags) is distinct from 'array' then raise exception 'REVIEW_TAGS_INVALID' using errcode='22023'; end if;\n if jsonb_array_length(p_tags)>3 or exists(select 1 from jsonb_array_elements(p_tags) t\n  where jsonb_typeof(t.value)<>'string' or not (t.value#>>'{}'=any(private.review_tag_catalog()))) then\n  raise exception 'REVIEW_TAGS_INVALID' using errcode='22023';\n end if;\n tags_value:=array(select t.value#>>'{}' from jsonb_array_elements(p_tags) t order by (t.value#>>'{}') collate \"C\");\n if not private.review_tags_valid(tags_value) then raise exception 'REVIEW_TAGS_INVALID' using errcode='22023'; end if;\n -- The star hash keeps the legacy formula exactly (so every stored hash and every replay through either function stays compatible); the comment is bound by its own digest in its own row.\n h:=encode(extensions.digest(jsonb_build_object('agreementId',p_agreement_id,'target',p_target_account_id,\n  'rating',rating_value::integer,'tags',to_jsonb(tags_value))::text,'sha256'),'hex');\n comment_value:=private.review_comment_input_v1(p_comment);\n comment_sha:=case when comment_value is null then null else encode(extensions.digest(convert_to(comment_value,'UTF8'),'sha256'),'hex') end;\n -- Same successful command remains an immutable read, even after a later block.\n perform pg_advisory_xact_lock(hashtextextended('uskoci:review-command:'||u::text||':'||p_client_request_id::text,9120));\n select * into r from private.agreement_reviews where reviewer_account_id=u and client_request_id=p_client_request_id;\n if found then\n  if r.input_hash<>h then raise exception 'REQUEST_ID_REUSED' using errcode='22023'; end if;\n  -- A comment that differs from the stored one (or one added to a stored star-only review) is another command under the same id.\n  select c.comment,c.comment_sha256 into stored_comment,stored_sha from private.agreement_review_comments_v1 c where c.review_id=r.id;\n  if stored_sha is distinct from comment_sha then raise exception 'REQUEST_ID_REUSED' using errcode='22023'; end if;\n  return private.review_receipt(r,true)||jsonb_build_object('comment',stored_comment);\n end if;\n select * into a from public.agreements where id=p_agreement_id and u in(requester_account_id,worker_account_id) for share;\n if not found then raise exception 'REVIEW_NOT_ALLOWED' using errcode='42501'; end if;\n if p_target_account_id<>(case when u=a.requester_account_id then a.worker_account_id else a.requester_account_id end) then\n  raise exception 'REVIEW_NOT_ALLOWED' using errcode='42501';\n end if;\n if a.status<>'COMPLETED' or not exists(select 1 from public.agreement_execution where agreement_id=a.id and state='COMPLETED') then\n  raise exception 'REVIEW_NOT_COMPLETED' using errcode='55000';\n end if;\n perform pg_advisory_xact_lock(hashtextextended('uskoci:review-agreement:'||a.id::text||':'||u::text,9120));\n if exists(select 1 from private.agreement_reviews where agreement_id=a.id and reviewer_account_id=u) then\n  raise exception 'REVIEW_ALREADY_SUBMITTED' using errcode='55000';\n end if;\n -- A block cannot remove the counterpart's completed-work review entitlement (stars and comment alike; a refusal would reveal the block).\n -- P8 suppresses ordinary deliveries, including this event, for blocked pairs. The comment is hidden from readers while the pair is blocked, at read time.\n insert into private.agreement_reviews(agreement_id,reviewer_account_id,target_account_id,rating,tags,client_request_id,input_hash)\n values(a.id,u,p_target_account_id,rating_value::integer,tags_value,p_client_request_id,h) returning * into r;\n if comment_value is not null then\n  insert into private.agreement_review_comments_v1(review_id,author_account_id,target_account_id,comment,comment_sha256,created_at)\n  values(r.id,r.reviewer_account_id,r.target_account_id,comment_value,comment_sha,r.created_at);\n end if;\n perform private.audit_marketplace(u,'AGREEMENT_REVIEW_SUBMITTED','AGREEMENT',a.id,a.current_version,jsonb_build_object('reviewId',r.id));\n target_role:=case when u=a.requester_account_id then 'WORKER' else 'REQUESTER' end;\n perform private.emit_event(p_target_account_id,target_role,'REVIEW_RECEIVED','AGREEMENT',a.id,a.current_version,\n  'Nova ocena','Dobili ste ocenu za zavr'||chr(353)||'en Dogovor.','agreement-review:'||r.id::text,'NORMAL','{}'::jsonb,null);\n return private.review_receipt(r,false)||jsonb_build_object('comment',comment_value);\nend;\n$function$\n",
+      "body_md5": "75a88570ff847b97a7d71b0854acf171",
+      "owner": "postgres",
+      "acl": "{postgres=X/postgres,authenticated=X/postgres,service_role=X/postgres}",
+      "config": [
+        "search_path=pg_catalog"
+      ],
+      "definer": true,
+      "strict": false,
+      "volatility": "v",
+      "catalog_attributes": {
+        "oid": "27107",
+        "proacl": [
+          "postgres=X/postgres",
+          "authenticated=X/postgres",
+          "service_role=X/postgres"
+        ],
+        "probin": null,
+        "procost": 100,
+        "prokind": "f",
+        "prolang": "13619",
+        "proname": "rpc_submit_agreement_review_v2",
+        "prorows": 0,
+        "pronargs": 6,
+        "proowner": "16388",
+        "proconfig": [
+          "search_path=pg_catalog"
+        ],
+        "proretset": false,
+        "prosecdef": true,
+        "prorettype": "3802",
+        "prosqlbody": null,
+        "prosupport": "-",
+        "proargmodes": null,
+        "proargnames": [
+          "p_agreement_id",
+          "p_target_account_id",
+          "p_rating",
+          "p_tags",
+          "p_client_request_id",
+          "p_comment"
+        ],
+        "proargtypes": [
+          "2950",
+          "2950",
+          "3802",
+          "3802",
+          "2950",
+          "3802"
+        ],
+        "proisstrict": false,
+        "proparallel": "u",
+        "protrftypes": null,
+        "provariadic": "0",
+        "provolatile": "v",
+        "proleakproof": false,
+        "pronamespace": "2200",
+        "proallargtypes": null,
+        "proargdefaults": "({CONST :consttype 3802 :consttypmod -1 :constcollid 0 :constlen -1 :constbyval false :constisnull true :location -1 :constvalue <>})",
+        "pronargdefaults": 1
+      }
+    },
+    {
+      "name": "public.rpc_tick_auto_completion",
+      "signature": "rpc_tick_auto_completion()",
+      "args": "",
+      "result": "integer",
+      "definition": "CREATE OR REPLACE FUNCTION public.rpc_tick_auto_completion()\n RETURNS integer\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO 'pg_catalog'\nAS $function$\ndeclare candidate record; a public.agreements; x public.agreement_execution; done integer:=0; at_time timestamptz:=statement_timestamp();\nbegin\n for candidate in select ag.id,ag.need_id from public.agreements ag join public.agreement_execution ex on ex.agreement_id=ag.id\n   where ag.status='CONFIRMED' and ex.state='AWAITING_REQUESTER' and ex.problem_opened_at is null\n     and ex.requester_deadline_at is not null and ex.requester_deadline_at<=at_time\n   order by ag.need_id,ag.id limit 100\n loop\n   perform 1 from public.needs where id=candidate.need_id for update skip locked;\n   if not found then continue; end if;\n   select * into a from public.agreements where id=candidate.id for update skip locked;\n   if not found or a.status<>'CONFIRMED' then continue; end if;\n   select * into x from public.agreement_execution where agreement_id=a.id for update skip locked;\n   if not found or x.state<>'AWAITING_REQUESTER' or x.agreement_version<>a.current_version\n     or x.problem_opened_at is not null or x.requester_deadline_at is null or x.requester_deadline_at>at_time\n     or exists(select 1 from public.agreement_change_proposals where agreement_id=a.id and status='PENDING') then continue; end if;\n   update public.agreement_execution set state='COMPLETED',completed_at=at_time,requester_deadline_at=null,updated_at=at_time where agreement_id=a.id;\n   update public.agreements set status='COMPLETED',updated_at=at_time where id=a.id;\n   perform private.sync_need_completion(a.need_id);\n   -- PKG-029a (deep read 1.2): the worker is told the job closed, exactly as when the requester confirms (same\n   -- event, same dedupe key, so the two paths can never both notify).\n   perform private.emit_event(a.worker_account_id, 'WORKER', 'EXECUTION_STATE_CHANGED', 'AGREEMENT', a.id, a.current_version,\n     'Dogovor je završen', 'Rok za potvrdu je istekao, pa je završetak potvrđen automatski.',\n     'completed:worker:' || a.id::text || ':' || a.current_version::text, 'NORMAL',\n     jsonb_build_object('completedAt', at_time, 'automatic', true), null);\n   done:=done+1;\n end loop;\n return done;\nend;\n$function$\n",
+      "body_md5": "b617890420e11846dbe528ffc4d800d7",
+      "owner": "postgres",
+      "acl": "{postgres=X/postgres,service_role=X/postgres}",
+      "config": [
+        "search_path=pg_catalog"
+      ],
+      "definer": true,
+      "strict": false,
+      "volatility": "v",
+      "catalog_attributes": {
+        "oid": "18071",
+        "proacl": [
+          "postgres=X/postgres",
+          "service_role=X/postgres"
+        ],
+        "probin": null,
+        "procost": 100,
+        "prokind": "f",
+        "prolang": "13619",
+        "proname": "rpc_tick_auto_completion",
+        "prorows": 0,
+        "pronargs": 0,
+        "proowner": "16388",
+        "proconfig": [
+          "search_path=pg_catalog"
+        ],
+        "proretset": false,
+        "prosecdef": true,
+        "prorettype": "23",
+        "prosqlbody": null,
+        "prosupport": "-",
+        "proargmodes": null,
+        "proargnames": null,
+        "proargtypes": [],
+        "proisstrict": false,
+        "proparallel": "u",
+        "protrftypes": null,
+        "provariadic": "0",
+        "provolatile": "v",
+        "proleakproof": false,
+        "pronamespace": "2200",
+        "proallargtypes": null,
+        "proargdefaults": null,
+        "pronargdefaults": 0
+      }
+    },
+    {
+      "name": "public.selectable_application_count",
+      "signature": "selectable_application_count(needs)",
+      "args": "n needs",
+      "result": "integer",
+      "definition": "CREATE OR REPLACE FUNCTION public.selectable_application_count(n needs)\n RETURNS integer\n LANGUAGE plpgsql\n STABLE SECURITY DEFINER\n SET search_path TO 'pg_catalog'\nAS $function$\ndeclare actor uuid:=auth.uid(); actual public.needs; result integer;\nbegin\n  if actor is null then raise exception 'AUTH_REQUIRED' using errcode='28000'; end if;\n  if not public.rpc_storage_account_open() then raise exception 'ACCOUNT_NOT_OPEN' using errcode='42501'; end if;\n  -- Only the ID is input. Never trust owner/status/price fields in a caller-supplied composite.\n  select * into actual from public.needs t where t.id=n.id and t.requester_account_id=actor;\n  if not found then return null; end if;\n  select count(*)::integer into result from private.need_candidate_states_v5(actual.id) c\n    where c.candidate_state='SELECTABLE';\n  return result;\nend;\n$function$\n",
+      "body_md5": "fe53442f8b661d6f33d22a54e2a468a8",
+      "owner": "postgres",
+      "acl": "{postgres=X/postgres,authenticated=X/postgres,service_role=X/postgres}",
+      "config": [
+        "search_path=pg_catalog"
+      ],
+      "definer": true,
+      "strict": false,
+      "volatility": "s",
+      "catalog_attributes": {
+        "oid": "25187",
+        "proacl": [
+          "postgres=X/postgres",
+          "authenticated=X/postgres",
+          "service_role=X/postgres"
+        ],
+        "probin": null,
+        "procost": 100,
+        "prokind": "f",
+        "prolang": "13619",
+        "proname": "selectable_application_count",
+        "prorows": 0,
+        "pronargs": 1,
+        "proowner": "16388",
+        "proconfig": [
+          "search_path=pg_catalog"
+        ],
+        "proretset": false,
+        "prosecdef": true,
+        "prorettype": "23",
+        "prosqlbody": null,
+        "prosupport": "-",
+        "proargmodes": null,
+        "proargnames": [
+          "n"
+        ],
+        "proargtypes": [
+          "17658"
+        ],
+        "proisstrict": false,
+        "proparallel": "u",
+        "protrftypes": null,
+        "provariadic": "0",
+        "provolatile": "s",
+        "proleakproof": false,
+        "pronamespace": "2200",
+        "proallargtypes": null,
+        "proargdefaults": null,
+        "pronargdefaults": 0
+      }
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "source": "docs/reference/USKOCI_HTML_REFERENCA_IZGLEDA_APP.html",
+  "sourceSha256": "d1b4ff452cbb401997956854a639d87adc15f138ff754902f54182847a6208a4",
+  "purpose": "Preserved original resources; current design direction is independent of this historical layout.",
+  "files": [
+    {
+      "name": "uskoci-entry-city.webp",
+      "target": "assets/generated/uskoci-entry-city.webp",
+      "bytes": 64388,
+      "sha256": "ad4c57566f3a69b269f6371f2ed516146e583e820c2ce8051c3dcaf870193f01"
+    },
+    {
+      "name": "uskoci-rounded.ttf",
+      "target": "assets/generated/uskoci-rounded.ttf",
+      "bytes": 134916,
+      "sha256": "0b82ab5fdba8e0147e38e89237ea4a430f0d7017c313d9b8e56a309acde756c0"
+    },
+    {
+      "name": "entryReferenceData.ts.txt",
+      "target": "src/ui/referenceEntry/entryReferenceData.ts",
+      "bytes": 36438,
+      "sha256": "9e4667d9d7050f041c9c9dcdee17054a5928261d139dc7e4d4bca66f5e2e8e47"
+    }
+  ]
+}

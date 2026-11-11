@@ -1,0 +1,28 @@
+{
+  "source": "Existing USKOČI Figma design nZwxDeRClrrecngX09bimy, welcome frame 2:138",
+  "capturedAt": "2026-10-21",
+  "status": "Exact original raw image assets from the approved design; native callsites and phone appearance still need validation",
+  "assets": [
+    {
+      "file": "logo.png",
+      "figmaNode": "3:3",
+      "width": 2172,
+      "height": 724,
+      "sha256": "870F2B26838A06A3F0F6C92C9FC61DDC238B777BE53562BDF8FB0A14DA44CB86"
+    },
+    {
+      "file": "publish.png",
+      "figmaNode": "3:5",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "EBAC6AEC8979633961AB54AB576876C70BEEF3DBFF2236C8AE77FB53B8A90671"
+    },
+    {
+      "file": "discover.png",
+      "figmaNode": "3:7",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "C9637868157F86D3D33D57BE986880F9FD5CF712D972B72DF544F5DC489BC015"
+    }
+  ]
+}

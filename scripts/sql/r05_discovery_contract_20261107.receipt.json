@@ -1,0 +1,123 @@
+{
+  "schema": "USKOCI_R05_DISCOVERY_SOURCE_PROOF_V1",
+  "status": "DEV_APPLIED_FULL_READBACK_AND_ORDINARY_REMOTE_PROBES_VERIFIED",
+  "project": "leqcwgzvjsxugfgzdmth",
+  "observedDateUtc": "2026-11-07",
+  "sourceBaseCommit": "20903892d7f5def28ce33a15027918e5ca19c342",
+  "gitCheckpoint": "NOT_COMMITTED_OR_PUSHED_BY_THIS_AGENT",
+  "candidate": {
+    "path": "scripts/sql/r05_discovery_contract_20261107.sql",
+    "bytes": 51324,
+    "sha256": "086f8f269d2c2bd67ff3037dcc41b7f38e0e1eaf34648639f82b4aec1bf9cc5d",
+    "changedFunction": "public.rpc_discovery_v1(jsonb)",
+    "livePreimageBodyMd5": "a5ce63c8874fbd3550730dd46d4044d7",
+    "candidateBodyMd5": "1cb5ece85a18972ca3ef827981733858",
+    "guardedFunctionCount": 14,
+    "unchangedFunctionCount": 13,
+    "expectedAuthenticatedReadableNeedsColumns": 40,
+    "dataMutation": false,
+    "rlsMutation": false,
+    "grantMutation": false,
+    "matchingRuleMutation": false
+  },
+  "activeClient": {
+    "modes": [
+      "PAGE",
+      "MAP",
+      "PLACES",
+      "EXACT_PUBLIC"
+    ],
+    "placesGroupBy": "CITY",
+    "optionalFilters": [
+      "forMe",
+      "minBudgetRsd"
+    ],
+    "previewEasP6DiscoveryReader": "0",
+    "productionEasP6DiscoveryReader": "0",
+    "isolatedQaWorkflow": "Inherits preview.env, including EXPO_PUBLIC_P6_DISCOVERY_READER=0. This source review does not identify a newly built or installed APK.",
+    "flagChanged": false
+  },
+  "localProof": {
+    "command": "node --test scripts/r05-discovery-contract.test.cjs",
+    "testsPassed": 16,
+    "testsFailed": 0,
+    "topLevelGroups": 1,
+    "behaviorSubtests": 15,
+    "runtime": "Disposable PGlite PostgreSQL with actual captured discovery/helper/matcher bodies and actual current TypeScript response decoders.",
+    "coverage": [
+      "Reproduce old forMe/minBudget P6_INVALID_FILTER and MAP/PLACES P6_MODE_NOT_IMPLEMENTED failures.",
+      "Atomic preimage/ACL/projection/RLS drift rejection and complete pg_proc metadata preservation.",
+      "No fixture row changes; default PAGE output and absent/false forMe filter hashes preserved.",
+      "ForMe uses the current owned-profile matcher before LIMIT, pagination and exact counts.",
+      "Saved distant work area remains eligible beyond 300 km despite a smaller legacy profile circle.",
+      "ForMe/all/account/minimum changes cannot reuse incompatible anchors or cursors.",
+      "Missing or inactive work profile rejects ForMe instead of falling back to all tasks.",
+      "Stated budget preserves TOTAL/PER_PERSON/HOURLY values, offers and partial 3-of-5 coverage without price conversion.",
+      "Invalid optional filters reject null/string/overflow/unrecognized values and OFFERS-only minimum.",
+      "MAP uses the same membership, coarse public pins and a bounded whole-world grid.",
+      "PLACES CITY count agrees with PAGE city selection; AREA/prefix/grouping have separate traversal identity.",
+      "Serbian Cyrillic/Latin/diacritic city folding retains the public display label.",
+      "EXACT_PUBLIC and ordinary SQL roles preserve draft, other-world, closed-account and denied-column boundaries.",
+      "More than 300 visible fixture tasks contribute to map counts/buckets without page truncation."
+    ],
+    "fixtureLimits": [
+      "Auth/lineage and closed-account services use the existing bounded R01 fixture.",
+      "Signed taxonomy eligibility, identity admission and saved-area geometry are bounded dependencies, not a complete matching acceptance test.",
+      "PostGIS storage is represented by the existing geography domain fixture; real geometry and real device rendering are not tested.",
+      "The row-volume case proves completeness/bounds, not hosted performance or production capacity."
+    ],
+    "syntaxCheck": "PASS: node --check scripts/r05-discovery-contract.test.cjs",
+    "diffWhitespaceCheck": "PASS: git diff --check",
+    "migrationIntegrity": {
+      "canonicalFiles": 207,
+      "status": "PASS",
+      "pythonTestsPassed": 31,
+      "pythonTestsFailed": 0
+    }
+  },
+  "historicalSource": {
+    "commit": "a3623973450130fcf0e770f9ed28f315f366d5b2",
+    "path": "supabase/candidates/discovery-min-price-20261020/before.sql",
+    "bodyMd5": "a9b0985991f4ebfe4e95143e5cf57222",
+    "legacyVersionsPresent": [
+      "20261007204555",
+      "20261008000839"
+    ],
+    "legacyCurrentLedger": "Names are NULL and statement arrays are empty. Historical receipts support prior deployment history but do not establish current exact-ledger equivalence.",
+    "adaptation": "Only the existing reader was extracted and adapted. Both legacy profile-radius prefilters were removed; current matching remains authoritative. No historical tree or migration hash was restored or rewritten."
+  },
+  "independentReview": {
+    "reviewer": "product_qa",
+    "result": "NO_P0_P1_BLOCKER_FOUND",
+    "method": "Read-only source/contract review; reviewer did not rerun the 16 SQL tests."
+  },
+  "devApplied": true,
+  "canonicalMigrationRegistered": true,
+  "paidProviderCalls": 0,
+  "notProven": [
+    "Ordinary JWT/PostgREST ForMe, MAP, PLACES and minimum-filter probes after this candidate.",
+    "Native rendering, installed APK behavior and P6 production activation.",
+    "Hosted load/performance or comprehensive geographic/calendar matching."
+  ],
+  "devProof": {
+    "migrationVersion": "20261107121943",
+    "migrationName": "r05_discovery_contract_20261107",
+    "migrationCountAfter": 342,
+    "singleLedgerStatementEqualsCandidate": true,
+    "allFourteenFullDefinitionsAndMetadataCompared": true,
+    "unchangedDependencyFunctions": 13,
+    "targetBodyMd5": "1cb5ece85a18972ca3ef827981733858",
+    "targetMetadataAndAclUnchanged": true,
+    "needsProjectionFortyColumnsUnchanged": true,
+    "needsPoliciesSixUnchanged": true,
+    "canonicalFile": "supabase/migrations/20261107121943_r05_discovery_contract_20261107.sql",
+    "canonicalEvidenceSha256": "7aaaf62031b73f0eaa1ce85758503164989aedc4ca67c9f7dda0317cbdbd6e80"
+  },
+  "ordinaryAuthFollowup": {
+    "status": "PASS",
+    "evidence": "scripts/ordinary-auth-e2e-20261107.receipt.json",
+    "evidenceSha256": "4c63107a21cda2c2faeaf3f6317ac659d30eeb7f41c79f470c75725f848fb35d",
+    "scope": "R05 REMOTE ForMe/PAGE/MAP/PLACES/minimum/EXACT with P6 flag unchanged",
+    "native": false
+  }
+}

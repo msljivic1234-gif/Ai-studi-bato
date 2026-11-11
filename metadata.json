@@ -1,0 +1,6 @@
+{
+  "name": "GitHub & Database Workspace",
+  "description": "Full-stack workspace with GitHub integration and relational database support.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

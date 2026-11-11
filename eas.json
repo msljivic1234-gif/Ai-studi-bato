@@ -1,0 +1,68 @@
+{
+  "cli": {
+    "version": ">= 23.2.0",
+    "appVersionSource": "remote"
+  },
+  "build": {
+    "preview": {
+      "distribution": "internal",
+      "environment": "preview",
+      "autoIncrement": true,
+      "credentialsSource": "remote",
+      "android": {
+        "buildType": "apk"
+      },
+      "channel": "preview",
+      "env": {
+        "USKOCI_OTA_TARGET": "preview",
+        "EXPO_PUBLIC_SUPABASE_URL": "https://leqcwgzvjsxugfgzdmth.supabase.co",
+        "EXPO_PUBLIC_SUPABASE_ANON_KEY": "sb_publishable_o_I-YOn57oPCrIboF0OjPQ_c3DHmOZW",
+        "EXPO_PUBLIC_USE_FAKE_SOURCE": "0",
+        "EXPO_PUBLIC_AUTH_RECOVERY_REDIRECT_URL": "uskociapp://oporavak",
+        "EXPO_PUBLIC_P6_DISCOVERY_READER": "0",
+        "EXPO_PUBLIC_EX04_OWN_TASKS_PAGED": "1",
+        "EXPO_PUBLIC_EX04_OWN_APPLICATIONS_PAGED": "1",
+        "EXPO_PUBLIC_EX04_CANDIDATES_PAGED": "1",
+        "EXPO_PUBLIC_VOICE_MESSAGES": "1",
+        "EXPO_PUBLIC_AI_LOCATION_DIALOGUE": "1",
+        "EXPO_PUBLIC_CONVERSATION_INBOX": "1",
+        "EXPO_PUBLIC_USKOCI_NEED_SIGNED_REVIEW": "true",
+        "EXPO_PUBLIC_USKOCI_WORKER_SIGNED_REVIEW": "true",
+        "EXPO_PUBLIC_USKOCI_WORKER_CONFIRMED_MODES": "true",
+        "EXPO_PUBLIC_SUPPORT_EMAIL": "uskocibusiness@gmail.com",
+        "EXPO_PUBLIC_D12_REVIEW_COMMENT": "1",
+        "EXPO_PUBLIC_P6_MIN_BUDGET_FILTER": "1",
+        "USKOCI_PUSH_PROOF_BUILD": "1",
+        "EXPO_PUBLIC_USKOCI_DEV_AUTO_PUSH_ENROLL": "1"
+      }
+    },
+    "production": {
+      "distribution": "store",
+      "environment": "production",
+      "autoIncrement": true,
+      "credentialsSource": "remote",
+      "android": {
+        "buildType": "app-bundle"
+      },
+      "env": {
+        "EXPO_PUBLIC_USE_FAKE_SOURCE": "0",
+        "EXPO_PUBLIC_SUPPORT_EMAIL": "uskocibusiness@gmail.com",
+        "EXPO_PUBLIC_D12_REVIEW_COMMENT": "1",
+        "EXPO_PUBLIC_P6_MIN_BUDGET_FILTER": "1",
+        "EXPO_PUBLIC_AUTH_RECOVERY_REDIRECT_URL": "uskociapp://oporavak",
+        "EXPO_PUBLIC_P6_DISCOVERY_READER": "0",
+        "EXPO_PUBLIC_EX04_OWN_TASKS_PAGED": "1",
+        "EXPO_PUBLIC_EX04_OWN_APPLICATIONS_PAGED": "1",
+        "EXPO_PUBLIC_EX04_CANDIDATES_PAGED": "1",
+        "EXPO_PUBLIC_VOICE_MESSAGES": "1",
+        "EXPO_PUBLIC_AI_LOCATION_DIALOGUE": "1",
+        "EXPO_PUBLIC_CONVERSATION_INBOX": "1",
+        "EXPO_PUBLIC_USKOCI_NEED_SIGNED_REVIEW": "true",
+        "EXPO_PUBLIC_USKOCI_WORKER_SIGNED_REVIEW": "true",
+        "EXPO_PUBLIC_USKOCI_WORKER_CONFIRMED_MODES": "true",
+        "USKOCI_OTA_TARGET": "production"
+      },
+      "channel": "production"
+    }
+  }
+}

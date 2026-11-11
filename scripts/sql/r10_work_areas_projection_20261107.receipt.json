@@ -1,0 +1,360 @@
+{
+  "schema": "USKOCI_R10_WORK_AREAS_PROJECTION_SOURCE_V1",
+  "taskIds": [
+    "R10",
+    "F19",
+    "SV06"
+  ],
+  "capturedAt": "2026-11-07T17:00:44.480079+00:00",
+  "repository": "uskocibusiness-boop/USKOCI-EAN",
+  "branch": "work/uskoci-cist-proizvod-20261104",
+  "sourceBase": "94f2801db54bcbd7cb294cda983e048cd5885939",
+  "status": "SOURCE_CANDIDATE_IMPLEMENTED_AND_ISOLATED_SQL_TESTED",
+  "authority": {
+    "executionMaster": "docs/plan/CODEX_PLAN_RADA.md",
+    "sections": [
+      "R10 — Ispravka projekcija i potpunost kopija",
+      "R10 — Saglasnost, autorizacija i odbijanje nespremnog rada",
+      "SV06 — Izvoz, sve životne kopije i zatvaranje naloga"
+    ],
+    "previousBlockerProof": "docs/plan/proofs/r10-policy-blockers-20261107.json",
+    "productRulesChanged": false,
+    "policyDecisionsInvented": false
+  },
+  "reproducedProblem": {
+    "finding": "Captured live data_export_worker_candidate_v5 omits workAreas even when the source profile contains a valid confirmed array. The current live snapshot and archived reset projectors reuse it, losing the field in four projections.",
+    "copyPaths": [
+      "workerAiDrafts[].profile.workAreas",
+      "workerAiReviews[].profile.workAreas",
+      "archivedWorkerReset[].payload.worker_sessions[].candidate.workAreas",
+      "archivedWorkerReset[].payload.worker_reviews[].envelope.profile.workAreas"
+    ],
+    "metadataOnlySaveReceiptIsNotProfileCopy": true
+  },
+  "implementation": {
+    "newPrivateFunction": "private.data_export_worker_areas_v5(jsonb)",
+    "changedExistingFunctions": [
+      "private.data_export_worker_candidate_v5(jsonb)",
+      "private.data_export_projection_sha_v5()"
+    ],
+    "allowedAreaFields": [
+      "kind",
+      "countryCode",
+      "label",
+      "city",
+      "sourceRef",
+      "latitude",
+      "longitude",
+      "radiusKm"
+    ],
+    "validationOwner": "private.validate_worker_areas_v1(jsonb)",
+    "tolerantContract": "Project only allowed fields. Validate each projected individual area with the existing canonical validator. Omit only an invalid entry (SQLSTATE 22023); preserve valid values, original order and repeated valid entries. Missing, JSON null or non-array workAreas projects to an empty array. Extra private fields are discarded before validation. No facts are repaired or guessed, and source rows are never changed.",
+    "notAnActiveProfileSetWriter": "Validation is per historical entry for export, not admission of a new work-area set. This adapter does not deduplicate, reorder, select a new country/radius, confirm a proposal, or write a profile.",
+    "wholeAccountExportCompatibility": "A malformed historical entry no longer aborts the whole account snapshot. Other valid data and valid neighboring entries remain exportable.",
+    "projectionDependencyCountBefore": 14,
+    "projectionDependencyCountAfter": 16,
+    "newDigestDependencies": [
+      "private.data_export_worker_areas_v5(jsonb)",
+      "private.validate_worker_areas_v1(jsonb)"
+    ],
+    "dynamicProjectionDigestOnly": true,
+    "expectedRetentionOrErasurePinChanged": false,
+    "postimageBodies": {
+      "private.data_export_worker_candidate_v5(jsonb)": "c54d2b639082356d06609317be8226f0",
+      "private.data_export_projection_sha_v5()": "39faec2ad11eadd6f1184cb4e560d61d"
+    },
+    "adapterBodyMd5": "052eea0037026beb43c653bc248af2ad",
+    "isolatedProjectionSha256": "8b6a6099cab922d88e2ceff88ac9f34c1319cc9c3990814eab18a70288614c0f"
+  },
+  "compatibilityReview": {
+    "writerObservation": "worker_ai_patch starts with the existing base and validates workAreas only when that field is present in the incoming patch. Review preparation copies the existing candidate. This does not establish a complete shape guarantee for every historical archived/proposed copy.",
+    "writerBodyPins": [
+      {
+        "name": "public.rpc_worker_service_from_application",
+        "signature": "rpc_worker_service_from_application(uuid,uuid,uuid,boolean)",
+        "body_md5": "5166aa0e568cb7010ffd522f71c9aafb"
+      },
+      {
+        "name": "private.worker_ai_patch",
+        "signature": "private.worker_ai_patch(jsonb,jsonb,uuid,uuid,boolean)",
+        "body_md5": "72c241bc11a844f9e5779f046bb56e20"
+      },
+      {
+        "name": "public.rpc_patch_worker_ai",
+        "signature": "rpc_patch_worker_ai(uuid,integer,jsonb)",
+        "body_md5": "6d9a43f4de9a5510688cd3abfcd9611e"
+      },
+      {
+        "name": "public.rpc_prepare_worker_ai_review",
+        "signature": "rpc_prepare_worker_ai_review(uuid,integer,boolean)",
+        "body_md5": "b521d11f93593472a29dc033e13e0d15"
+      },
+      {
+        "name": "public.rpc_complete_worker_ai_turn_service",
+        "signature": "rpc_complete_worker_ai_turn_service(uuid,uuid,uuid,uuid,jsonb)",
+        "body_md5": "13ca82b747c934706ca230b837ee87ab"
+      },
+      {
+        "name": "public.rpc_prepare_worker_ai_review_taxonomy",
+        "signature": "rpc_prepare_worker_ai_review_taxonomy(uuid,integer,boolean)",
+        "body_md5": "d4609b081d71eaeef45310c3bac46cab"
+      },
+      {
+        "name": "public.rpc_prepare_worker_ai_review_taxonomy_confirmed",
+        "signature": "rpc_prepare_worker_ai_review_taxonomy_confirmed(uuid,integer,boolean,jsonb)",
+        "body_md5": "77d1f1620b0eebf3c4d8511a081bc656"
+      },
+      {
+        "name": "private.worker_ai_area_source_continuity_v1",
+        "signature": "private.worker_ai_area_source_continuity_v1()",
+        "body_md5": "6e8543b28bb11312cb454a946a6c95b3"
+      }
+    ],
+    "shapeAggregateScope": "Counts only for the four relevant private source copies. No account IDs, source bodies, locations or personal text returned.",
+    "shapeAggregates": [
+      {
+        "source": "archived_draft",
+        "profile_count": 3,
+        "field_present": 0,
+        "field_json_null": 0,
+        "field_other_type": 0,
+        "array_has_nonobject": 0,
+        "array_has_extra_fields": 0
+      },
+      {
+        "source": "archived_review",
+        "profile_count": 4,
+        "field_present": 0,
+        "field_json_null": 0,
+        "field_other_type": 0,
+        "array_has_nonobject": 0,
+        "array_has_extra_fields": 0
+      },
+      {
+        "source": "live_draft",
+        "profile_count": 11,
+        "field_present": 11,
+        "field_json_null": 0,
+        "field_other_type": 0,
+        "array_has_nonobject": 0,
+        "array_has_extra_fields": 0
+      },
+      {
+        "source": "live_review",
+        "profile_count": 23,
+        "field_present": 23,
+        "field_json_null": 0,
+        "field_other_type": 0,
+        "array_has_nonobject": 0,
+        "array_has_extra_fields": 0
+      }
+    ],
+    "aggregateLimit": "These counts check presence, container type, object entries and extra field names; they do not prove complete semantic validity of every stored area.",
+    "reviewedRevision": "The first strict whole-array validator proposal was superseded before DEV submission after coordinator review. The frozen candidate uses the existing tolerant export contract."
+  },
+  "provenance": {
+    "originalWorkerProjectionMigration": "supabase/migrations/20260913001000_clean_v5_owned_export_projection.sql",
+    "validatorMigration": "supabase/migrations/20261023210000_matching_work_areas_and_public_grants.sql",
+    "archiveRedactionBaseline": "supabase/migrations/20261021104455_closure_taxonomy_archive_copy_coverage.sql",
+    "laterCatalogResolutionLedgerPatch": [
+      {
+        "name": "r04_r06_single_pass_atomic_first_plan_v1",
+        "version": "20261103092425",
+        "statements_md5": "ad165ab345afb3ab39b4ab555caf50c1"
+      }
+    ],
+    "baselineBoundary": "Live archive projector/reset-section bodies retain the later catalog_resolution extension from the recorded 20261103092425 ledger patch. Current full definitions and metadata are captured and pinned; the older literal migration is not blindly restored.",
+    "existingFunctionDefinitionsCaptured": 20,
+    "acceptedPreimageProjectionSha256": "46b8c6a4b4a7fb67bec0545cde68a6f92088810663695c0f3b09b195a090246e"
+  },
+  "migrationGuards": {
+    "preimage": "Require absent new helper, exact body MD5 and normalized owner/language/definer/strictness/volatility/parallel/leakproof/cost/rows/search_path/ACL/result/arguments metadata for all 20 existing dependencies.",
+    "postimage": "Compare full pg_proc rows excluding prosrc for all 20 existing dependencies. Require exact postimage bodies for the two changed functions and unchanged bodies for the other 18. Require exact new adapter body, invoker/immutable/owner/search_path/ACL metadata and a complete dynamic digest roster.",
+    "temporaryGuardTableOnly": "pg_temp.uskoci_r10_projection_guard is transaction-scoped and dropped on commit.",
+    "unexpectedSourceDriftRejected": true,
+    "unexpectedPrivilegeDriftRejected": true,
+    "postimageMetadataDriftRollsBack": true,
+    "postimageAdapterBodyDriftRollsBack": true,
+    "accidentalReapplicationRejected": true,
+    "publicExecuteAdded": false,
+    "existingAclChanged": false,
+    "businessRowsModifiedByCandidate": false
+  },
+  "isolatedVerification": {
+    "engine": "@electric-sql/pglite with pgcrypto; actual captured PostgreSQL function bodies",
+    "exactProjectionFunctionsExecuted": [
+      "private.data_export_snapshot(uuid,uuid,jsonb,timestamptz)",
+      "private.closure_taxonomy_export_rows_v1(uuid)",
+      "private.closure_taxonomy_project_v1(text,jsonb,uuid)",
+      "private.data_export_worker_candidate_v5(jsonb)"
+    ],
+    "catalogShapes": {
+      "relations": 76,
+      "columns": 921,
+      "geographyAdaptation": [
+        {
+          "relation": "private.dev_phase1_20261014_needs_snapshot",
+          "column": "approx_geog",
+          "liveType": "geography(Point,4326)",
+          "isolatedType": "text"
+        },
+        {
+          "relation": "public.needs",
+          "column": "approx_geog",
+          "liveType": "geography(Point,4326)",
+          "isolatedType": "text"
+        }
+      ]
+    },
+    "fixtureBoundary": "Synthetic table shapes retain captured column names/types except two unused, unpopulated PostGIS columns represented as text. Table constraints, table RLS, triggers, Storage service and Auth management are not a complete cloned environment. All source function bodies are hash-checked and their private execute ACL is reproduced. Synthetic binding input invokes the private projector only; it is not an approved policy or public export authorization.",
+    "positive": [
+      "COUNTRY/CITY/RADIUS and mixed valid order survive all four projections",
+      "Other projected profile fields and source rows remain unchanged",
+      "Repeated private snapshots with the same cutoff and input are identical",
+      "Ordinary roles cannot execute the private functions",
+      "Existing owner predicates exclude another account and explicitly foreign archived entries"
+    ],
+    "negative": [
+      "Missing account yields no snapshot",
+      "Inconsistent conversation ownership excludes the draft/review",
+      "Extra private fields never reach output",
+      "Missing, null and wrong container types yield empty workAreas without rejecting the rest of the profile",
+      "Invalid entry types, excessive coordinate precision, wrong radius type, unapproved country and unsupported kind are omitted without invented replacements",
+      "Mixed valid/invalid arrays retain only valid entries in stored order",
+      "Drift in validator body, grants, postimage metadata or adapter body rolls back"
+    ],
+    "baselineRun": {
+      "command": "node --test --test-reporter=tap scripts/r10-work-areas-projection.test.cjs",
+      "baselineOnly": true,
+      "exitCode": 1,
+      "counts": {
+        "tests": 39,
+        "pass": 15,
+        "fail": 24,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "failureNames": [
+        "COUNTRY: exact type, values and order survive live draft, review and both archive copies",
+        "CITY: exact type, values and order survive live draft, review and both archive copies",
+        "RADIUS: exact type, values and order survive live draft, review and both archive copies",
+        "ORDERED_CITY_RADIUS: exact type, values and order survive live draft, review and both archive copies",
+        "another owner receives only their own live and archived copies",
+        "legacy profiles without workAreas export an empty array and invent no location",
+        "extra private area fields are discarded while the valid allowed fields survive",
+        "invalid missing_contract_field is omitted without inventing replacement facts or rejecting the profile",
+        "invalid unrounded_private_coordinates is omitted without inventing replacement facts or rejecting the profile",
+        "invalid numeric_string_radius is omitted without inventing replacement facts or rejecting the profile",
+        "invalid unapproved_country is omitted without inventing replacement facts or rejecting the profile",
+        "invalid wrong_kind is omitted without inventing replacement facts or rejecting the profile",
+        "invalid object_instead_of_array is omitted without inventing replacement facts or rejecting the profile",
+        "invalid null_instead_of_array is omitted without inventing replacement facts or rejecting the profile",
+        "invalid string_instead_of_array is omitted without inventing replacement facts or rejecting the profile",
+        "invalid nonobject_array_entries is omitted without inventing replacement facts or rejecting the profile",
+        "mixed valid and invalid entries preserve the valid order across all live/archive copies",
+        "historical repeated entries are projected in order without turning export into a profile writer",
+        "projection digest changes with this field and covers changes to its canonical validator",
+        "only the existing projector and its dynamic dependency digest have changed",
+        "anon cannot call the private candidate or snapshot projection directly",
+        "authenticated cannot call the private candidate or snapshot projection directly",
+        "service_role cannot call the private candidate or snapshot projection directly",
+        "R10 preserves validated workAreas through the current own-account snapshot and reset archive"
+      ],
+      "projectionDigest": null,
+      "logSha256": "be7758fd892ff04e0eb58f3d38fbeaeac96095f97cf20e92c430a805c06ed7b1"
+    },
+    "baselineInterpretation": "The first projection suite deliberately keeps the captured preimage; the migration-guard suite still tests the candidate. The 24 failing test nodes include an aggregate parent and missing-new-adapter permission checks (42883 rather than 42501). They are not 24 distinct product defects or evidence of an old permission leak. The direct preimage characterization separately demonstrates the missing field in all four projections.",
+    "postimageRun": {
+      "command": "node --test --test-reporter=tap scripts/r10-work-areas-projection.test.cjs",
+      "baselineOnly": false,
+      "exitCode": 0,
+      "counts": {
+        "tests": 39,
+        "pass": 39,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "failureNames": [],
+      "projectionDigest": "8b6a6099cab922d88e2ceff88ac9f34c1319cc9c3990814eab18a70288614c0f",
+      "logSha256": "a2c124cec1003078014c84dda2944baa2d9f78334e1b75b4b93c17f0f747acff"
+    },
+    "syntaxCheck": "node --check scripts/r10-work-areas-projection.test.cjs: PASS",
+    "diffCheck": "git diff --check: PASS",
+    "typescript": "No TypeScript source changed; final integration gate belongs to coordinator.",
+    "ci": "Not claimed by this source receipt"
+  },
+  "redactionVerification": {
+    "actualHelpersExecuted": [
+      "private.closure_redaction_patch_v5(text,jsonb,uuid,uuid)",
+      "private.closure_taxonomy_patch_v1(text,jsonb,uuid,uuid)"
+    ],
+    "liveSession": "Existing UPDATE instruction replaces the complete candidate with its erased marker, covering workAreas.",
+    "liveReview": "Existing UPDATE instruction replaces the complete envelope with its erased marker, covering the nested profile/workAreas.",
+    "archiveReset": "Existing DELETE instruction covers the whole reset row and payload.",
+    "holds": "An active account/conversation retention hold still returns no live draft/review redaction instruction.",
+    "unregisteredRelationRejected": true,
+    "boundary": "These are actual isolated redaction helper instructions and hold checks. They do not prove execution/commit of account closure, all historical copies, Storage deletion, Auth deletion, or the legal validity of any retention exception."
+  },
+  "devBoundary": {
+    "project": "leqcwgzvjsxugfgzdmth",
+    "readOnlyObservationBeforeCandidate": {
+      "observed_at": "2026-11-07 16:44:47.379107+00",
+      "postgres_version": "17.6",
+      "projection_sha256": "46b8c6a4b4a7fb67bec0545cde68a6f92088810663695c0f3b09b195a090246e",
+      "retention_source_ready": false,
+      "export_policy_binding_null": true,
+      "retention_predicate_body_md5": "b89891cd3eb5f327bd642a160e5a2e81",
+      "policy_binding_body_md5": "21ae94d4425396da941359cd834913fb"
+    },
+    "mutationsPerformedByThisAgent": false,
+    "deploymentProof": "Coordinator owns any later DEV application and a separate execution/readback receipt.",
+    "noPolicyActivation": true,
+    "noRetentionOrErasureRepin": true,
+    "noPaidProviderCall": true,
+    "noPrivateRowsReturned": true
+  },
+  "notProven": [
+    "Approved legal policy or retention/export lifetimes",
+    "Whole public export request/grant/revoke/late-download journey",
+    "Signed-review Save and full account closure execution on hosted DEV",
+    "Complete current/backup/archive erasure or Storage/Auth side effects",
+    "Native/device acceptance",
+    "Public beta readiness"
+  ],
+  "officialReferences": [
+    "https://supabase.com/changelog.md",
+    "https://supabase.com/changelog/postgres-15-19-17-11-breaking-changes",
+    "https://supabase.com/docs/guides/database/functions",
+    "https://www.postgresql.org/docs/current/functions-json.html"
+  ],
+  "files": [
+    {
+      "path": "scripts/sql/r10_work_areas_projection_20261107.preimage.json",
+      "sha256": "27ef62befd92ea580fde6e564b685b69094732e78a9e07aa62d7548abe22d8b9",
+      "bytes": 12237
+    },
+    {
+      "path": "scripts/sql/r10_work_areas_projection_20261107.dependencies.json",
+      "sha256": "65af49267428d372a3cf7a65b92fe9f22fb977d2e8c37bf28f23630be98549c0",
+      "bytes": 96361
+    },
+    {
+      "path": "scripts/sql/r10_work_areas_projection_20261107.fixture-schema.json",
+      "sha256": "ba932b4be507decc04008b36ed775b3ea2c62e470d7ee515cc1d40f529640f7f",
+      "bytes": 246043
+    },
+    {
+      "path": "scripts/sql/r10_work_areas_projection_20261107.sql",
+      "sha256": "d269d4eedb38a8727f44162cc6e8640a8dc34d2d52a60b72bc86efa1dee28074",
+      "bytes": 16509
+    },
+    {
+      "path": "scripts/r10-work-areas-projection.test.cjs",
+      "sha256": "54a05dd317f6fed0b2e3c7df5a83c8649c52ef9227b9a74585379602a42c86fd",
+      "bytes": 23482
+    }
+  ]
+}

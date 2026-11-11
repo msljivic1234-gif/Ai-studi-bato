@@ -1,0 +1,263 @@
+{
+  "format_version": 1,
+  "project": "leqcwgzvjsxugfgzdmth",
+  "observed_at_utc": "2026-11-07T15:40:24.287526+00:00",
+  "status": "DEV_ORDINARY_AUTH_READBACK_CONFIRMED",
+  "world": "TEST",
+  "migration": {
+    "name": "r07_selection_recovery_20261107",
+    "version": "20261107153455",
+    "joined_md5": "db1ca71ebfeea07af1aafa33d2035e1f",
+    "joined_bytes": 8392,
+    "joined_sha256": "b29efe20f41cbf1c5521c8de85d3662b2d33fe85d01d3ca86739a51380edfc50",
+    "statement_count": 1
+  },
+  "account_id_sha256": {
+    "worker": "2c6c7605a3e6a6ed941a6608185b60a8bc96b2bce6ff02bf84453e612008be40",
+    "requester": "0c0907e99f626948eef05c174763117d611cf612802bcd89ede83422859e9875"
+  },
+  "lineage_receipt_sha256": "1da811f999c2c3899b23b8c27330917e461abfe527795ad0eb7b84258a72fb94",
+  "auth_harness_sha256": "c8ac61cae8f86cfb385099913146706c209de49adf119a34fab2fb7ace16dd75",
+  "fixture_state_sha256": "f5180b111942b580e31a709994a625397db38c1b8142fd511b67987623eb9bb3",
+  "script_sha256": "df72bfe1ae27c38459dc695c206110185016c57c434ee3ea3fe45c90e3a2692b",
+  "ordinary_auth_roles_verified": 2,
+  "real_session_id_claims_verified": 2,
+  "agreement_id_sha256": "1cdbb16b6a73fb3a63b6d3632aa6ceca67e22dcb723f9b34a7cdb0e1bce25c8d",
+  "agreement_status": "COMPLETED",
+  "owned_receipt_sha256": "2ee10dbb51c729736e6cbd02666529625536e828d2ed225763dcdc6048ce3d2c",
+  "original_need_revision": 1,
+  "original_response_version": 1,
+  "original_covered_slots": 2,
+  "workspace_before_sha256": "bed8a1f31087f3e4b8c179df135e1c8bb540de774b4c7302b008a9667938228e",
+  "workspace_after_sha256": "bed8a1f31087f3e4b8c179df135e1c8bb540de774b4c7302b008a9667938228e",
+  "workspace_terms_unchanged": true,
+  "both_participants_same_terms": true,
+  "operations": [
+    {
+      "name": "requester_workspace_before",
+      "actor": "requester",
+      "rpc": "rpc_get_agreement_workspace",
+      "http_status": 200,
+      "elapsed_ms": 5746.2
+    },
+    {
+      "name": "worker_workspace_before",
+      "actor": "worker",
+      "rpc": "rpc_get_agreement_workspace",
+      "http_status": 200,
+      "elapsed_ms": 5627.0
+    },
+    {
+      "name": "owner_exact_receipt",
+      "actor": "requester",
+      "rpc": "rpc_read_selection_result",
+      "http_status": 200,
+      "elapsed_ms": 5500.2
+    },
+    {
+      "name": "owner_repeated_receipt",
+      "actor": "requester",
+      "rpc": "rpc_read_selection_result",
+      "http_status": 200,
+      "elapsed_ms": 5787.6
+    },
+    {
+      "name": "other_account_ledger_hidden",
+      "actor": "worker",
+      "rpc": "rpc_read_selection_result",
+      "http_status": 200,
+      "elapsed_ms": 5760.5
+    },
+    {
+      "name": "unknown_key_is_only_not_found",
+      "actor": "requester",
+      "rpc": "rpc_read_selection_result",
+      "http_status": 200,
+      "elapsed_ms": 5821.4
+    },
+    {
+      "name": "changed_revision",
+      "actor": "requester",
+      "rpc": "rpc_read_selection_result",
+      "http_status": 400,
+      "elapsed_ms": 6400.2,
+      "safe_code": "22023"
+    },
+    {
+      "name": "changed_hash",
+      "actor": "requester",
+      "rpc": "rpc_read_selection_result",
+      "http_status": 400,
+      "elapsed_ms": 7463.7,
+      "safe_code": "22023"
+    },
+    {
+      "name": "changed_people",
+      "actor": "requester",
+      "rpc": "rpc_read_selection_result",
+      "http_status": 400,
+      "elapsed_ms": 5499.3,
+      "safe_code": "22023"
+    },
+    {
+      "name": "ordinary_budget_report_denied",
+      "actor": "requester",
+      "rpc": "rpc_ai_test_budget_report_service",
+      "http_status": 403,
+      "elapsed_ms": 6152.3,
+      "safe_code": "42501"
+    },
+    {
+      "name": "requester_workspace_after",
+      "actor": "requester",
+      "rpc": "rpc_get_agreement_workspace",
+      "http_status": 200,
+      "elapsed_ms": 6567.9
+    },
+    {
+      "name": "worker_workspace_after",
+      "actor": "worker",
+      "rpc": "rpc_get_agreement_workspace",
+      "http_status": 200,
+      "elapsed_ms": 7889.7
+    }
+  ],
+  "selection_writer_calls": 0,
+  "business_writer_calls": 0,
+  "model_calls": 0,
+  "admin_client_used_for_api_scenario": false,
+  "native_acceptance": false,
+  "server_row_hash_before_after": "Recorded separately by the coordinator/read-only SQL evidence; no privileged writer used.",
+  "read_only_sql_state_comparison": {
+    "scope": "Privileged connector SELECT hashes only; not used to simulate ordinary caller or write business rows.",
+    "before": {
+      "terms": [
+        {
+          "basis": "HOURLY",
+          "price": 1200,
+          "people": 2,
+          "version": 1,
+          "currency": "RSD",
+          "required_slots": 5
+        },
+        {
+          "basis": "HOURLY",
+          "price": 1250,
+          "people": 2,
+          "version": 2,
+          "currency": "RSD",
+          "required_slots": 5
+        }
+      ],
+      "status": "COMPLETED",
+      "accounts": [
+        {
+          "lineage": "SYNTHETIC_ACCEPTANCE_FIXTURE",
+          "revision": 1,
+          "account_sha256": "0c0907e99f626948eef05c174763117d611cf612802bcd89ede83422859e9875",
+          "visibility_world": "TEST"
+        },
+        {
+          "lineage": "SYNTHETIC_ACCEPTANCE_FIXTURE",
+          "revision": 1,
+          "account_sha256": "2c6c7605a3e6a6ed941a6608185b60a8bc96b2bce6ff02bf84453e612008be40",
+          "visibility_world": "TEST"
+        }
+      ],
+      "snapshot": {
+        "events": {
+          "count": 11,
+          "sha256": "440891605c4261ba2801a5d6233eada7fa065a4b7e2a891cf3eea1a77ea4148d"
+        },
+        "versions": {
+          "count": 2,
+          "sha256": "a2a550975d4035c1a6017912f08cf61d625912dc2ff256b84b18413ccca5798f"
+        },
+        "agreement": {
+          "count": 1,
+          "sha256": "2c209b8b037091783a29b0b23411e62dde39c2702f84f10e71d4c7eec1a156dc"
+        },
+        "selections": {
+          "count": 1,
+          "sha256": "ad336e0874fe3195b8a1fb4b8071b47c17dae71ad3b452fac335f1f46dbf53be"
+        },
+        "activations": {
+          "count": 1,
+          "sha256": "dfa44de3280d2e5a32f84a02818d1e3f95bd37c5bcc51534c32061cac20651c1"
+        },
+        "selection_commands": {
+          "count": 1,
+          "sha256": "e5d084c8a68ca5fc54d900fdd101378d8132ae840a470f017aca74521378429e"
+        }
+      },
+      "current_version": 2,
+      "observed_at_utc": "2026-11-07T15:37:18.046715+00:00"
+    },
+    "after": {
+      "terms": [
+        {
+          "basis": "HOURLY",
+          "price": 1200,
+          "people": 2,
+          "version": 1,
+          "currency": "RSD",
+          "required_slots": 5
+        },
+        {
+          "basis": "HOURLY",
+          "price": 1250,
+          "people": 2,
+          "version": 2,
+          "currency": "RSD",
+          "required_slots": 5
+        }
+      ],
+      "status": "COMPLETED",
+      "accounts": [
+        {
+          "lineage": "SYNTHETIC_ACCEPTANCE_FIXTURE",
+          "revision": 1,
+          "account_sha256": "0c0907e99f626948eef05c174763117d611cf612802bcd89ede83422859e9875",
+          "visibility_world": "TEST"
+        },
+        {
+          "lineage": "SYNTHETIC_ACCEPTANCE_FIXTURE",
+          "revision": 1,
+          "account_sha256": "2c6c7605a3e6a6ed941a6608185b60a8bc96b2bce6ff02bf84453e612008be40",
+          "visibility_world": "TEST"
+        }
+      ],
+      "snapshot": {
+        "events": {
+          "count": 11,
+          "sha256": "440891605c4261ba2801a5d6233eada7fa065a4b7e2a891cf3eea1a77ea4148d"
+        },
+        "versions": {
+          "count": 2,
+          "sha256": "a2a550975d4035c1a6017912f08cf61d625912dc2ff256b84b18413ccca5798f"
+        },
+        "agreement": {
+          "count": 1,
+          "sha256": "2c209b8b037091783a29b0b23411e62dde39c2702f84f10e71d4c7eec1a156dc"
+        },
+        "selections": {
+          "count": 1,
+          "sha256": "ad336e0874fe3195b8a1fb4b8071b47c17dae71ad3b452fac335f1f46dbf53be"
+        },
+        "activations": {
+          "count": 1,
+          "sha256": "dfa44de3280d2e5a32f84a02818d1e3f95bd37c5bcc51534c32061cac20651c1"
+        },
+        "selection_commands": {
+          "count": 1,
+          "sha256": "e5d084c8a68ca5fc54d900fdd101378d8132ae840a470f017aca74521378429e"
+        }
+      },
+      "current_version": 2,
+      "observed_at_utc": "2026-11-07T15:40:33.006168+00:00"
+    },
+    "unchanged": true
+  },
+  "public_api_key_kind_verified": "sb_publishable; no privileged key used",
+  "simultaneous_last_place_proven": false
+}

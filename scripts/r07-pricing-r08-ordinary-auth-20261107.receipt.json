@@ -1,0 +1,192 @@
+{
+  "createdAtUtc": "2026-11-07T17:05:40.974887+00:00",
+  "project": "leqcwgzvjsxugfgzdmth",
+  "baseSourceCommit": "94f2801db54bcbd7cb294cda983e048cd5885939",
+  "serverPreflightSha256": "44b855e62d1b75a99e40d162b81d7a51ed8601ee5567fdb2792b9c4d97e1269c",
+  "lineageReceiptSha256": "1da811f999c2c3899b23b8c27330917e461abfe527795ad0eb7b84258a72fb94",
+  "actors": {
+    "requester": {
+      "accountIdSha256": "2c6c7605a3e6a6ed941a6608185b60a8bc96b2bce6ff02bf84453e612008be40",
+      "authRole": "authenticated",
+      "sessionIdPresent": true
+    },
+    "worker": {
+      "accountIdSha256": "0c0907e99f626948eef05c174763117d611cf612802bcd89ede83422859e9875",
+      "authRole": "authenticated",
+      "sessionIdPresent": true
+    }
+  },
+  "checks": {
+    "preflight": {
+      "taskIdSha256": "79abe6784db987340b592e07f11e238f8d54cea85a87b7a3640a1066656268b1",
+      "priceRsd": 12000,
+      "priceBasis": "TOTAL",
+      "requiredSlots": 1,
+      "coveredSlots": 0,
+      "ordinaryPublicRead": true,
+      "endStillInFutureAtDispatch": true,
+      "needTermsSha256": "6e03a0f6097a9d711fc1d7a6f7df66be95ddc444fe1bebeeb3f31c0a99549d18"
+    },
+    "refusalReadback": {
+      "httpStatus": 400,
+      "sqlstate": "P0001",
+      "code": "WORKER_NOT_ELIGIBLE",
+      "hardBlockers": [
+        "CALENDAR_CONFLICT"
+      ],
+      "readOnlyCommandResult": "NOT_FOUND",
+      "candidateCountBeforeAndAfter": 0,
+      "coveredSlotsBeforeAndAfter": 0,
+      "needTermsSha256After": "6e03a0f6097a9d711fc1d7a6f7df66be95ddc444fe1bebeeb3f31c0a99549d18",
+      "originalNeedTermsUnchanged": true,
+      "newResponseOrAgreementCreated": false,
+      "noWriterRetry": true
+    },
+    "calendarConflictEvidence": {
+      "source": "read-only canonical DEV metadata; not an administrator business simulation",
+      "target": {
+        "ends_at": "2026-11-07T22:48:53.130914+00:00",
+        "price_rsd": 12000,
+        "starts_at": "2026-11-06T22:48:53.130914+00:00",
+        "price_basis": "TOTAL",
+        "schedule_kind": "FIXED_WINDOW",
+        "required_slots": 1,
+        "execution_location_mode": "STATIONARY"
+      },
+      "conflicts": [
+        {
+          "ends_at": "2026-11-07T02:18:01.08934+00:00",
+          "starts_at": "2026-11-06T22:18:01.08934+00:00",
+          "accepted_end": "2026-11-07T02:18:01.08934+00:00",
+          "terms_sha256": "6689228a9740e356a7e446a2041b7af9638459fd7a1a21e3c5a20b610dc8570c",
+          "schedule_kind": "FIXED_WINDOW",
+          "accepted_start": "2026-11-06T22:18:01.08934+00:00",
+          "calendar_state": "BLOCKING",
+          "execution_mode": "PHYSICAL",
+          "worker_matches": true,
+          "calendar_status": "CONFIRMED",
+          "current_version": 1,
+          "execution_state": "CONFIRMED",
+          "agreement_id_sha256": "41ab3ddc5eff0c5246805fdae5da9565e74228e6e61eb7772ef111d5a279dba7",
+          "live_agreement_status": "CONFIRMED",
+          "execution_location_mode": "STATIONARY",
+          "calendar_version_matches": true,
+          "accepted_interval_matches": true,
+          "execution_version_matches": true
+        }
+      ],
+      "observed_at": "2026-11-07T17:08:42.506114+00:00",
+      "conflict_count": 1
+    },
+    "r08Reader": {
+      "ordinaryParticipantReads": 2,
+      "schema": "AGREEMENT_CANCELLATION_V1",
+      "existingCompletedAgreementSha256": "1cdbb16b6a73fb3a63b6d3632aa6ceca67e22dcb723f9b34a7cdb0e1bce25c8d",
+      "bothReturnNotCancelled": true,
+      "noReasonInvented": true,
+      "positive4000CharacterCancellation": "BLOCKED_NO_NEW_ELIGIBLE_AGREEMENT"
+    }
+  },
+  "status": "DEV_ORDINARY_AUTH_TOTAL_BLOCKED_BY_CONFIRMED_CALENDAR_RESERVATION",
+  "schema": "USKOCI_R07_TOTAL_R08_ORDINARY_AUTH_V1",
+  "updatedAtUtc": "2026-11-07T17:13:25.237172+00:00",
+  "objectIdSha256": {
+    "need": "79abe6784db987340b592e07f11e238f8d54cea85a87b7a3640a1066656268b1",
+    "workerProfile": "4581f6b79f692a8e66c6cc5f3c66054cea861ce32b1713474e735ee032fbd814"
+  },
+  "operations": [
+    {
+      "name": "taskImmediatelyBeforeSubmit",
+      "actor": "worker",
+      "kind": "READ",
+      "state": "CONFIRMED",
+      "rpc": "rpc_read_task",
+      "httpStatus": 200,
+      "elapsedMs": 5101.1,
+      "bodySha256": "3290f295cd3819f47ab767fed2c8589c2261067afe0c98af6f814dc3b68abe3b",
+      "harnessSha256": "e925fa2c070e95cb6683895428b48a45efb2027defa742ae44766ad03649712b"
+    },
+    {
+      "name": "applicationSubmit",
+      "actor": "worker",
+      "kind": "WRITE",
+      "state": "REFUSED",
+      "rpc": "rpc_submit_response",
+      "httpStatus": 400,
+      "sqlstate": "P0001",
+      "safeCode": "WORKER_NOT_ELIGIBLE",
+      "elapsedMs": 4826.2,
+      "bodySha256": "ade78aac93e5de9d7a24df15fb96078a991ab8c4c2c09f17b7ae1021621abc82",
+      "harnessSha256": "e925fa2c070e95cb6683895428b48a45efb2027defa742ae44766ad03649712b"
+    },
+    {
+      "name": "refusedCommandReadback",
+      "actor": "worker",
+      "kind": "READ",
+      "state": "CONFIRMED",
+      "rpc": "rpc_read_response_submit_result",
+      "httpStatus": 200,
+      "elapsedMs": 6122.9,
+      "bodySha256": "ade78aac93e5de9d7a24df15fb96078a991ab8c4c2c09f17b7ae1021621abc82",
+      "harnessSha256": "a4e85702b3015681b42bb32e2cee09fe49cf4c5e5ded200755a1c9392518d30f"
+    },
+    {
+      "name": "taskAfterRefusal",
+      "actor": "requester",
+      "kind": "READ",
+      "state": "CONFIRMED",
+      "rpc": "rpc_read_task",
+      "httpStatus": 200,
+      "elapsedMs": 5710.2,
+      "bodySha256": "3290f295cd3819f47ab767fed2c8589c2261067afe0c98af6f814dc3b68abe3b",
+      "harnessSha256": "a4e85702b3015681b42bb32e2cee09fe49cf4c5e5ded200755a1c9392518d30f"
+    },
+    {
+      "name": "candidatesAfterRefusal",
+      "actor": "requester",
+      "kind": "READ",
+      "state": "CONFIRMED",
+      "rpc": "rpc_list_need_candidates",
+      "httpStatus": 200,
+      "elapsedMs": 8167.6,
+      "bodySha256": "3290f295cd3819f47ab767fed2c8589c2261067afe0c98af6f814dc3b68abe3b",
+      "harnessSha256": "a4e85702b3015681b42bb32e2cee09fe49cf4c5e5ded200755a1c9392518d30f"
+    },
+    {
+      "name": "requesterExistingCompletedCancellationRead",
+      "actor": "requester",
+      "kind": "READ",
+      "state": "CONFIRMED",
+      "rpc": "rpc_agreement_cancellation_v1",
+      "httpStatus": 200,
+      "elapsedMs": 5557.6,
+      "bodySha256": "b290cd9e0504fa90f724dee7a42496ae1fe62fa970ab13b1c8c5d09c9b007a42",
+      "harnessSha256": "a4e85702b3015681b42bb32e2cee09fe49cf4c5e5ded200755a1c9392518d30f"
+    },
+    {
+      "name": "workerExistingCompletedCancellationRead",
+      "actor": "worker",
+      "kind": "READ",
+      "state": "CONFIRMED",
+      "rpc": "rpc_agreement_cancellation_v1",
+      "httpStatus": 200,
+      "elapsedMs": 5972.0,
+      "bodySha256": "b290cd9e0504fa90f724dee7a42496ae1fe62fa970ab13b1c8c5d09c9b007a42",
+      "harnessSha256": "a4e85702b3015681b42bb32e2cee09fe49cf4c5e5ded200755a1c9392518d30f"
+    }
+  ],
+  "ordinaryAuthBusinessWriter": true,
+  "businessWriterAttempts": 1,
+  "confirmedBusinessWrites": 0,
+  "adminBusinessWriter": false,
+  "modelCalls": 0,
+  "newAccounts": 0,
+  "deletions": 0,
+  "boundary": "Ordinary authenticated DEV API evidence only. No Android, production, three-actor concurrency, PER_PERSON or OFFERS acceptance is claimed.",
+  "blockedScopes": {
+    "PER_PERSON": "No approved existing fixture; new publication requires its real evaluator and closed AI budget.",
+    "OFFERS": "No approved existing fixture; publication approval is not bypassed.",
+    "threeActorCapacity": "Only two credentialed approved TEST actors are present."
+  },
+  "lastStop": "APPLICATIONSUBMIT_WORKER_NOT_ELIGIBLE"
+}

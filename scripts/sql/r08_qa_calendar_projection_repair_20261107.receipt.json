@@ -1,0 +1,62 @@
+{
+  "format_version": 1,
+  "project": "leqcwgzvjsxugfgzdmth",
+  "observed_at_utc": "2026-11-07",
+  "scope": "Coordinator-authorized single legacy QA calendar projection repair, using the existing private.refresh_worker_calendar_event writer. Both parties are the two previously authenticated canonical SYNTHETIC_ACCEPTANCE_FIXTURE accounts; no new schema, business term, status, price, participant, or time was introduced.",
+  "preflight": {
+    "verified_fixtures": 2,
+    "expected_lineage_rows": 2,
+    "test_world_fixtures": 2,
+    "candidate_count": 1,
+    "candidates": [
+      {
+        "status": "CONFIRMED",
+        "version": 1,
+        "calendar_state": "RELEASED",
+        "would_conflict": false,
+        "calendar_status": "CONFIRMED",
+        "preimage_sha256": "4499b185a89e550029549fc74ad703fae64f4de6592a5857c64a9bdceaff8a8b",
+        "agreement_id_sha256": "41ab3ddc5eff0c5246805fdae5da9565e74228e6e61eb7772ef111d5a279dba7",
+        "current_version_matches": true,
+        "worker_identity_matches": true,
+        "accepted_interval_matches": true
+      }
+    ]
+  },
+  "business_preflight": {
+    "business_preimage_sha256": "f7f87dad2c3ca640529430d3415c31e838fa7310457eda1e2c73bf3af5145e04",
+    "execution_version_matches": true,
+    "execution_active": true
+  },
+  "postimage": {
+    "agreement_id_sha256": "41ab3ddc5eff0c5246805fdae5da9565e74228e6e61eb7772ef111d5a279dba7",
+    "business_postimage_sha256": "f7f87dad2c3ca640529430d3415c31e838fa7310457eda1e2c73bf3af5145e04",
+    "postimage_sha256": "6d4ae2f3f641e4310b846afccb37571ed829da0f76df7d24d29fe3170557719e",
+    "agreement_confirmed": true,
+    "original_version": true,
+    "calendar_blocking": true,
+    "calendar_status_confirmed": true,
+    "current_version_matches": true,
+    "worker_identity_matches": true,
+    "accepted_interval_matches": true,
+    "both_parties_test_world": true,
+    "conflicts": false
+  },
+  "method": {
+    "locks": "Both fixture lineage rows; Need -> Agreement -> Execution -> worker calendar serialization -> calendar row, before invoking the existing writer.",
+    "admission": "Abort on fixture lineage/world/revision, Agreement identity/version/status, complete source terms, participant identity, calendar source fingerprint or accepted interval drift. The existing writer checks current worker conflicts under its serialization fence.",
+    "repair": "Only the existing one-row calendar projection was reacquired as BLOCKING; the canonical writer owns its projection timestamp/fence.",
+    "idempotent_replay": "The same guarded command sees the already correct BLOCKING state and returns before invoking the writer. Exact postimage (including the calendar timestamp) is unchanged.",
+    "rows_targeted": 1,
+    "real_user_rows_targeted": 0,
+    "conflict_observed": false,
+    "historical_migration_edited": false
+  },
+  "proof_boundary": {
+    "ordinary_auth_user_flow": false,
+    "native_e2e": false,
+    "not_a_calendar_mass_update": true,
+    "not_a_double_booking_incident_claim": true,
+    "private_values_in_receipt": false
+  }
+}

@@ -1,0 +1,268 @@
+{
+  "format_version": 1,
+  "project": "leqcwgzvjsxugfgzdmth",
+  "observed_at_utc": "2026-11-07T15:18:26.948Z",
+  "base_commit": "833885296d6e4bad0e49acb58ac72a247df911aa",
+  "scope": "Read-only current selection writer, closure guards and reader schemas; no user rows or secrets.",
+  "new_reader_absent": true,
+  "session_authority": {
+    "functions": [
+      {
+        "acl": "{postgres=X/postgres}",
+        "name": "private.push_session_valid",
+        "owner": "postgres",
+        "config": [
+          "search_path=pg_catalog"
+        ],
+        "definer": true,
+        "body_md5": "3454eb7040f3dab3cb0c35b512b46859",
+        "signature": "private.push_session_valid(uuid,uuid)",
+        "definition": "CREATE OR REPLACE FUNCTION private.push_session_valid(p_user uuid, p_session uuid)\n RETURNS boolean\n LANGUAGE sql\n SECURITY DEFINER\n SET search_path TO 'pg_catalog'\nAS $function$\n select p_session is not null and exists(select 1 from auth.sessions s join auth.users u on u.id=s.user_id\n where s.id=p_session and s.user_id=p_user and (s.not_after is null or s.not_after>clock_timestamp())\n and u.deleted_at is null and (u.banned_until is null or u.banned_until<=clock_timestamp()));\n$function$\n",
+        "volatility": "v"
+      }
+    ],
+    "auth_columns": [
+      {
+        "name": "id",
+        "type": "uuid",
+        "table": "auth.sessions",
+        "notNull": true
+      },
+      {
+        "name": "user_id",
+        "type": "uuid",
+        "table": "auth.sessions",
+        "notNull": true
+      },
+      {
+        "name": "not_after",
+        "type": "timestamp with time zone",
+        "table": "auth.sessions",
+        "notNull": false
+      },
+      {
+        "name": "id",
+        "type": "uuid",
+        "table": "auth.users",
+        "notNull": true
+      },
+      {
+        "name": "banned_until",
+        "type": "timestamp with time zone",
+        "table": "auth.users",
+        "notNull": false
+      },
+      {
+        "name": "deleted_at",
+        "type": "timestamp with time zone",
+        "table": "auth.users",
+        "notNull": false
+      }
+    ],
+    "observed_at_utc": "2026-11-07T15:30:49.432498+00:00"
+  },
+  "functions": [
+    {
+      "name": "private.closure_account_restricted",
+      "signature": "private.closure_account_restricted(uuid)",
+      "body_md5": "f4999250c315e0253374d4611291c7ad",
+      "owner": "postgres",
+      "acl": "{postgres=X/postgres}",
+      "config": [
+        "search_path=pg_catalog"
+      ],
+      "definer": true,
+      "volatility": "s",
+      "definition": "CREATE OR REPLACE FUNCTION private.closure_account_restricted(a uuid)\n RETURNS boolean\n LANGUAGE sql\n STABLE SECURITY DEFINER\n SET search_path TO 'pg_catalog'\nAS $function$ select exists(select 1 from private.account_closure_requests r where r.account_id=a\n and r.state in('READY','EXECUTING','FAILED','CLOSED')); $function$\n"
+    },
+    {
+      "name": "private.closure_assert_open",
+      "signature": "private.closure_assert_open(uuid,uuid)",
+      "body_md5": "dc9bc4c718593850da4fdb49e612dbd2",
+      "owner": "postgres",
+      "acl": "{postgres=X/postgres}",
+      "config": [
+        "search_path=pg_catalog"
+      ],
+      "definer": true,
+      "volatility": "v",
+      "definition": "CREATE OR REPLACE FUNCTION private.closure_assert_open(a uuid, b uuid DEFAULT NULL::uuid)\n RETURNS void\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO 'pg_catalog'\nAS $function$\ndeclare u uuid;\nbegin\n if a is null then raise exception 'CLOSURE_CONTEXT_INVALID' using errcode='42501'; end if;\n for u in select distinct x from unnest(array[a,b]) x where x is not null order by x loop\n  perform pg_advisory_xact_lock_shared(private.closure_account_key(u));\n  if private.closure_account_restricted(u) then raise exception 'ACCOUNT_CLOSING' using errcode='42501'; end if;\n end loop;\nend;\n$function$\n"
+    },
+    {
+      "name": "public.rpc_select_response",
+      "signature": "rpc_select_response(uuid,integer,uuid,integer,text,text)",
+      "body_md5": "02934f7831db821a7b33fd6d40289b9a",
+      "owner": "postgres",
+      "acl": "{postgres=X/postgres,authenticated=X/postgres,service_role=X/postgres}",
+      "config": [
+        "search_path=public, pg_temp"
+      ],
+      "definer": true,
+      "volatility": "v",
+      "definition": "CREATE OR REPLACE FUNCTION public.rpc_select_response(p_need_id uuid, p_need_revision integer, p_response_id uuid, p_response_version integer, p_content_hash text, p_client_request_id text)\n RETURNS uuid\n LANGUAGE plpgsql\n SECURITY DEFINER\n SET search_path TO 'public', 'pg_temp'\nAS $function$\ndeclare\n  uid uuid := auth.uid();\n  v_need public.needs%rowtype;\n  v_resp public.marketplace_responses%rowtype;\n  v_ver public.marketplace_response_versions%rowtype;\n  v_price_snapshot private.response_application_snapshots%rowtype;\n  v_requested_ver public.marketplace_response_versions%rowtype;\n  v_profile public.app_profiles%rowtype;\n  v_command private.selection_commands%rowtype;\n  v_policy private.connection_policy_versions%rowtype;\n  v_selection_id uuid;\n  v_agreement_id uuid;\n  v_covered integer;\n  v_terms jsonb;\n  v_match jsonb;\n  v_request_hash text;\n  v_legacy_selected_by uuid;\n  v_legacy_need_revision integer;\n  v_legacy_response_id uuid;\n  v_legacy_covered_slots integer;\n  v_legacy_agreement_id uuid;\n  v_legacy_response_version integer;\n  v_legacy_content_hash text;\nbegin\n  if uid is null then\n    raise exception 'AUTH_REQUIRED' using errcode = '28000';\n  end if;\n\n  if p_client_request_id is null\n     or char_length(btrim(p_client_request_id)) not between 8 and 200 then\n    raise exception 'INVALID_CLIENT_REQUEST_ID' using errcode = '22023';\n  end if;\n\n  select * into v_requested_ver\n    from public.marketplace_response_versions\n   where response_id = p_response_id\n     and version = p_response_version;\n\n  v_request_hash := encode(sha256(convert_to(jsonb_build_object(\n    'requesterAccountId', uid,\n    'needId', p_need_id,\n    'needRevision', p_need_revision,\n    'responseId', p_response_id,\n    'responseVersion', p_response_version,\n    'contentHash', p_content_hash,\n    'coveredSlots', v_requested_ver.covered_slots\n  )::text, 'UTF8')), 'hex');\n\n  perform pg_catalog.pg_advisory_xact_lock(\n    pg_catalog.hashtextextended(uid::text || ':' || p_client_request_id, 7242)\n  );\n\n  select * into v_command\n    from private.selection_commands c\n   where c.requester_account_id = uid\n     and c.client_request_id = p_client_request_id;\n\n  if found then\n    if v_command.request_hash <> v_request_hash then\n      raise exception 'IDEMPOTENCY_KEY_REUSED' using errcode = '22023';\n    end if;\n    return v_command.agreement_id;\n  end if;\n\n  -- Pre-P0D-02/P0D-03 historical rows remain authoritative and are not\n  -- retroactively charged or given fabricated activation receipts.\n  select s.selected_by_account_id,\n         s.need_revision,\n         s.response_id,\n         s.covered_slots,\n         a.id,\n         nullif(av.terms->>'response_version','')::integer,\n         av.content_hash\n    into v_legacy_selected_by,\n         v_legacy_need_revision,\n         v_legacy_response_id,\n         v_legacy_covered_slots,\n         v_legacy_agreement_id,\n         v_legacy_response_version,\n         v_legacy_content_hash\n    from public.need_selections s\n    join public.agreements a on a.selection_id = s.id\n    left join public.agreement_versions av\n      on av.agreement_id = a.id and av.version = 1\n   where s.need_id = p_need_id\n     and s.client_request_id = p_client_request_id;\n\n  if found then\n    if v_legacy_selected_by <> uid then\n      raise exception 'NOT_REQUESTER' using errcode = '42501';\n    end if;\n    if v_legacy_need_revision <> p_need_revision\n       or v_legacy_response_id is distinct from p_response_id\n       or (v_requested_ver.response_id is not null\n           and v_legacy_covered_slots <> v_requested_ver.covered_slots)\n       or (v_legacy_response_version is not null\n           and v_legacy_response_version <> p_response_version)\n       or (v_legacy_content_hash is not null\n           and v_legacy_content_hash <> p_content_hash) then\n      raise exception 'IDEMPOTENCY_KEY_REUSED' using errcode = '22023';\n    end if;\n    return v_legacy_agreement_id;\n  end if;\n\n  select * into v_need from public.needs where id = p_need_id for update;\n  if not found then raise exception 'NEED_NOT_FOUND' using errcode = 'P0002'; end if;\n  if v_need.requester_account_id <> uid then raise exception 'NOT_REQUESTER' using errcode = '42501'; end if;\n  if v_need.status not in ('PUBLISHED','SELECTION') then\n    raise exception 'NEED_NOT_OPEN' using errcode = 'P0001', detail = v_need.status; end if;\n\n  if v_need.response_deadline is not null\n     and v_need.response_deadline <= statement_timestamp() then\n    raise exception 'RESPONSE_WINDOW_EXPIRED' using errcode = 'P0001', hint = 'Rok za prijave je istekao.';\n  end if;\n\n  -- Existing agreements and idempotent selection receipts returned above.\n  -- Only a NEW selection is refused after the actual task-time boundary.\n  if not private.need_search_time_admitted_v1(v_need.id,clock_timestamp()) then\n    raise exception 'NEED_EXECUTION_WINDOW_EXPIRED' using errcode='PT409',\n      hint='Vreme za ovaj zadatak je isteklo.';\n  end if;\n\n  if v_need.revision <> p_need_revision then\n    raise exception 'STALE_REVIEW_REQUIRED' using errcode = 'P0001', detail = 'need_revision',\n      hint = 'Potreba je izmenjena. Pogledajte prijave ponovo.'; end if;\n\n  select * into v_resp from public.marketplace_responses where id = p_response_id for update;\n  if not found then raise exception 'RESPONSE_NOT_FOUND' using errcode = 'P0002'; end if;\n  if v_resp.need_id <> p_need_id then raise exception 'RESPONSE_NEED_MISMATCH' using errcode = 'P0001'; end if;\n  if v_resp.status not in ('SUBMITTED','DELIVERED','VIEWED','SHORTLISTED') then\n    raise exception 'RESPONSE_NOT_SELECTABLE' using errcode = 'P0001', detail = v_resp.status; end if;\n\n  if v_resp.current_version <> p_response_version then\n    raise exception 'STALE_REVIEW_REQUIRED' using errcode = 'P0001', detail = 'response_version',\n      hint = 'Uskocer je izmenio prijavu. Proverite je ponovo.'; end if;\n\n  select * into v_ver from public.marketplace_response_versions\n   where response_id = p_response_id and version = p_response_version;\n  if not found then raise exception 'RESPONSE_VERSION_NOT_FOUND' using errcode = 'P0002'; end if;\n  if v_ver.content_hash <> p_content_hash then\n    raise exception 'STALE_REVIEW_REQUIRED' using errcode = 'P0001', detail = 'content_hash',\n      hint = 'Uslovi prijave su izmenjeni.'; end if;\n  if v_ver.need_revision <> v_need.revision then\n    raise exception 'STALE_REVIEW_REQUIRED' using errcode = 'P0001', detail = 'response_need_revision'; end if;\n\n  select * into v_profile\n    from public.app_profiles p\n   where p.id = v_resp.worker_profile_id\n   for share;\n\n  if not found\n     or v_profile.kind <> 'WORKER'\n     or v_profile.account_id <> v_resp.worker_account_id\n     or v_profile.profile_status <> 'ACTIVE'\n     or char_length(btrim(v_profile.display_name)) < 2\n     or (char_length(btrim(v_profile.city)) < 2 and private.worker_remote_only_activation_ready_v1(v_profile.account_id,v_profile.skills) IS NOT TRUE)\n     or cardinality(v_profile.skills) < 1 then\n    raise exception 'WORKER_PROFILE_NOT_READY' using errcode = 'P0001',\n      hint = 'Uskocer vise nema vazeci spreman profil za izbor.';\n  end if;\n\n  -- WPP01: accept the people committed by this offer, subject to the\n  -- existing task remaining-slot, calendar and price checks below.\n\n  if (v_ver.proposed_start_at is null)<>(v_ver.proposed_end_at is null) then\n    raise exception 'AGREEMENT_CALENDAR_INTERVAL_INVALID' using errcode='22023';\n  end if;\n  if v_ver.proposed_start_at is null and v_need.schedule_kind='FIXED_WINDOW'\n    and (v_need.starts_at is null or not isfinite(v_need.starts_at)\n      or (v_need.ends_at is not null and (not isfinite(v_need.ends_at) or v_need.starts_at>=v_need.ends_at))) then\n    raise exception 'NEED_FIXED_INTERVAL_INVALID' using errcode='22023';\n  end if;\n  -- An old start-only task cannot be selected after its precise beginning.\n  if v_need.schedule_kind='FIXED_WINDOW' and v_need.ends_at is null\n     and v_need.starts_at is not null and v_need.starts_at<=statement_timestamp() then\n    raise exception 'FIXED_WINDOW_START_PASSED' using errcode='22023';\n  end if;\n  v_match := private.match_detail_for_calendar_interval(p_need_id, v_resp.worker_profile_id,\n    coalesce(v_ver.proposed_start_at,case when v_need.schedule_kind='FIXED_WINDOW' and v_need.ends_at is not null then v_need.starts_at end),\n    coalesce(v_ver.proposed_end_at,case when v_need.schedule_kind='FIXED_WINDOW' and v_need.ends_at is not null then v_need.ends_at end));\n  if not coalesce((v_match->>'responseAllowed')::boolean, false) then\n    raise exception 'WORKER_NO_LONGER_ELIGIBLE' using errcode = 'P0001',\n      detail = coalesce((v_match->'hardBlockers')::text,'[]'),\n      hint = 'Uskocer vise ne ispunjava uslove Potrebe.';\n  end if;\n\n  -- Start-only selection must still reject an existing confirmed Dogovor\n  -- that blocks the precise declared start. One microsecond is only a\n  -- point-overlap probe, NOT a booked duration or task finish.\n  if v_ver.proposed_start_at is null and v_need.schedule_kind='FIXED_WINDOW'\n     and v_need.ends_at is null and\n     private.worker_calendar_conflict(v_resp.worker_profile_id,v_need.starts_at,\n       v_need.starts_at+interval '1 microsecond',null) then\n    raise exception 'WORKER_CALENDAR_CONFLICT' using errcode='P0001';\n  end if;\n  v_covered := public.fn_need_covered_slots(p_need_id);\n  if v_covered + v_resp.covered_slots > v_need.required_slots then\n    raise exception 'OVERFILL' using errcode = 'P0001', hint = 'Ta prijava pokriva vise mesta nego sto je preostalo.'; end if;\n\n  -- PKG-033: historical/reconfirmed offers cannot bypass today's fixed-price rule at selection.\n  perform private.assert_application_price_v5(v_need, v_ver.covered_slots, v_ver.price_rsd);\n  -- Selection consumes the reviewed immutable application, never a guess\n  -- from today's task. Committed old selection receipts already replayed.\n  if v_ver.price_basis is null or v_resp.price_basis is null then\n    raise exception 'APPLICATION_PRICE_BASIS_REVIEW_REQUIRED' using errcode='PT409';\n  elsif v_ver.price_basis is distinct from (case when v_need.mode='MY_PRICE' and v_need.price_basis='HOURLY' then 'HOURLY' else 'TOTAL' end)\n     or v_resp.price_basis is distinct from v_ver.price_basis then\n    raise exception 'APPLICATION_PRICE_BASIS_CHANGED' using errcode='PT409';\n  end if;\n  select * into v_price_snapshot from private.response_application_snapshots\n    where response_id=v_ver.response_id and response_version=v_ver.version;\n  if not found or v_price_snapshot.pricing_mode is distinct from v_need.mode\n     or v_price_snapshot.covered_slots is distinct from v_ver.covered_slots\n     or v_price_snapshot.need_required_slots is distinct from v_need.required_slots then\n    raise exception 'APPLICATION_PRICE_BASIS_REVIEW_REQUIRED' using errcode='PT409';\n  end if;\n\n  select * into v_policy\n    from private.connection_policy_versions\n   where policy_key='REQUESTER_SELECTION_V1' and version=1;\n  if not found\n     or v_policy.beneficiary_role <> 'REQUESTER'\n     or v_policy.activation_reason <> 'SELECTION'\n     or v_policy.charge_mode <> 'PROMOTIONAL_FREE'\n     or v_policy.unit_basis <> 'HEADCOUNT'\n     or v_policy.platform_cost_rsd <> 0 then\n    raise exception 'CONNECTION_POLICY_NOT_READY' using errcode='55000';\n  end if;\n\n  insert into public.need_selections(\n    need_id,need_revision,selected_by_account_id,client_request_id,covered_slots,\n    response_id,worker_account_id,worker_profile_id,selection_mode,status\n  ) values (\n    p_need_id,v_need.revision,uid,p_client_request_id,v_resp.covered_slots,\n    p_response_id,v_resp.worker_account_id,v_resp.worker_profile_id,\n    case when v_need.mode='FASTEST' then 'AUTO_FILL' else 'REQUESTER_SELECTS' end,\n    'SELECTED'\n  ) returning id into v_selection_id;\n\n  v_terms := jsonb_build_object(\n    'price_rsd',v_ver.price_rsd,'priceBasis',v_ver.price_basis,'currency','RSD',\n    'pricingMode',v_price_snapshot.pricing_mode,\n    'required_slots',v_price_snapshot.need_required_slots,'covered_slots',v_ver.covered_slots,\n    -- Agreement calendar terms stay an honest complete pair or BOTH NULL.\n    -- A declared start-only moment stays authoritative on the task; it is\n    -- not a fabricated booking in private.agreement_calendar_interval().\n    'proposed_start_at',coalesce(v_ver.proposed_start_at,case when v_need.schedule_kind='FIXED_WINDOW' and v_need.ends_at is not null then v_need.starts_at end),\n    'proposed_end_at',coalesce(v_ver.proposed_end_at,case when v_need.schedule_kind='FIXED_WINDOW' and v_need.ends_at is not null then v_need.ends_at end),\n    'schedule_source',case when v_ver.proposed_start_at is not null then 'APPLICATION_PROPOSAL'\n      when v_need.schedule_kind='FIXED_WINDOW' and v_need.ends_at is not null then 'NEED_FIXED_WINDOW' else 'UNSCHEDULED' end,\n    'scope_note',v_ver.scope_note,'need_revision',v_need.revision,\n    'response_version',v_ver.version\n  );\n  -- Snapshot the requested exact start separately from the calendar reservation.\n  -- Calendar interval uses ONLY a complete proposed_start_at/proposed_end_at pair.\n  if v_ver.proposed_start_at is null and v_need.schedule_kind='FIXED_WINDOW'\n     and v_need.ends_at is null and v_need.starts_at is not null then\n    v_terms:=v_terms||jsonb_build_object('declared_start_at',v_need.starts_at);\n  end if;\n\n  insert into public.agreements(\n    need_id,selection_id,selected_response_id,requester_account_id,requester_profile_id,\n    worker_account_id,worker_profile_id,current_version,status\n  ) values (\n    p_need_id,v_selection_id,p_response_id,v_need.requester_account_id,v_need.requester_profile_id,\n    v_resp.worker_account_id,v_resp.worker_profile_id,1,'CONFIRMED'\n  ) returning id into v_agreement_id;\n\n  insert into public.agreement_versions(\n    agreement_id,version,status,terms,content_hash,created_by_account_id\n  ) values (v_agreement_id,1,'CONFIRMED',v_terms,v_ver.content_hash,uid);\n\n  insert into public.agreement_execution(agreement_id,agreement_version,mode,state)\n  values (\n    v_agreement_id,1,\n    -- PKG-029b (deep read 12.7): remote or physical follows the place; the schedule decides only for a task\n    -- written before the place had a mode.\n    case when coalesce(v_need.execution_location_mode = 'REMOTE', v_need.schedule_kind = 'REMOTE_ANYTIME')\n      then 'REMOTE' else 'PHYSICAL' end,\n    'CONFIRMED'\n  );\n\n  insert into private.connection_activations(\n    requester_account_id,beneficiary_account_id,client_request_id,request_hash,\n    policy_key,policy_version,policy_snapshot,activation_reason,\n    need_id,need_revision,selection_id,agreement_id,response_id,response_version,\n    response_content_hash,worker_account_id,worker_profile_id,units,platform_cost_rsd,state\n  ) values (\n    uid,uid,p_client_request_id,v_request_hash,\n    v_policy.policy_key,v_policy.version,v_policy.policy_snapshot,'SELECTION',\n    p_need_id,p_need_revision,v_selection_id,v_agreement_id,p_response_id,p_response_version,\n    p_content_hash,v_resp.worker_account_id,v_resp.worker_profile_id,v_ver.covered_slots,0,'SATISFIED'\n  );\n\n  update public.marketplace_responses\n     set status='SELECTED',selected_at=statement_timestamp()\n   where id=p_response_id;\n\n  perform set_config('uskoci.need_lifecycle','SELECT',true);\n  update public.needs\n     set status=case when v_covered+v_resp.covered_slots >= v_need.required_slots\n                     then 'ACTIVE' else 'SELECTION' end\n   where id=p_need_id;\n\n  insert into private.selection_commands(\n    requester_account_id,client_request_id,request_hash,\n    need_id,need_revision,response_id,response_version,\n    response_content_hash,covered_slots,selection_id,agreement_id\n  ) values (\n    uid,p_client_request_id,v_request_hash,\n    p_need_id,p_need_revision,p_response_id,p_response_version,\n    p_content_hash,v_ver.covered_slots,v_selection_id,v_agreement_id\n  );\n\n  -- N02: domain event shares the Selection/Agreement/activation transaction.\n  -- Preferences, suppression and channel dedupe remain owned by emit_event.\n  perform private.emit_event(\n    v_resp.worker_account_id, 'WORKER', 'RESPONSE_SELECTED',\n    'RESPONSE', v_resp.id, v_ver.version,\n    'Vaša prijava je izabrana', 'Otvorite Dogovor za detalje zadatka.',\n    'response_selected:' || v_selection_id::text,\n    'NORMAL', jsonb_build_object('agreement_id', v_agreement_id, 'need_id', v_need.id)\n  );\n\n  return v_agreement_id;\nend;\n$function$\n"
+    }
+  ],
+  "tables": [
+    {
+      "name": "private.selection_commands",
+      "owner": "postgres",
+      "rls": true,
+      "force_rls": false,
+      "acl": "{postgres=arwdDxtm/postgres}",
+      "columns": [
+        {
+          "name": "requester_account_id",
+          "type": "uuid",
+          "notNull": true
+        },
+        {
+          "name": "client_request_id",
+          "type": "text",
+          "notNull": true
+        },
+        {
+          "name": "request_hash",
+          "type": "text",
+          "notNull": true
+        },
+        {
+          "name": "need_id",
+          "type": "uuid",
+          "notNull": true
+        },
+        {
+          "name": "need_revision",
+          "type": "integer",
+          "notNull": true
+        },
+        {
+          "name": "response_id",
+          "type": "uuid",
+          "notNull": true
+        },
+        {
+          "name": "response_version",
+          "type": "integer",
+          "notNull": true
+        },
+        {
+          "name": "response_content_hash",
+          "type": "text",
+          "notNull": true
+        },
+        {
+          "name": "covered_slots",
+          "type": "integer",
+          "notNull": true
+        },
+        {
+          "name": "selection_id",
+          "type": "uuid",
+          "notNull": true
+        },
+        {
+          "name": "agreement_id",
+          "type": "uuid",
+          "notNull": true
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "notNull": true
+        }
+      ],
+      "policies": []
+    },
+    {
+      "name": "public.agreements",
+      "owner": "postgres",
+      "rls": true,
+      "force_rls": false,
+      "acl": "{postgres=arwdDxtm/postgres,anon=arwdDxtm/postgres,authenticated=arwdDxtm/postgres,service_role=arwdDxtm/postgres}",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "notNull": true
+        },
+        {
+          "name": "need_id",
+          "type": "uuid",
+          "notNull": true
+        },
+        {
+          "name": "selection_id",
+          "type": "uuid",
+          "notNull": true
+        },
+        {
+          "name": "selected_response_id",
+          "type": "uuid",
+          "notNull": true
+        },
+        {
+          "name": "requester_account_id",
+          "type": "uuid",
+          "notNull": true
+        },
+        {
+          "name": "requester_profile_id",
+          "type": "uuid",
+          "notNull": true
+        },
+        {
+          "name": "worker_account_id",
+          "type": "uuid",
+          "notNull": true
+        },
+        {
+          "name": "worker_profile_id",
+          "type": "uuid",
+          "notNull": true
+        },
+        {
+          "name": "current_version",
+          "type": "integer",
+          "notNull": true
+        },
+        {
+          "name": "status",
+          "type": "text",
+          "notNull": true
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "notNull": true
+        },
+        {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "notNull": true
+        }
+      ],
+      "policies": [
+        {
+          "name": "agreements_parties_read",
+          "check": null,
+          "roles": [
+            "16485"
+          ],
+          "using": "((requester_account_id = ( SELECT auth.uid() AS uid)) OR (worker_account_id = ( SELECT auth.uid() AS uid)))",
+          "command": "r",
+          "permissive": true
+        },
+        {
+          "name": "v5_closed_account_visibility",
+          "check": null,
+          "roles": [
+            "16485"
+          ],
+          "using": "rpc_storage_account_open()",
+          "command": "r",
+          "permissive": false
+        }
+      ]
+    }
+  ]
+}

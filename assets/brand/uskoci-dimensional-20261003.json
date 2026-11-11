@@ -1,0 +1,30 @@
+{
+  "authority": "Owner reference 13524.jpg, 2026-10-03: dimensional logo/letters; preserve original intro animation.",
+  "reference": {
+    "file": "13524.jpg",
+    "sha256": "bc6f80712f1264f82f2f5a7f5b447fc12a45fb9537d626670a3b1d66d08c3ca8"
+  },
+  "method": "Built-in imagegen transparent-background edit of the supplied reference; result copied byte-for-byte. No raster recoloring, cleanup or resampling. Semantic clipping and transforms are in BrandRaster.tsx. Splash and pin PNGs are rendered from the actual shared BrandMark and existing SVG pin shell using bundled Sharp; no new application dependency.",
+  "prompt": "Edit target: attached original USKOČI logo. Create the faithful production transparent-background cutout of this EXACT logo. Preserve the original dimensional green and orange material, the two people making the U and shaking hands, the orange location pin and green smile inside U, and the exact following letters S K O Č I (first three green, last two orange, orange caron). Do NOT redesign the logo, letterforms, layout, perspective or colors. Remove all white background and broad ground cast shadows completely, retaining only subtle self-shadow on the material. Transparent pixels inside all openings including the O and around every part. Center the whole original horizontal wordmark with only a small even transparent safe margin, tightly composed wide landscape 3:1 canvas. Crisp smooth edges, original rounded polished physical depth, strong small-size clarity. No extra text, symbols, objects, frames or decorative effects. The logo is to become a mobile app asset; faithful shape and spelling are critical.",
+  "atlas": {
+    "file": "assets/brand/premium-entry/logo.png",
+    "sha256": "870f2b26838a06a3f0f6c92c9fc61ddc238b777be53562bdf8fb0a14da44cb86",
+    "bytes": 846476,
+    "width": 2172,
+    "height": 724,
+    "mode": "RGBA"
+  },
+  "exports": {
+    "splash": {
+      "file": "assets/entry-splash-mark.png",
+      "sha256": "04f1e534f7ba650e6e876556507e79a5a833a7f0f14e656e64c4cf78ece284f8",
+      "bytes": 404349
+    },
+    "taskPin": {
+      "file": "assets/discovery/uskoci-task-material.png",
+      "sha256": "8fea6a370279adb1ffb2451bf23313821caa1e4bc74d9a686a1288fcd857ea75",
+      "bytes": 27451
+    }
+  },
+  "bounds": "No launcher icon/package change. Task pin stays 160px/40dp with existing selected halo and MapLibre sources. Source preview is not native acceptance."
+}

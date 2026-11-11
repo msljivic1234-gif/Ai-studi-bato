@@ -1,0 +1,43 @@
+{
+  "checkedAt": "2026-11-07T15:23:55.712415+00:00",
+  "project": "leqcwgzvjsxugfgzdmth",
+  "sourceCommit": "b56f0e52db99256cdfb6988567edc0e7d597849c",
+  "function": "uskoci-worker-interview",
+  "preimageVersion": 143,
+  "activeVersion": 144,
+  "status": "ACTIVE",
+  "verifyJwt": false,
+  "matchedFiles": 21,
+  "sha256ByFile": {
+    "supabase/functions/uskoci-worker-interview/index.ts": "c4342ca6f2fa80f3ee7fd65cb1cc4ae502d235bad335e35528dcf139d081a27e",
+    "supabase/functions/_shared/aiPhaseTiming.mjs": "4eba3bd3d1692a4094c2b84d75d3e678554859e64c96c9535567280213d088d2",
+    "supabase/functions/_shared/taxonomyRuntimeConfig.mjs": "bd9b146ec53e3e7659d8294cdfac4eac77b4f965ece7c7ee60cd63b111f5a4b0",
+    "src/contracts/aiAvailability.ts": "e670bc2df4bdabe8df0285a80a6dcdaba348e4e9453ccfe787dbd1a2a2f1c9b8",
+    "src/contracts/workerAreas.ts": "42043ac28b6be3443a9837d855bada914513e267e45710111698da2c0163c33d",
+    "supabase/functions/_shared/interviewVoiceInstruction.mjs": "ce73cde3e8722eb1440850ba6fcbf6651cf9aebef75acda31dca5e8fafb67c0e",
+    "supabase/functions/_shared/aiTestBudget.ts": "d93bb7a9a4f2e3cdab5ea4b1d0afb60f81e927f2c067695309f7ed6f5ac3778c",
+    "supabase/functions/_shared/geminiTaskStream.ts": "56e731f72c8fb094c133a79a63c97538d18ad6581f991a40ab0d6139324b9d69",
+    "supabase/functions/_shared/singlePassTaxonomy.mjs": "aa126a55d690fb0799ca8b1e4473061ed3b0f503631a738378490618f2664632",
+    "supabase/functions/_shared/backgroundTaxonomyArchitect.mjs": "90c6ec46f56248d184ea338d51acb9153e64358ea0acdf7fa118575c6377ee6f",
+    "supabase/functions/_shared/classificationEngine.mjs": "7b888425294c7c2d9d95927b14c4a0a544d44ad0b785a6f0749c610b1b433971",
+    "supabase/functions/_shared/serviceHandoff.mjs": "784f55be68944570acac509444e19eaf51b27664f686ecd7e210c9ae9681df2e",
+    "supabase/functions/_shared/workerServiceModeContext.mjs": "839e373ac5949085f735222c870bcd4374a90b045233e90c9a146e6046ea452f",
+    "supabase/functions/_shared/completeFirstPlan.ts": "09db698bf5b3a728d80daeffd14c3be3ba9a0e4b83c70f13f9ba6472f7ae48de",
+    "supabase/functions/_shared/serviceExecutionInstruction.mjs": "1e6ec151b93d17fab1cc6b4fde44025c0f41350e569686aa8e2c2a6b02d05314",
+    "supabase/functions/_shared/researchDeadline.ts": "6ae7a25c1bac1b2da89a10ed2c1ddbeed12def545411f796ce151695708054f9",
+    "supabase/functions/_shared/workerAreaAdmission.mjs": "27e41e614301d73b55c61782ea1b885cbf76a634b0d25ae814eb9b09038f9c99",
+    "supabase/functions/_shared/workerAreaResolver.mjs": "6890d942d88a845054abea2b0651b3c5db6dbf5554468d87840e59f67fc0e0ab",
+    "supabase/functions/_shared/geminiContextCache.mjs": "160fb09f35538f6b0f4170931fa7d64bb87e9f2af2695e4dcabedfb799fce9c7",
+    "supabase/functions/_shared/craftQuestionMatrix.mjs": "d1c81546eaa7282fa636bdda0e15723ff0c79a0a233fd35ee72b35d69235cc8b",
+    "supabase/functions/_shared/conversationIntent.mjs": "5c99f4a30ad7e3b30189dfeb143f45ab66f19060b5e58cbde5d6498f0badffc7"
+  },
+  "tests": {
+    "targeted": 78,
+    "typescript": "PASS",
+    "devSqlPositive": 7,
+    "devSqlNegative": 2
+  },
+  "paidModelCalls": 0,
+  "nativePerformed": false,
+  "scope": "provider schema/prompt only; no SQL writer/guard changes, no saved profile, no key migration"
+}

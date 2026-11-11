@@ -1,0 +1,580 @@
+{
+  "schema": "USKOCI_R06_BOUNDED_RECONCILIATION_V1",
+  "status": "SOURCE_IMPLEMENTED_TARGETED_TESTED_DEV_READ_ONLY_ACCOUNTING_CONFIRMED",
+  "projectRef": "leqcwgzvjsxugfgzdmth",
+  "sourceCheckpointBase": "94f2801db54bcbd7cb294cda983e048cd5885939",
+  "checkedAt": "2026-11-07T16:47:50.787279+00:00",
+  "scope": {
+    "databaseReads": "Aggregate accounting, command states/dispatch flags, table/function metadata and account existence counts only.",
+    "privateConversationBodiesRead": false,
+    "credentialValuesIncluded": false,
+    "paidProviderCalls": 0,
+    "devMutationsByThisAgent": false,
+    "historicalLedgerReset": false,
+    "unknownHoldsReleased": false,
+    "budgetCeilingRaised": false,
+    "allowlistExpanded": false,
+    "r10PolicyChanged": false
+  },
+  "files": {
+    "supabase/functions/uskoci-qa-classify/index.ts": {
+      "sha256": "eb69d270c28356ad059e32157583ece1c012512743c36eedd57a83211b428688",
+      "bytes": 21791
+    },
+    "scripts/r06-reconciliation-qa-usage.test.cjs": {
+      "sha256": "965eea99c58b4997e7ba694c041a0dbe6f3b1f3d5df46094bc0286750c248bfc",
+      "bytes": 17940
+    },
+    "scripts/sql/r06_reconciliation_20261107.readonly.sql": {
+      "sha256": "5e84eb88ba7665299af8a0df5b212d72fbb48f7ca4e0a342573e1968d5d7884c",
+      "bytes": 7536
+    }
+  },
+  "snapshot": {
+    "usage": {
+      "count": 1227,
+      "latest": "2026-11-07T12:33:15.625161+00:00",
+      "earliest": "2026-09-18T12:37:32.481917+00:00",
+      "total_tokens": 10309025,
+      "output_tokens": 428499,
+      "prompt_tokens": 9878097,
+      "distinct_operations": 1227,
+      "internal_priced_microusd": 9015893
+    },
+    "budget": {
+      "enabled": true,
+      "singleton": true,
+      "ceiling_microusd": 5000000,
+      "price_valid_until": "2027-01-01T00:00:00+00:00",
+      "reserved_microusd": 65486681,
+      "reservation_cap_enforced": true
+    },
+    "allowlist": {
+      "total": 17,
+      "active": 12
+    },
+    "functions": [
+      {
+        "acl": "{postgres=X/postgres}",
+        "owner": "postgres",
+        "definer": true,
+        "body_md5": "87ad940334ae78be5a3c0b19983d5981",
+        "settings": [
+          "search_path=pg_catalog"
+        ],
+        "signature": "private.ai_test_price_microusd(integer,integer)",
+        "anon_execute": false,
+        "authenticated_execute": false
+      },
+      {
+        "acl": "{postgres=X/postgres}",
+        "owner": "postgres",
+        "definer": true,
+        "body_md5": "ddbe2bb651ccc097b153ed4ec8ddb39b",
+        "settings": [
+          "search_path=pg_catalog"
+        ],
+        "signature": "private.ai_test_stt_price_microusd(bigint,integer)",
+        "anon_execute": false,
+        "authenticated_execute": false
+      },
+      {
+        "acl": "{postgres=X/postgres,service_role=X/postgres}",
+        "owner": "postgres",
+        "definer": true,
+        "body_md5": "91629b929aae24dc3a9b05b412ab1b2e",
+        "settings": [
+          "search_path=pg_catalog, public, private"
+        ],
+        "signature": "public.rpc_ai_test_budget_reserve_service(uuid,uuid,text,bigint)",
+        "anon_execute": false,
+        "authenticated_execute": false
+      },
+      {
+        "acl": "{postgres=X/postgres,service_role=X/postgres}",
+        "owner": "postgres",
+        "definer": true,
+        "body_md5": "584eecfd229477010ae1043257a04227",
+        "settings": [
+          "search_path=pg_catalog"
+        ],
+        "signature": "public.rpc_ai_test_record_usage_service(uuid,text,integer,integer,integer)",
+        "anon_execute": false,
+        "authenticated_execute": false
+      },
+      {
+        "acl": "{postgres=X/postgres,service_role=X/postgres}",
+        "owner": "postgres",
+        "definer": true,
+        "body_md5": "f3307b7e3c09b11d34f7e53ba19b7922",
+        "settings": [
+          "search_path=pg_catalog"
+        ],
+        "signature": "public.rpc_ai_test_release_unused_reservation_service(uuid)",
+        "anon_execute": false,
+        "authenticated_execute": false
+      },
+      {
+        "acl": "{postgres=X/postgres,service_role=X/postgres}",
+        "owner": "postgres",
+        "definer": true,
+        "body_md5": "443dd3877a4aac63eed7189d0e3eba1f",
+        "settings": [
+          "search_path=pg_catalog"
+        ],
+        "signature": "public.rpc_ai_test_settle_audio_service(uuid,bigint,integer)",
+        "anon_execute": false,
+        "authenticated_execute": false
+      }
+    ],
+    "checked_at": "2026-11-07T16:47:50.787279+00:00",
+    "recent_usage": {
+      "count": 13,
+      "sample": "2026-11-07_UTC",
+      "max_microusd": 11341,
+      "min_microusd": 1131,
+      "total_tokens": 84094,
+      "mean_microusd": 6105.38,
+      "output_tokens": 5432,
+      "prompt_tokens": 78662,
+      "total_microusd": 79370
+    },
+    "reservations": {
+      "count": 2324,
+      "latest": "2026-11-07T12:33:13.867776+00:00",
+      "earliest": "2026-09-13T13:09:25.253856+00:00",
+      "unknown_count": 221,
+      "settled_microusd": 10386681,
+      "distinct_operations": 2324,
+      "unknown_hold_microusd": 55100000,
+      "ledger_exposure_microusd": 65486681
+    },
+    "settlement_groups": [
+      {
+        "kind": "LLM",
+        "count": 19,
+        "usage_count": 0,
+        "settled_microusd": 58026,
+        "settlement_basis": "CONSERVATIVE_ESTIMATE_UNMEASURED",
+        "allocated_microusd": 4750000,
+        "usage_priced_microusd": null
+      },
+      {
+        "kind": "LLM",
+        "count": 1408,
+        "usage_count": 1227,
+        "settled_microusd": 9537381,
+        "settlement_basis": "MEASURED",
+        "allocated_microusd": 352000000,
+        "usage_priced_microusd": 9015893
+      },
+      {
+        "kind": "LLM",
+        "count": 218,
+        "usage_count": 0,
+        "settled_microusd": null,
+        "settlement_basis": null,
+        "allocated_microusd": 54500000,
+        "usage_priced_microusd": null
+      },
+      {
+        "kind": "STT",
+        "count": 554,
+        "usage_count": 0,
+        "settled_microusd": 791274,
+        "settlement_basis": "AUDIO_DURATION_AT_PUBLISHED_RATE",
+        "allocated_microusd": 110800000,
+        "usage_priced_microusd": null
+      },
+      {
+        "kind": "STT",
+        "count": 122,
+        "usage_count": 0,
+        "settled_microusd": 0,
+        "settlement_basis": "FAILED_NO_USAGE",
+        "allocated_microusd": 24400000,
+        "usage_priced_microusd": null
+      },
+      {
+        "kind": "STT",
+        "count": 3,
+        "usage_count": 0,
+        "settled_microusd": null,
+        "settlement_basis": null,
+        "allocated_microusd": 600000,
+        "usage_priced_microusd": null
+      }
+    ],
+    "usage_consistency": {
+      "orphan_usage": 0,
+      "amount_mismatches": 0,
+      "account_mismatches": 0,
+      "unsettled_with_usage": 0,
+      "nonmeasured_with_usage": 0,
+      "usage_above_reservation": 0
+    },
+    "relevant_constraints": [
+      {
+        "name": "ai_test_budget_v5_ceiling_microusd_check",
+        "relation": "private.ai_test_budget_v5",
+        "definition": "CHECK ((ceiling_microusd = 5000000))"
+      },
+      {
+        "name": "ai_test_budget_v5_pkey",
+        "relation": "private.ai_test_budget_v5",
+        "definition": "PRIMARY KEY (singleton)"
+      },
+      {
+        "name": "ai_test_reservations_v5_operation_id_key",
+        "relation": "private.ai_test_reservations_v5",
+        "definition": "UNIQUE (operation_id)"
+      },
+      {
+        "name": "ai_test_reservations_v5_pkey",
+        "relation": "private.ai_test_reservations_v5",
+        "definition": "PRIMARY KEY (id)"
+      },
+      {
+        "name": "ai_test_usage_v5_account_id_fkey",
+        "relation": "private.ai_test_usage_v5",
+        "definition": "FOREIGN KEY (account_id) REFERENCES auth.users(id) ON DELETE CASCADE"
+      },
+      {
+        "name": "ai_test_usage_v5_pkey",
+        "relation": "private.ai_test_usage_v5",
+        "definition": "PRIMARY KEY (operation_id)"
+      }
+    ],
+    "missing_measured_usage": {
+      "count": 181,
+      "newest": "2026-10-13T18:11:29.229077+00:00",
+      "oldest": "2026-09-17T09:04:54.817152+00:00",
+      "auth_row_live": 0,
+      "auth_row_absent": 181,
+      "settled_microusd": 521488,
+      "auth_row_soft_deleted": 0
+    },
+    "multiple_command_links": 0,
+    "unknown_command_groups": [
+      {
+        "kind": "LLM",
+        "count": 51,
+        "state": "FAILED",
+        "newest": "2026-11-05T20:22:06.66694+00:00",
+        "oldest": "2026-09-17T18:23:05.868516+00:00",
+        "surface": "NEED",
+        "hold_microusd": 12750000,
+        "provider_dispatched": true
+      },
+      {
+        "kind": "LLM",
+        "count": 103,
+        "state": null,
+        "newest": "2026-11-01T14:42:24.853176+00:00",
+        "oldest": "2026-10-14T20:43:30.657059+00:00",
+        "surface": "NO_CURRENT_COMMAND_LINK",
+        "hold_microusd": 25750000,
+        "provider_dispatched": null
+      },
+      {
+        "kind": "LLM",
+        "count": 6,
+        "state": "EVALUATED",
+        "newest": "2026-10-10T12:44:37.297697+00:00",
+        "oldest": "2026-09-19T06:50:27.580624+00:00",
+        "surface": "PUBLICATION_REVIEW",
+        "hold_microusd": 1500000,
+        "provider_dispatched": null
+      },
+      {
+        "kind": "LLM",
+        "count": 53,
+        "state": "PUBLISHED",
+        "newest": "2026-11-02T15:13:18.177013+00:00",
+        "oldest": "2026-09-18T10:11:48.908618+00:00",
+        "surface": "PUBLICATION_REVIEW",
+        "hold_microusd": 13250000,
+        "provider_dispatched": null
+      },
+      {
+        "kind": "LLM",
+        "count": 1,
+        "state": "COMMITTED",
+        "newest": "2026-10-08T21:12:10.293935+00:00",
+        "oldest": "2026-10-08T21:12:10.293935+00:00",
+        "surface": "QA",
+        "hold_microusd": 250000,
+        "provider_dispatched": true
+      },
+      {
+        "kind": "LLM",
+        "count": 4,
+        "state": "REJECTED",
+        "newest": "2026-10-08T21:32:40.964445+00:00",
+        "oldest": "2026-10-08T21:11:49.816115+00:00",
+        "surface": "QA",
+        "hold_microusd": 1000000,
+        "provider_dispatched": true
+      },
+      {
+        "kind": "STT",
+        "count": 3,
+        "state": null,
+        "newest": "2026-09-17T16:51:53.44043+00:00",
+        "oldest": "2026-09-17T16:50:12.005644+00:00",
+        "surface": "NO_CURRENT_COMMAND_LINK",
+        "hold_microusd": 600000,
+        "provider_dispatched": null
+      }
+    ],
+    "current_explicit_nondispatched_links": 0
+  },
+  "reconciliation": {
+    "ledgerEqualsReservationExposure": true,
+    "explicitBudgetMismatchMicrousd": 0,
+    "knownUsageSettlementMismatchCount": 0,
+    "unsettledWithExistingUsageCount": 0,
+    "duplicateReservationOperationCount": 0,
+    "duplicateUsageOperationCount": 0,
+    "existingProcedureRepairCandidatesFound": 0,
+    "zeroCostReleaseCandidatesProven": 0,
+    "currentUnknownAmountMicrousd": 55100000,
+    "currentUnknownCount": 221,
+    "unknownBreakdown": [
+      {
+        "surface": "NEED",
+        "count": 51,
+        "holdMicrousd": 12750000,
+        "evidence": "FAILED with provider_dispatched=true; failure is not proof of no charge."
+      },
+      {
+        "surface": "PUBLICATION_REVIEW",
+        "count": 59,
+        "holdMicrousd": 14750000,
+        "evidence": "6 EVALUATED and 53 PUBLISHED; no recorded usage. Terminal business state does not identify exact provider charge."
+      },
+      {
+        "surface": "QA",
+        "count": 5,
+        "holdMicrousd": 1250000,
+        "evidence": "1 COMMITTED and 4 REJECTED; all provider_dispatched=true, no usage. Active source omission reproduced below."
+      },
+      {
+        "surface": "UNLINKED_LLM",
+        "count": 103,
+        "holdMicrousd": 25750000,
+        "evidence": "No current matching Need/Worker/QA/publication-review command in the examined contracts. Absence is not positive no-dispatch evidence."
+      },
+      {
+        "surface": "STT",
+        "count": 3,
+        "holdMicrousd": 600000,
+        "evidence": "Historical September 17 reservations without current command/usage evidence; cannot infer zero audio or zero charge."
+      }
+    ],
+    "settledBreakdown": [
+      {
+        "basis": "MEASURED_WITH_PRESENT_USAGE",
+        "count": 1227,
+        "microusd": 9015893
+      },
+      {
+        "basis": "HISTORICAL_MEASURED_WITHOUT_PRESENT_USAGE",
+        "count": 181,
+        "microusd": 521488
+      },
+      {
+        "basis": "AUDIO_DURATION_AT_PUBLISHED_RATE",
+        "count": 554,
+        "microusd": 791274
+      },
+      {
+        "basis": "CONSERVATIVE_ESTIMATE_UNMEASURED",
+        "count": 19,
+        "microusd": 58026
+      },
+      {
+        "basis": "FAILED_NO_USAGE",
+        "count": 122,
+        "microusd": 0
+      }
+    ],
+    "missingMeasuredUsage": {
+      "count": 181,
+      "microusd": 521488,
+      "authRowAbsent": 181,
+      "authRowSoftDeleted": 0,
+      "authRowLive": 0,
+      "schemaFact": "ai_test_usage_v5.account_id references auth.users(id) ON DELETE CASCADE; ai_test_reservations_v5 has no corresponding account foreign key.",
+      "inference": "The missing usage rows are structurally consistent with removed Auth accounts while the historical settled amounts remain. This is not fresh evidence of duplicate charging, zero cost, or an incorrect settled amount.",
+      "action": "Preserve the historical settled values. Do not recreate usage or refund from absent evidence."
+    },
+    "invoiceClaim": false,
+    "remainingProviderEvidence": "Exact historical per-operation usage or provider billing/trace evidence is needed to replace an unknown hold. Billing evidence was not available in this bounded check.",
+    "noCurrentSafeReleaseConclusion": "No examined unknown operation has positive no-dispatch evidence. No current usage/settlement mismatch can be corrected by replaying an existing recorder. Existing procedures were therefore not invoked."
+  },
+  "qaSourceFix": {
+    "defect": "The actual QA classifier reserved an LLM operation but never decoded or persisted the returned usageMetadata. Both successful and rejected paid responses could retain the full reservation indefinitely.",
+    "currentLiveMetadataSupportsGap": {
+      "qaReservations": 5,
+      "withDispatch": true,
+      "withUsage": 0,
+      "holdMicrousd": 1250000
+    },
+    "changedBehavior": "Use the existing geminiUsage decoder and one independent bounded accounting request before semantic validation. Bind it to the exact reserved classification operation; the existing SQL writer resolves its account and enforces idempotence.",
+    "semanticFailureStillAccounted": true,
+    "callerAbortDoesNotCancelKnownUsageReceipt": true,
+    "usageDeadlineMs": 5000,
+    "providerRetriesAdded": 0,
+    "accountingRetriesAdded": 0,
+    "missingOrMalformedUsage": "Keep hold; never invent zero, perform release, or start a second provider call.",
+    "accountingUnknownOrFailure": "Keep valid business classification and conservative accounting state; do not silently retry either provider or receipt.",
+    "formalCopy": "Proverite ishod pitanja pre ponovnog slanja.",
+    "noRetroactiveRepairOfFiveQaHolds": true,
+    "sharedSourceFilesChanged": [],
+    "newExistingDependenciesInQaPackage": [
+      "supabase/functions/_shared/geminiTaskStream.ts",
+      "src/contracts/aiAvailability.ts"
+    ]
+  },
+  "candidate": {
+    "file": "evidence/r06-qa-usage-candidate.json",
+    "sha256": "7f38e66e080a577417189d9071ac1b0c576fae58cb8a921b24314d354b125ee2",
+    "files": 7,
+      "base": "Previously verified QA28 authentication package; entry exactly matches immutable source 94f2801 before this fix.",
+    "unchangedDependencyFiles": 4,
+    "knownLiveAiTestBudgetAndQaSubmissionDriftPreserved": true,
+    "exactCandidateTestsUseNoRepositoryFallback": true,
+    "deployment": "Owned by coordinator; no deployment or paid hosted QA success is claimed by this receipt."
+  },
+  "verification": [
+    {
+      "command": "R06_QA_PREIMAGE_REF=94f2801db54bcbd7cb294cda983e048cd5885939 node --test scripts/r06-reconciliation-qa-usage.test.cjs",
+      "expected": "Bug reproduction against immutable preimage",
+      "passed": 10,
+      "failed": 10,
+      "skipped": 0,
+      "exitCode": 1
+    },
+    {
+      "command": "node --test --test-reporter=tap scripts/r06-reconciliation-qa-usage.test.cjs",
+      "passed": 20,
+      "failed": 0,
+      "skipped": 0,
+      "exitCode": 0
+    },
+    {
+      "command": "node --test --test-reporter=tap scripts/r06-reconciliation-qa-usage.test.cjs scripts/r06-budget-accounting.test.cjs scripts/supabase-key-compatibility.test.cjs",
+      "passed": 78,
+      "failed": 0,
+      "skipped": 0,
+      "exitCode": 0
+    },
+    {
+      "command": "R06_QA_SOURCE_MAP=../evidence/r06-qa-usage-candidate.json node --test --test-reporter=tap scripts/r06-reconciliation-qa-usage.test.cjs",
+      "passed": 20,
+      "failed": 0,
+      "skipped": 0,
+      "exitCode": 0,
+      "finalFormalCopyIncluded": true
+    },
+    {
+      "command": "node_modules/.bin/tsc --ignoreConfig --noEmit --target ES2022 --module ESNext --moduleResolution bundler --lib ES2022,DOM,DOM.Iterable --allowImportingTsExtensions --skipLibCheck --strict supabase/functions/uskoci-qa-classify/index.ts",
+      "exitCode": 0,
+      "scope": "Strict QA handler and imported source types"
+    },
+    {
+      "command": "scripts/sql/r06_reconciliation_20261107.readonly.sql through canonical Supabase execute_sql",
+      "status": "PASS",
+      "scope": "Actual aggregate query, no writer invocation"
+    }
+  ],
+  "temporaryEvidence": {
+    "../evidence/r06-qa-usage-candidate.json": {
+      "sha256": "7f38e66e080a577417189d9071ac1b0c576fae58cb8a921b24314d354b125ee2",
+      "bytes": 63016
+    },
+    "../evidence/r06-qa-usage-preimage.tap": {
+      "sha256": "e91a4c8b25f7e728809856ac23328a34dbf889ff842c5ae419065638fc5298f4",
+      "bytes": 8979
+    },
+    "../evidence/r06-qa-usage-candidate.tap": {
+      "sha256": "2c09a546826056852cf90edcb29657f4f4a2c42693d2469939a6c2dd6bc207c8",
+      "bytes": 5049
+    },
+    "../evidence/r06-qa-usage-regression.tap": {
+      "sha256": "18f02da5c82eb81a0f3525252872882cd6a4bf8ead614b12976ee3ebed886aaf",
+      "bytes": 19943
+    },
+    "../evidence/r06-qa-usage-exact-candidate.tap": {
+      "sha256": "f08d39d41050b78fde489b3092c82eefac1de4cd1023433e5b58942e5c481c65",
+      "bytes": 5052
+    }
+  },
+  "proposedMinimumControlledPaidProbe": {
+    "status": "NOT_AUTHORIZED_NOT_RUN",
+    "incrementalReservationEnvelopeMicrousd": 750000,
+    "maximumNewProviderAttempts": 3,
+    "llmAttempts": 3,
+    "sttAttempts": 0,
+    "perLlmReservationMicrousd": 250000,
+    "stages": [
+      {
+        "attempt": 1,
+        "flow": "WORKER",
+        "scenario": "A complete explicit weekly statement: every day09:00–17:00. Verify all7 day rules, exact review and preservation of unrelated existing availability."
+      },
+      {
+        "attempt": 2,
+        "flow": "WORKER",
+        "scenario": "Every day with required hours deliberately absent from the controlled context. Verify clarification, no fabricated hours and no unintended removal."
+      },
+      {
+        "attempt": 3,
+        "flow": "QA",
+        "scenario": "One synthetic ordinary-account question after deployment. Verify the exact reserved operation receives provider usage and a single settlement, then replay/readback without another model call."
+      }
+    ],
+    "nonPaidChecks": "Auth/readback, review/Save only after explicit test confirmation, replay, ownership and ledger queries do not require additional model attempts.",
+    "stopRule": "Run sequentially; stop on first unknown/unaccounted result or failed acceptance. No automatic paid retry. Stable operation IDs for the three agreed attempts.",
+    "pricing": {
+      "model": "gemini-3.8-flash",
+      "inputUsdPerMillionTokens": 0.75,
+      "outputUsdPerMillionTokensIncludingThinking": 3.75,
+      "validBefore": "2027-01-01T00:00:00Z",
+      "internalFormula": "ceil(promptTokens * 0.75 + outputTokens * 3.75) microUSD",
+      "referenceUrl": "https://ai.google.dev/gemini-api/docs/pricing",
+      "referenceCheckedOn": "2026-11-07",
+      "referenceVerifiedThroughOfficialSearch": true,
+      "cacheDiscountAssumed": false,
+      "groundingToolsPlanned": false,
+      "sourcePriceHelpersChanged": false
+    },
+    "empiricalEstimate": {
+      "sample": "13 existing reported-usage LLM operations recorded on2026-11-07, before this task",
+      "sampleInternalMicrousd": 79370,
+      "perAttemptObservedMeanMicrousd": 6105.38,
+      "perAttemptObservedMaximumMicrousd": 11341,
+      "threeAtObservedMeanUsd": 0.01831614,
+      "threeAtObservedMaximumUsd": 0.034023,
+      "interpretation": "A planning comparison, not a guarantee. Different context/output can change actual charge;0.75USD is the sum of existing admission reservations, not an invoice or a strict provider billing cap."
+    },
+    "currentGate": {
+      "configuredCeilingMicrousd": 5000000,
+      "unchangedExistingExposureMicrousd": 65486681,
+      "currentlyPermittedNewAttempts": 0,
+      "cumulativeExposurePlusThreeReservationsMicrousd": 66236681,
+      "explanation": "The existing lifetime ledger already exceeds 5 USD. Approval of an extra 0.75 USD testing envelope does not itself make calls possible. Any future admission change must preserve all 65.486681 USD historical exposure and constrain the three approved attempts; raising a global ceiling alone would also reopen all 12 active allowlisted accounts.",
+      "approvalRequired": "Approve at most these 3 paid text scenarios and their 0.75 USD reservation envelope, then separately review the concrete bounded admission change. Do not approve a ledger reset, unknown-hold release, allowlist expansion or a claim that 65.486681 USD was billed.",
+      "noAdmissionMigrationPreparedOrAppliedHere": true
+    }
+  },
+  "limitations": [
+    "No provider invoice, historical trace reconciliation, paid hosted QA/weekly acceptance or native result is established.",
+    "An internal unique operation/usage row is not proof of exactly-once provider billing.",
+    "The current budget-report RPC labels reservation count as providerCalls; this receipt reports reservation and dispatch evidence separately and does not alter that unrelated report contract.",
+    "The new handler tests substitute HTTP/provider and Auth/RPC transport; existing SQL accounting tests exercise the real writer in a local database. These proof layers are distinct.",
+    "Full CI, QA package DEV promotion/readback and final integrated TypeScript are coordinator-owned follow-up gates."
+  ]
+}
+

@@ -1,0 +1,101 @@
+{
+  "observedAt": "2026-11-07T15:18:02Z",
+  "repository": "uskocibusiness-boop/USKOCI-EAN",
+  "branch": "work/uskoci-cist-proizvod-20261104",
+  "head": "833885296d6e4bad0e49acb58ac72a247df911aa",
+  "run": {
+    "id": 42373442734,
+    "number": 45,
+    "conclusion": "success",
+    "createdAt": "2026-11-07T12:39:20Z",
+    "finishedAt": "2026-11-07T12:58:39Z",
+    "jobId": 128406099030,
+    "tests": {
+      "passed": 469,
+      "failed": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "typescript": "PASS",
+    "migrationIntegrity": {
+      "files": 207,
+      "checks": 31,
+      "status": "PASS"
+    },
+    "androidBuild": "PASS"
+  },
+  "artifact": {
+    "id": 13575177112,
+    "name": "uskoci-isolated-qa-apk-45",
+    "expiresAt": "2026-11-14T12:58:31Z",
+    "zipSha256": "e5d938e5f063180fa42db795231b7135c18b0c7ae2bf7ea9bb17f3bf714aee27",
+    "zipDigestIndependentlyVerified": true
+  },
+  "apk": {
+    "filename": "USKOCI-QA-833885296.apk",
+    "bytes": 83345039,
+    "sha256": "4ef8e7a1bf15f577b08a5334e5c7ff5f6be11046e66dd0ac20a00aff52f5d04e",
+    "digestIndependentlyVerified": true,
+    "package": "rs.uskoci.preview.qa",
+    "minSdk": 24,
+    "targetSdk": 36,
+    "abi": "arm64-v8a",
+    "signing": "EXPO_TEMPLATE_ANDROID_DEBUG_KEY",
+    "backend": "DEV",
+    "embeddedBundle": true,
+    "otaEnabled": false,
+    "pushProven": false,
+    "deviceInstallPerformed": false
+  },
+  "continuation": {
+    "previousStagedTreeMatchesRemote": true,
+    "priorCheckoutUntouched": true,
+    "currentWorkingCopyIsolated": true,
+    "continuationPathAbsentOnCurrentBranch": true,
+    "bridgeAbsentOnCurrentBranch": true,
+    "activePlan": "docs/plan/CODEX_PLAN_RADA.md"
+  },
+  "dev": {
+    "project": "leqcwgzvjsxugfgzdmth",
+    "migrations": 342,
+    "latestVersion": "20261107121943",
+    "edgeVersions": {
+      "uskoci-ai-interview": 192,
+      "uskoci-worker-interview": 143,
+      "uskoci-speech-session": 30,
+      "uskoci-media": 29,
+      "uskoci-publication-evaluate": 29,
+      "uskoci-qa-classify": 27,
+      "uskoci-push-transport": 44,
+      "uskoci-taxonomy-postsave-worker": 13,
+      "uskoci-data-export-worker": 28,
+      "uskoci-data-export-download": 28,
+      "uskoci-account-closure-worker": 18,
+      "uskoci-location-search": 31
+    },
+    "retentionReady": false,
+    "exportBindingMissing": true
+  },
+  "legalRoutes": {
+    "checkedAt": "2026-11-07",
+    "statuses": {
+      "/politika-privatnosti": 404,
+      "/uslovi-koriscenja": 404,
+      "/brisanje-naloga": 404
+    }
+  },
+  "boundaries": [
+    "CI and APK build proof only; no installed two-device Android E2E",
+    "No production AAB/signing/backend/store release",
+    "No legacy-key revocation in this initial checkpoint"
+  ],
+  "boundedPackagedAssetScan": {
+    "bundledHermesFile": true,
+    "decodedHermesStrings": true,
+    "serviceRoleJwtFound": false,
+    "modernSecretLiteralFound": false,
+    "literalPrefixCount": 1,
+    "rawStringBufferPrefixFalsePositiveResolved": true,
+    "nativeBinaryFullAudit": false
+  }
+}

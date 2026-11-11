@@ -1,0 +1,49 @@
+{
+  "project": "leqcwgzvjsxugfgzdmth",
+  "accounts": [
+    {
+      "world": "TEST",
+      "lineage": "SYNTHETIC_ACCEPTANCE_FIXTURE",
+      "id_sha256": "2c6c7605a3e6a6ed941a6608185b60a8bc96b2bce6ff02bf84453e612008be40"
+    },
+    {
+      "world": "TEST",
+      "lineage": "SYNTHETIC_ACCEPTANCE_FIXTURE",
+      "id_sha256": "0c0907e99f626948eef05c174763117d611cf612802bcd89ede83422859e9875"
+    }
+  ],
+  "functions": [
+    {
+      "body_md5": "02934f7831db821a7b33fd6d40289b9a",
+      "signature": "rpc_select_response(uuid,integer,uuid,integer,text,text)",
+      "volatility": "v",
+      "authenticated_execute": true
+    },
+    {
+      "body_md5": "e592af7aead2172ff769f38aada8e056",
+      "signature": "rpc_cancel_agreement(uuid,text)",
+      "volatility": "v",
+      "authenticated_execute": true
+    },
+    {
+      "body_md5": "398e85c4420da9c4765ae0ff6197a59e",
+      "signature": "rpc_submit_response(uuid,integer,uuid,integer,integer,timestamp with time zone,timestamp with time zone,text,text)",
+      "volatility": "v",
+      "authenticated_execute": true
+    },
+    {
+      "body_md5": "ec935f3da29105d0308f9952f9acd58f",
+      "signature": "private.agreement_cancellation_facts_v1(uuid)",
+      "volatility": "s",
+      "authenticated_execute": false
+    },
+    {
+      "body_md5": "f54af14827bdd1c0906f512ee8aa9043",
+      "signature": "rpc_agreement_cancellation_v1(uuid[])",
+      "volatility": "s",
+      "authenticated_execute": true
+    }
+  ],
+  "observed_at": "2026-11-07T17:02:36.583212+00:00",
+  "r08_migration": "20261107165358"
+}

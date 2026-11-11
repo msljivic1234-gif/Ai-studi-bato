@@ -1,0 +1,709 @@
+{
+  "schema": "R10_WORK_AREAS_DEPENDENCIES_V1",
+  "project": "leqcwgzvjsxugfgzdmth",
+  "capturedAt": "2026-11-07T16:39:30.250Z",
+  "sourceCommit": "94f2801db54bcbd7cb294cda983e048cd5885939",
+  "readOnly": true,
+  "scope": "Exact live projection/redaction dependencies; metadata and source definitions only, no user rows.",
+  "functions": [
+    {
+      "name": "private.closure_redaction_patch_v5",
+      "arguments": "r text, t jsonb, a uuid, g uuid",
+      "body_md5": "55ba7bf41ce39d9c914929270b916570",
+      "definition": "CREATE OR REPLACE FUNCTION private.closure_redaction_patch_v5(r text, t jsonb, a uuid, g uuid)\n RETURNS jsonb\n LANGUAGE plpgsql\n STABLE SECURITY DEFINER\n SET search_path TO 'pg_catalog'\nAS $function$\ndeclare p jsonb:='{}';k text;h text;ag public.agreements;terms jsonb;\nbegin\n if r is null or t is null or a is null or g is null or not(r=any(private.closure_redaction_relations_v5()))\n then raise exception 'ERASURE_RELATION_NOT_ADMITTED';end if;\n if r=ANY(ARRAY['private.work_taxonomy_review_outbox_v1','private.work_taxonomy_pending_reviews_v1','private.work_taxonomy_gemini_turn_hints_v1','private.work_taxonomy_admissions_v1','private.work_taxonomy_review_batches_v1','private.work_taxonomy_related_acceptances','private.taxonomy_confirmed_worker_modes_v1','private.work_taxonomy_worker_capabilities','private.worker_execution_mode_choices','private.work_taxonomy_need_skills','private.work_taxonomy_need_snapshots','private.work_taxonomy_need_bindings_v1','private.work_taxonomy_worker_bindings_v1','private.dev_phase1_20261014_worker_capabilities_snapshot','private.dev_phase1_20261014_opportunity_snapshot','private.dev_phase1_20261014_dispatch_snapshot','private.dev_test101_owner_worker_profile_backup','private.dev_test101_owner_profile_backup_20261014','private.dev_worker_profile_reset_snapshots_v1','private.dev_phase1_20261014_needs_snapshot']::text[]) then return private.closure_taxonomy_patch_v1(r,t,a,g);end if;\n if r='public.agreement_invalidations_v1' then\n  return jsonb_build_object('operation','DELETE','patch','{}'::jsonb);end if;\n h:=encode(extensions.digest(convert_to('AF-D22:ERASED:'||r||':'||coalesce(t->>'id',t->>'client_request_id',t->>'conversation_id',t->>'review_id',t->>'account_id','subject'),'UTF8'),'sha256'),'hex');\n -- Support command receipts are metadata only. A related scoped case keeps its\n -- exact recovery/hash contract until that exception is resolved; no narrative\n -- is copied into the redaction ledger. Cancelled opaque tombstones stay usable.\n if r in('private.support_commands_v5','private.support_grant_commands_v5') then return null;end if;\n if r in('public.ai_conversations','public.ai_messages','public.ai_structured_facts','public.ai_action_proposals',\n  'private.ai_need_turn_commands','private.worker_ai_turns','private.worker_ai_sessions','private.ai_task_reviews','private.worker_ai_reviews','private.need_draft_save_commands')\n and exists(select 1 from private.retention_holds where account_id=a and active and conversation_id=\n  case when r='public.ai_conversations' then (t->>'id')::uuid else (t->>'conversation_id')::uuid end) then return null;end if;\n if r='private.ai_task_review_commands' and exists(select 1 from private.ai_task_reviews v join private.retention_holds h on h.account_id=v.account_id and h.conversation_id=v.conversation_id and h.active\n  where v.account_id=a and v.id=(t->>'review_id')::uuid) then return null;end if;\n if r='private.worker_ai_saves' and exists(select 1 from private.worker_ai_reviews v join private.retention_holds h on h.account_id=v.account_id and h.conversation_id=v.conversation_id and h.active\n  where v.account_id=a and v.id=(t->>'review_id')::uuid) then return null;end if;\n if r='public.ai_structured_facts' then\n  if t->'superseded_by'<>'null'::jsonb then return jsonb_build_object('operation','UPDATE','patch',jsonb_build_object('superseded_by',null));end if;\n  if exists(select 1 from public.ai_structured_facts where superseded_by=(t->>'id')::uuid) then return null;end if;\n end if;\n if r in('public.ai_messages','public.ai_structured_facts','public.ai_action_proposals',\n  'public.need_sensitive','public.need_geography','public.need_requirement_details',\n  'private.data_export_artifacts','public.notification_push_attempts','public.notification_deliveries',\n  'public.notification_push_devices','public.notification_preferences','public.opportunity_deliveries',\n  'private.dispatch_schedule','public.access_grants','public.profile_availability_rules','public.profile_availability_windows',\n  'public.worker_match_preferences','private.worker_calendar_events','private.worker_calendar_serialization',\n  'private.support_read_markers_v5','private.group_message_visibility_v5','private.agreement_review_comments_v1') then\n  if r='private.data_export_artifacts' and exists(select 1 from storage.objects where bucket_id='data-export-artifacts' and name=t->>'object_path')\n  then raise exception 'ERASURE_STORAGE_NOT_CLEAN';end if;\n  return jsonb_build_object('operation','DELETE','patch','{}'::jsonb);\n end if;\n if r='private.agreement_voice_uploads_v1' then\n  if t->>'dispatch_state'='DISPATCHING' then raise exception 'ERASURE_PRODUCER_UNSETTLED';end if;\n  if exists(select 1 from storage.objects where bucket_id='agreement-voice' and name=t->>'storage_path') then raise exception 'ERASURE_STORAGE_NOT_CLEAN';end if;\n  return jsonb_build_object('operation','DELETE','patch','{}'::jsonb);\n end if;\n if r in('private.owned_media_assets','private.agreement_photo_uploads_v5') then\n  if t->>'dispatch_state'='DISPATCHING' then raise exception 'ERASURE_PRODUCER_UNSETTLED';end if;\n  if private.closure_erasure_media_protected_v5(a,t->>'storage_path') then return null;end if;\n  if exists(select 1 from storage.objects where bucket_id='profile-media' and name=t->>'storage_path') then raise exception 'ERASURE_STORAGE_NOT_CLEAN';end if;\n  return jsonb_build_object('operation','DELETE','patch','{}'::jsonb);\n end if;\n if r='public.app_accounts' then p:=jsonb_build_object('email','','phone','','full_name','','city','');\n elsif r='public.app_profiles' then p:=jsonb_build_object('display_name','','city','','headline','','bio','','avatar_path',null,\n  'portfolio','[]'::jsonb,'skills','[]'::jsonb,'tools','[]'::jsonb,'licenses','[]'::jsonb,'vehicles','[]'::jsonb,'exclusions','[]'::jsonb,\n  'years_experience',0,'radius_km',1,'available_now',false,'available_now_expires_at',null,'team_capacity',1,\n  'minimum_fee_rsd',0,'rating_requester',null,'rating_worker',null,'operating_country_code',null,'profile_status','CLOSED');\n elsif r='public.needs' then p:=jsonb_build_object('title','Obrisan zadatak','description','Sadržaj uklonjen pri zatvaranju naloga.','category','OBRISANO',\n  'approximate_city','','approximate_area','','approximate_lat',null,'approximate_lng',null,\n  'starts_at',null,'ends_at',null,'required_skills','[]'::jsonb,'required_tools','[]'::jsonb,'required_vehicles','[]'::jsonb,'required_licenses','[]'::jsonb,\n  'public_photo_paths','[]'::jsonb,'requester_price_rsd',null,'response_deadline',null,'urgent',false,\n  'urgent_activated_at',null,'urgent_expires_at',null,'urgent_policy_version',null,'remaining_search_close_reason',null);\n elsif r in('private.ai_task_reviews','private.worker_ai_reviews') then p:=jsonb_build_object('envelope',jsonb_build_object('erasedBy','AF-D22'));\n elsif r='private.worker_ai_sessions' then p:=jsonb_build_object('candidate',jsonb_build_object('erasedBy','AF-D22'));\n elsif r='private.ai_task_review_commands' then\n  foreach k in array array['evaluation_binding','evaluation','published'] loop\n   if t->k<>'null'::jsonb then p:=p||jsonb_build_object(k,jsonb_build_object('erasedBy','AF-D22'));end if;\n  end loop;\n elsif r='private.need_revision_events' then p:=jsonb_build_object('previous_material_snapshot',jsonb_build_object('erasedBy','AF-D22'),'new_material_snapshot',jsonb_build_object('erasedBy','AF-D22'));\n elsif r='public.data_export_requests' then p:=jsonb_build_object('active_export_attempt_id',null,\n  'export_revoked_at',coalesce(nullif(t->'export_revoked_at','null'::jsonb),to_jsonb((select requested_at from private.closure_executions_v5 where generation=g and account_id=a))));\n elsif r='private.need_publication_decisions' then p:=jsonb_build_object('public_geography_snapshot',jsonb_build_object('erasedBy','AF-D22'),'public_media_refs','[]'::jsonb,'reviewer_provenance','{}'::jsonb,'service_provenance',jsonb_build_object('erasedBy','AF-D22'));\n elsif r='private.preselection_qa_questions' then p:=jsonb_build_object('question_text','Sadržaj uklonjen pri zatvaranju naloga.');\n elsif r='private.preselection_qa_answer_versions' then p:=jsonb_build_object('answer_text','Sadržaj uklonjen pri zatvaranju naloga.');\n elsif r in('private.preselection_qa_policy_decisions','private.preselection_qa_materiality_decisions') then\n  if exists(select 1 from private.qa_ai_commands q where q.account_id<>a and\n   (case when r='private.preselection_qa_policy_decisions' then q.policy_decision_id else q.materiality_decision_id end)=(t->>'id')::uuid\n   and not exists(select 1 from private.closure_executions_v5 e join private.closure_actions_v5 ac on ac.generation=e.generation\n    where e.account_id=q.account_id and ac.kind='RELATIONAL_REDACT' and ac.state='VERIFIED')) then return null;end if;\n  p:=jsonb_build_object('service_provenance',jsonb_build_object('erasedBy','AF-D22'));\n elsif r='private.response_application_snapshots' then p:=jsonb_build_object('worker_skills','[]'::jsonb,'worker_tools','[]'::jsonb,'worker_licenses','[]'::jsonb,'worker_vehicles','[]'::jsonb);\n elsif r in('public.marketplace_responses','public.marketplace_response_versions') then\n  if exists(select 1 from public.agreements x where x.selected_response_id=coalesce(t->>'response_id',t->>'id')::uuid and private.closure_erasure_agreement_protected_v5(x.id)) then return null;end if;\n  p:=jsonb_build_object('scope_note','');if t?'bounded_message' then p:=p||jsonb_build_object('bounded_message','');end if;\n elsif r='public.agreement_messages' then\n  -- A selected Support copy survives in its immutable scoped snapshot. The\n  -- original ordinary chat row does not need the same plaintext forever.\n  p:=jsonb_build_object('body','Sadržaj uklonjen pri zatvaranju naloga.','photo_asset_ids','[]'::jsonb,'voice_asset_id',null);\n elsif r='private.group_messages_v5' then p:=jsonb_build_object('body','Sadržaj uklonjen pri zatvaranju naloga.');\n elsif r in('public.agreement_versions','public.agreement_change_proposals') then\n  if private.closure_erasure_agreement_protected_v5((t->>'agreement_id')::uuid) then return null;end if;\n  k:=case when r='public.agreement_versions' then 'terms' else 'proposed_terms' end;\n  if exists(select 1 from private.closure_scope_sources_v5 where account_id=a and generation=g and agreement_id=(t->>'agreement_id')::uuid\n   and source_kind=case when r='public.agreement_versions' then 'VERSION' else 'PROPOSAL' end\n   and source_id=case when r='public.agreement_versions' then t->>'version' else t->>'id' end and scope_author=a) then\n   terms:=(t->k)||jsonb_build_object('scope_note','');p:=jsonb_build_object(k,terms);\n  end if;\n  if r='public.agreement_change_proposals' and t->>'proposed_by_account_id'=a::text then p:=p||jsonb_build_object('reason','Sadržaj uklonjen pri zatvaranju naloga.');end if;\n  if p='{}'::jsonb then return null;end if;\n elsif r='public.agreement_execution' then\n  -- The source problem itself is an unresolved evidence exception.\n  if t->'problem_opened_at'<>'null'::jsonb then return null;end if;\n  p:=jsonb_build_object('problem_narrative',null);\n elsif r='private.agreement_location_points' then return jsonb_build_object('operation','DELETE','patch','{}'::jsonb);\n elsif r='public.user_activity_events' then\n  if t->>'recipient_user_id'=a::text then return jsonb_build_object('operation','DELETE','patch','{}'::jsonb);end if;\n  p:=jsonb_build_object('payload',jsonb_build_object('erasedBy','AF-D22'));\n elsif r='private.marketplace_audit_log' then p:=jsonb_build_object('detail',jsonb_build_object('erasedBy','AF-D22'));\n elsif r='private.retention_holds' then\n  if t->'active'='true'::jsonb then return null;end if;\n  p:=jsonb_build_object('hold_key','AF-D22:'||(t->>'id'));\n elsif r='private.ai_test_accounts_v5' then\n  if t->'retired_at'='null'::jsonb then p:=jsonb_build_object('retired_at',(select requested_at from private.closure_executions_v5 where generation=g and account_id=a));end if;\n elsif r='private.support_operator_grants_v5' then\n  if t->'active'='true'::jsonb then p:=jsonb_build_object('active',false,'revision',(t->>'revision')::integer+1,'updated_at',(select requested_at from private.closure_executions_v5 where generation=g and account_id=a));end if;\n end if;\n -- Content-derived request hashes are no longer original-content proofs after\n -- erasure. Policy/document/source-program digests and charged units are kept.\n foreach k in array array['request_hash','input_hash','input_sha256','text_sha256','semantic_hash','content_fingerprint',\n  'question_fingerprint','answer_fingerprint','context_hash','body_hash','body_sha256','completion_hash','source_hash','base_hash',\n  'canonical_fingerprint','private_materiality_marker','content_hash','evaluation_result_hash','need_edit_base_fingerprint'] loop\n  if t?k and jsonb_typeof(t->k)='string' then p:=p||jsonb_build_object(k,h);end if;\n end loop;\n -- These JSON command results are private source copies, not immutable legal\n -- terms. Keep identity/state columns for anti-replay, never old narrative JSON.\n if r in('private.requester_identity_commands','private.worker_ai_saves','private.need_draft_save_commands',\n  'private.ai_need_turn_commands','private.worker_ai_turns','private.qa_ai_commands',\n  'private.need_edit_commands','private.need_publish_commands','private.response_submit_commands','private.response_withdraw_commands',\n  'private.response_revision_resolution_commands','private.remaining_search_close_commands','private.preselection_qa_commands',\n  'private.account_block_commands','private.retention_jobs','private.support_commands_v5','private.support_grant_commands_v5') then\n  foreach k in array array['receipt','result'] loop\n   if t?k and t->k<>'null'::jsonb then p:=p||jsonb_build_object(k,jsonb_build_object('erasedBy','AF-D22'));end if;\n  end loop;\n end if;\n -- An operator's note about a person is not audit metadata the subject must live with. The\n -- lineage class, its revision and its timestamps stay; the free text becomes a fixed code.\n if r in('private.account_lineage_v5','private.account_lineage_events_v5') then\n  p:=p||jsonb_build_object('reason','CLOSURE_ERASED_OPERATOR_NOTE','source_ref','CLOSURE_ERASED_SOURCE_REF');\n end if;\n if r='public.needs' then p:=p||jsonb_build_object('category_id',null);end if;\n if p='{}'::jsonb or t@>p then return null;end if;\n return jsonb_build_object('operation','UPDATE','patch',p);\nend $function$\n",
+      "owner": "postgres",
+      "security_definer": true,
+      "acl": "{postgres=X/postgres}",
+      "metadata": {
+        "acl": "{postgres=X/postgres}",
+        "cost": 100,
+        "rows": 0,
+        "owner": "postgres",
+        "config": [
+          "search_path=pg_catalog"
+        ],
+        "result": "jsonb",
+        "strict": false,
+        "language": "plpgsql",
+        "parallel": "u",
+        "arguments": "r text, t jsonb, a uuid, g uuid",
+        "leakproof": false,
+        "volatility": "s",
+        "security_definer": true
+      },
+      "signature": "private.closure_redaction_patch_v5(text,jsonb,uuid,uuid)"
+    },
+    {
+      "name": "private.closure_redaction_relations_v5",
+      "arguments": "",
+      "body_md5": "102e417ab6d52ab0eec421a8bda5c0c4",
+      "definition": "CREATE OR REPLACE FUNCTION private.closure_redaction_relations_v5()\n RETURNS text[]\n LANGUAGE sql\n IMMUTABLE SECURITY DEFINER\n SET search_path TO 'pg_catalog'\nAS $function$ SELECT ARRAY['private.work_taxonomy_review_outbox_v1','private.work_taxonomy_pending_reviews_v1','private.work_taxonomy_gemini_turn_hints_v1','private.work_taxonomy_admissions_v1','private.work_taxonomy_review_batches_v1','private.work_taxonomy_related_acceptances','private.taxonomy_confirmed_worker_modes_v1','private.work_taxonomy_worker_capabilities','private.worker_execution_mode_choices','private.work_taxonomy_need_skills','private.work_taxonomy_need_snapshots','private.work_taxonomy_need_bindings_v1','private.work_taxonomy_worker_bindings_v1','private.dev_phase1_20261014_worker_capabilities_snapshot','private.dev_phase1_20261014_opportunity_snapshot','private.dev_phase1_20261014_dispatch_snapshot','private.dev_test101_owner_worker_profile_backup','private.dev_test101_owner_profile_backup_20261014','private.dev_worker_profile_reset_snapshots_v1','private.dev_phase1_20261014_needs_snapshot','private.requester_identity_commands','private.worker_ai_saves','private.ai_task_review_commands','private.ai_task_reviews','private.worker_ai_reviews','private.worker_ai_sessions','public.ai_action_proposals','public.ai_structured_facts','public.ai_messages','private.ai_need_turn_commands','private.worker_ai_turns','public.ai_conversations','private.need_draft_save_commands','private.need_edit_commands','private.need_publish_commands','private.response_submit_commands','private.response_withdraw_commands','private.response_revision_resolution_commands','private.remaining_search_close_commands','private.preselection_qa_commands','private.qa_ai_commands','private.need_publication_decisions','private.need_revision_events','private.preselection_qa_answer_versions','private.preselection_qa_questions','private.preselection_qa_policy_decisions','private.preselection_qa_materiality_decisions','private.response_application_snapshots','public.marketplace_response_versions','public.marketplace_responses','public.agreement_invalidations_v1','public.agreement_messages','private.group_messages_v5','public.agreement_versions','public.agreement_change_proposals','public.agreement_execution','private.agreement_location_points','private.agreement_location_commands','public.need_sensitive','public.need_geography','public.need_requirement_details','public.needs','public.data_export_requests','private.data_export_artifacts','public.notification_push_attempts','public.notification_deliveries','public.user_activity_events','public.notification_push_devices','public.notification_preferences','public.opportunity_deliveries','private.dispatch_schedule','public.dispatch_rounds','public.access_grants','public.profile_availability_rules','public.profile_availability_windows','public.worker_match_preferences','private.worker_calendar_events','private.worker_calendar_serialization','private.support_read_markers_v5','private.owned_media_assets','private.agreement_photo_uploads_v5','private.agreement_voice_uploads_v1','private.account_block_commands','private.marketplace_audit_log','private.retention_jobs','private.retention_holds','private.support_commands_v5','private.support_grant_commands_v5','private.account_lineage_events_v5','private.account_lineage_v5','private.group_message_visibility_v5','private.ai_test_accounts_v5','private.support_operator_grants_v5','public.app_profiles','public.app_accounts','private.agreement_review_comments_v1']::text[]; $function$\n",
+      "owner": "postgres",
+      "security_definer": true,
+      "acl": "{postgres=X/postgres}",
+      "metadata": {
+        "acl": "{postgres=X/postgres}",
+        "cost": 100,
+        "rows": 0,
+        "owner": "postgres",
+        "config": [
+          "search_path=pg_catalog"
+        ],
+        "result": "text[]",
+        "strict": false,
+        "language": "sql",
+        "parallel": "u",
+        "arguments": "",
+        "leakproof": false,
+        "volatility": "i",
+        "security_definer": true
+      },
+      "signature": "private.closure_redaction_relations_v5()"
+    },
+    {
+      "name": "private.closure_taxonomy_inventory_v1",
+      "arguments": "",
+      "body_md5": "16ed9d5077dd2662e4502a5040a83f80",
+      "definition": "CREATE OR REPLACE FUNCTION private.closure_taxonomy_inventory_v1()\n RETURNS jsonb\n LANGUAGE sql\n IMMUTABLE\n SET search_path TO 'pg_catalog'\nAS $function$ SELECT '[{\"relation\":\"private.work_taxonomy_review_outbox_v1\",\"dataClass\":\"COMMAND_LEDGERS\",\"key\":\"taxonomyQueue\",\"ownerColumn\":\"owner_account_id\",\"fields\":[\"id\",\"request_key\",\"source_review_id\",\"purpose\",\"plans\",\"state\",\"binding_state\",\"error_code\",\"binding_error_code\",\"result\",\"binding_result\",\"created_at\",\"updated_at\"],\"mode\":\"ACCOUNT\"},{\"relation\":\"private.work_taxonomy_pending_reviews_v1\",\"dataClass\":\"COMMAND_LEDGERS\",\"key\":\"taxonomyPendingReviews\",\"ownerColumn\":\"owner_account_id\",\"fields\":[\"id\",\"request_key\",\"source_review_id\",\"purpose\",\"classification_state\",\"resolution_state\",\"saved_at\",\"created_at\"],\"mode\":\"ACCOUNT\"},{\"relation\":\"private.work_taxonomy_gemini_turn_hints_v1\",\"dataClass\":\"AI_VOLATILE\",\"key\":\"taxonomyTurnProposals\",\"ownerColumn\":\"account_id\",\"fields\":[\"id\",\"purpose\",\"conversation_id\",\"client_request_id\",\"turn_id\",\"proposals\",\"catalog_version\",\"catalog_resolution\",\"created_at\"],\"mode\":\"ACCOUNT\"},{\"relation\":\"private.work_taxonomy_admissions_v1\",\"dataClass\":\"COMMAND_LEDGERS\",\"key\":\"taxonomyAdmissions\",\"ownerColumn\":\"owner_account_id\",\"fields\":[\"id\",\"request_key\",\"purpose\",\"source_review_id\",\"plan\",\"status\",\"result\",\"approved_at\",\"committed_at\",\"created_at\"],\"mode\":\"ACCOUNT\"},{\"relation\":\"private.work_taxonomy_review_batches_v1\",\"dataClass\":\"COMMAND_LEDGERS\",\"key\":\"taxonomyReviewedBatches\",\"ownerColumn\":\"owner_account_id\",\"fields\":[\"id\",\"request_key\",\"purpose\",\"source_review_id\",\"plans\",\"catalog_version\",\"result\",\"committed_at\"],\"mode\":\"ACCOUNT\"},{\"relation\":\"private.work_taxonomy_related_acceptances\",\"dataClass\":\"PROFILE_DATA\",\"key\":\"taxonomyRelatedConsent\",\"ownerColumn\":\"worker_account_id\",\"fields\":[\"source_category_id\",\"target_category_id\",\"explicitly_confirmed_at\",\"relationship_version\"],\"mode\":\"ACCOUNT\"},{\"relation\":\"private.taxonomy_confirmed_worker_modes_v1\",\"dataClass\":\"PROFILE_DATA\",\"key\":\"taxonomyServiceModes\",\"ownerColumn\":\"worker_account_id\",\"fields\":[\"category_id\",\"execution_scope\",\"source_review_id\",\"source_request_key\",\"confirmed_at\",\"active\",\"handoff\"],\"mode\":\"ACCOUNT\"},{\"relation\":\"private.work_taxonomy_worker_capabilities\",\"dataClass\":\"PROFILE_DATA\",\"key\":\"taxonomyCapabilities\",\"ownerColumn\":\"worker_account_id\",\"fields\":[\"category_id\",\"confirmed_at\",\"allow_related_offers\",\"excluded\",\"origin\",\"updated_at\"],\"mode\":\"ACCOUNT\"},{\"relation\":\"private.worker_execution_mode_choices\",\"dataClass\":\"PROFILE_DATA\",\"key\":\"workerModeConsent\",\"ownerColumn\":\"worker_account_id\",\"fields\":[\"worker_profile_id\",\"modes\",\"consent_source\",\"confirmed_at\",\"updated_at\"],\"mode\":\"ACCOUNT\"},{\"relation\":\"private.work_taxonomy_need_skills\",\"dataClass\":\"NEED_PUBLIC\",\"key\":\"taxonomyTaskSkills\",\"ownerColumn\":\"need_id\",\"fields\":[\"need_id\",\"need_revision\",\"category_id\"],\"mode\":\"NEED\"},{\"relation\":\"private.work_taxonomy_need_snapshots\",\"dataClass\":\"NEED_PUBLIC\",\"key\":\"taxonomyTaskSnapshots\",\"ownerColumn\":\"need_id\",\"fields\":[\"need_id\",\"need_revision\",\"category_id\",\"catalog_version\",\"reviewed_by_requester\",\"source\",\"classification_state\",\"original_category\",\"created_at\"],\"mode\":\"NEED\"},{\"relation\":\"private.work_taxonomy_need_bindings_v1\",\"dataClass\":\"COMMAND_LEDGERS\",\"key\":\"taxonomyTaskBindings\",\"ownerColumn\":\"owner_account_id\",\"fields\":[\"request_key\",\"source_review_id\",\"need_id\",\"need_revision\",\"category_id\",\"catalog_version\",\"result\",\"bound_at\"],\"mode\":\"ACCOUNT\"},{\"relation\":\"private.work_taxonomy_worker_bindings_v1\",\"dataClass\":\"COMMAND_LEDGERS\",\"key\":\"taxonomyWorkerBindings\",\"ownerColumn\":\"owner_account_id\",\"fields\":[\"request_key\",\"source_review_id\",\"profile_id\",\"catalog_version\",\"result\",\"bound_at\"],\"mode\":\"ACCOUNT\"},{\"relation\":\"private.dev_phase1_20261014_worker_capabilities_snapshot\",\"dataClass\":\"PROFILE_DATA\",\"key\":\"archivedWorkerCapabilities\",\"ownerColumn\":\"worker_account_id\",\"fields\":[\"category_id\",\"confirmed_at\",\"allow_related_offers\",\"excluded\",\"origin\",\"updated_at\"],\"mode\":\"ACCOUNT\"},{\"relation\":\"private.dev_phase1_20261014_opportunity_snapshot\",\"dataClass\":\"NOTIFICATION_DELIVERY\",\"key\":\"archivedOpportunities\",\"ownerColumn\":\"worker_account_id\",\"fields\":[\"id\",\"worker_profile_id\",\"need_id\",\"need_revision\",\"match_score\",\"reason_codes\",\"status\",\"expires_at\",\"seen_at\",\"responded_at\",\"created_at\",\"updated_at\"],\"mode\":\"ACCOUNT\"},{\"relation\":\"private.dev_phase1_20261014_dispatch_snapshot\",\"dataClass\":\"NOTIFICATION_DELIVERY\",\"key\":\"archivedTaskDispatch\",\"ownerColumn\":\"need_id\",\"fields\":[\"id\",\"need_id\",\"need_revision\",\"round_no\",\"urgency\",\"status\",\"stop_reason\",\"deadline_at\",\"created_at\"],\"mode\":\"NEED\"},{\"relation\":\"private.dev_test101_owner_worker_profile_backup\",\"dataClass\":\"PROFILE_DATA\",\"key\":\"archivedWorkerProfile\",\"ownerColumn\":\"account_id\",\"fields\":[\"id\",\"kind\",\"display_name\",\"city\",\"headline\",\"bio\",\"avatar_path\",\"account_type\",\"profile_status\",\"years_experience\",\"portfolio\",\"skills\",\"tools\",\"vehicles\",\"licenses\",\"exclusions\",\"radius_km\",\"operating_country_code\",\"available_now\",\"available_now_expires_at\",\"team_capacity\",\"minimum_fee_rsd\",\"rating_requester\",\"rating_worker\",\"created_at\",\"updated_at\"],\"mode\":\"ACCOUNT\"},{\"relation\":\"private.dev_test101_owner_profile_backup_20261014\",\"dataClass\":\"PROFILE_DATA\",\"key\":\"archivedProfiles\",\"ownerColumn\":\"account_id\",\"fields\":[\"id\",\"kind\",\"display_name\",\"city\",\"headline\",\"bio\",\"avatar_path\",\"account_type\",\"profile_status\",\"years_experience\",\"portfolio\",\"skills\",\"tools\",\"vehicles\",\"licenses\",\"exclusions\",\"radius_km\",\"operating_country_code\",\"available_now\",\"available_now_expires_at\",\"team_capacity\",\"minimum_fee_rsd\",\"rating_requester\",\"rating_worker\",\"created_at\",\"updated_at\"],\"mode\":\"ACCOUNT\"},{\"relation\":\"private.dev_worker_profile_reset_snapshots_v1\",\"dataClass\":\"PROFILE_DATA\",\"key\":\"archivedWorkerReset\",\"ownerColumn\":\"account_id\",\"fields\":[\"backup_id\",\"profile_id\",\"backed_up_at\",\"payload\"],\"mode\":\"ACCOUNT\"},{\"relation\":\"private.dev_phase1_20261014_needs_snapshot\",\"dataClass\":\"NEED_PUBLIC\",\"key\":\"archivedTasks\",\"ownerColumn\":\"requester_account_id\",\"fields\":[\"id\",\"title\",\"description\",\"category\",\"category_id\",\"approximate_city\",\"approximate_area\",\"approximate_lat\",\"approximate_lng\",\"schedule_kind\",\"starts_at\",\"ends_at\",\"required_slots\",\"mode\",\"requester_price_rsd\",\"required_skills\",\"required_tools\",\"required_vehicles\",\"required_licenses\",\"task_country_code\",\"task_timezone\",\"revision\",\"status\",\"created_at\",\"updated_at\"],\"mode\":\"ACCOUNT\"}]'::jsonb; $function$\n",
+      "owner": "postgres",
+      "security_definer": false,
+      "acl": "{postgres=X/postgres}",
+      "metadata": {
+        "acl": "{postgres=X/postgres}",
+        "cost": 100,
+        "rows": 0,
+        "owner": "postgres",
+        "config": [
+          "search_path=pg_catalog"
+        ],
+        "result": "jsonb",
+        "strict": false,
+        "language": "sql",
+        "parallel": "u",
+        "arguments": "",
+        "leakproof": false,
+        "volatility": "i",
+        "security_definer": false
+      },
+      "signature": "private.closure_taxonomy_inventory_v1()"
+    },
+    {
+      "name": "private.closure_taxonomy_patch_v1",
+      "arguments": "r text, t jsonb, a uuid, g uuid",
+      "body_md5": "5c88c60b705d2d99c61da935536ec137",
+      "definition": "CREATE OR REPLACE FUNCTION private.closure_taxonomy_patch_v1(r text, t jsonb, a uuid, g uuid)\n RETURNS jsonb\n LANGUAGE plpgsql\n STABLE SECURITY DEFINER\n SET search_path TO 'pg_catalog'\nAS $function$\nDECLARE p jsonb;h text;\nBEGIN\n IF NOT EXISTS(SELECT 1 FROM jsonb_array_elements(private.closure_taxonomy_inventory_v1()) x WHERE x->>'relation'=r)\n OR t IS NULL OR a IS NULL OR g IS NULL THEN RAISE EXCEPTION 'F01_PATCH_CONTEXT_INVALID';END IF;\n IF private.closure_taxonomy_held_v1(r,t,a) THEN RETURN NULL;END IF;\n h:=encode(extensions.digest(convert_to('AF-D22:F01:'||r||':'||coalesce(t->>'id',t->>'request_key',a::text),'UTF8'),'sha256'),'hex');\n IF r='private.work_taxonomy_review_outbox_v1' THEN\n  -- A retained replay tombstone has no plans, result copy, or usable lease.\n  p:=jsonb_build_object('plans','[]'::jsonb,'state','REVIEW_REQUIRED','binding_state','REVIEW_REQUIRED',\n   'lease_token',null,'lease_until',null,'error_code','CLOSURE_ERASED','binding_error_code','CLOSURE_ERASED',\n   'result',jsonb_build_object('erasedBy','AF-D22'),'binding_result',jsonb_build_object('erasedBy','AF-D22'));\n ELSIF r='private.work_taxonomy_review_batches_v1' THEN\n  p:=jsonb_build_object('plans','[]'::jsonb,'review_digest',h,'plans_digest',h,'result',jsonb_build_object('erasedBy','AF-D22'));\n ELSIF r='private.work_taxonomy_admissions_v1' THEN\n  p:=jsonb_build_object('plan','{}'::jsonb,'source_review_digest',h,'plan_digest',h);\n  IF t->'result'<>'null'::jsonb THEN p:=p||jsonb_build_object('result',jsonb_build_object('erasedBy','AF-D22'));END IF;\n ELSIF r='private.work_taxonomy_pending_reviews_v1' THEN\n  p:=jsonb_build_object('resolution_state','SUPERSEDED','classification_state','REVIEW_REQUIRED');\n ELSE RETURN jsonb_build_object('operation','DELETE','patch','{}'::jsonb);\n END IF;\n IF t@>p THEN RETURN NULL;END IF;\n RETURN jsonb_build_object('operation','UPDATE','patch',p);\nEND $function$\n",
+      "owner": "postgres",
+      "security_definer": true,
+      "acl": "{postgres=X/postgres}",
+      "metadata": {
+        "acl": "{postgres=X/postgres}",
+        "cost": 100,
+        "rows": 0,
+        "owner": "postgres",
+        "config": [
+          "search_path=pg_catalog"
+        ],
+        "result": "jsonb",
+        "strict": false,
+        "language": "plpgsql",
+        "parallel": "u",
+        "arguments": "r text, t jsonb, a uuid, g uuid",
+        "leakproof": false,
+        "volatility": "s",
+        "security_definer": true
+      },
+      "signature": "private.closure_taxonomy_patch_v1(text,jsonb,uuid,uuid)"
+    },
+    {
+      "name": "private.closure_taxonomy_reset_sections_v1",
+      "arguments": "",
+      "body_md5": "0b1c4a0b5884cdcf9c3b3db67e6bdc41",
+      "definition": "CREATE OR REPLACE FUNCTION private.closure_taxonomy_reset_sections_v1()\n RETURNS jsonb\n LANGUAGE sql\n IMMUTABLE\n SET search_path TO 'pg_catalog'\nAS $function$ SELECT '{\"worker_profile\":[\"id\",\"kind\",\"display_name\",\"city\",\"headline\",\"bio\",\"avatar_path\",\"account_type\",\"profile_status\",\"years_experience\",\"portfolio\",\"skills\",\"tools\",\"vehicles\",\"licenses\",\"exclusions\",\"radius_km\",\"operating_country_code\",\"available_now\",\"available_now_expires_at\",\"team_capacity\",\"minimum_fee_rsd\",\"rating_requester\",\"rating_worker\",\"created_at\",\"updated_at\"],\"worker_messages\":[\"id\",\"conversation_id\",\"role\",\"body\",\"created_at\"],\"worker_conversations\":[\"id\",\"purpose\",\"status\",\"created_at\",\"completed_at\"],\"worker_sessions\":[\"conversation_id\",\"profile_id\",\"revision\",\"candidate\",\"created_at\"],\"worker_reviews\":[\"id\",\"conversation_id\",\"revision\",\"envelope\",\"created_at\"],\"worker_turns\":[\"id\",\"conversation_id\",\"state\",\"created_at\",\"cancelled_at\"],\"worker_saves\":[\"review_id\",\"created_at\"],\"worker_hints\":[\"id\",\"purpose\",\"conversation_id\",\"client_request_id\",\"turn_id\",\"proposals\",\"catalog_version\",\"catalog_resolution\",\"created_at\"],\"capabilities\":[\"category_id\",\"confirmed_at\",\"allow_related_offers\",\"excluded\",\"origin\",\"updated_at\"],\"confirmed_modes\":[\"category_id\",\"execution_scope\",\"source_review_id\",\"source_request_key\",\"confirmed_at\",\"active\",\"handoff\"],\"bindings\":[\"request_key\",\"source_review_id\",\"profile_id\",\"catalog_version\",\"result\",\"bound_at\"],\"worker_modes\":[\"worker_profile_id\",\"modes\",\"consent_source\",\"confirmed_at\",\"updated_at\"],\"availability_rules\":[\"id\",\"profile_id\",\"active\",\"weekdays\",\"start_time\",\"end_time\",\"starts_on\",\"ends_on\",\"label\"],\"availability_windows\":[\"id\",\"profile_id\",\"starts_at\",\"ends_at\",\"state\",\"label\"],\"worker_preferences\":[\"profile_id\",\"worker_profile_id\",\"available_now\",\"available_until\",\"radius_km\"]}'::jsonb; $function$\n",
+      "owner": "postgres",
+      "security_definer": false,
+      "acl": "{postgres=X/postgres}",
+      "metadata": {
+        "acl": "{postgres=X/postgres}",
+        "cost": 100,
+        "rows": 0,
+        "owner": "postgres",
+        "config": [
+          "search_path=pg_catalog"
+        ],
+        "result": "jsonb",
+        "strict": false,
+        "language": "sql",
+        "parallel": "u",
+        "arguments": "",
+        "leakproof": false,
+        "volatility": "i",
+        "security_definer": false
+      },
+      "signature": "private.closure_taxonomy_reset_sections_v1()"
+    },
+    {
+      "name": "private.closure_taxonomy_semantic_v1",
+      "arguments": "v jsonb",
+      "body_md5": "1d4c6fd6725c00cb2c65bccc091cecc9",
+      "definition": "CREATE OR REPLACE FUNCTION private.closure_taxonomy_semantic_v1(v jsonb)\n RETURNS jsonb\n LANGUAGE plpgsql\n IMMUTABLE\n SET search_path TO 'pg_catalog'\nAS $function$\nDECLARE answer jsonb;k text;x jsonb;\nBEGIN\n IF jsonb_typeof(v)='array' THEN\n  SELECT coalesce(jsonb_agg(private.closure_taxonomy_semantic_v1(value) ORDER BY ord),'[]'::jsonb) INTO answer\n  FROM jsonb_array_elements(v) WITH ORDINALITY e(value,ord);RETURN answer;\n ELSIF jsonb_typeof(v)='object' THEN\n  SELECT coalesce(jsonb_object_agg(key,private.closure_taxonomy_semantic_v1(value)),'{}'::jsonb) INTO answer\n  FROM jsonb_each(v) WHERE key=ANY(private.closure_taxonomy_semantic_keys_v1());RETURN answer;\n END IF;\n RETURN v;\nEND $function$\n",
+      "owner": "postgres",
+      "security_definer": false,
+      "acl": "{postgres=X/postgres}",
+      "metadata": {
+        "acl": "{postgres=X/postgres}",
+        "cost": 100,
+        "rows": 0,
+        "owner": "postgres",
+        "config": [
+          "search_path=pg_catalog"
+        ],
+        "result": "jsonb",
+        "strict": false,
+        "language": "plpgsql",
+        "parallel": "u",
+        "arguments": "v jsonb",
+        "leakproof": false,
+        "volatility": "i",
+        "security_definer": false
+      },
+      "signature": "private.closure_taxonomy_semantic_v1(jsonb)"
+    },
+    {
+      "name": "private.data_export_array_v5",
+      "arguments": "v jsonb, t text",
+      "body_md5": "00933c589c16905b09318c080a2150f6",
+      "definition": "CREATE OR REPLACE FUNCTION private.data_export_array_v5(v jsonb, t text)\n RETURNS jsonb\n LANGUAGE sql\n IMMUTABLE\n SET search_path TO 'pg_catalog'\nAS $function$ select coalesce(jsonb_agg(x order by ordinal),'[]'::jsonb) from jsonb_array_elements(case when jsonb_typeof(v)='array' then v else '[]'::jsonb end) with ordinality a(x,ordinal) where jsonb_typeof(x)=t and t in('string','number','boolean') $function$\n",
+      "owner": "postgres",
+      "security_definer": false,
+      "acl": "{postgres=X/postgres}",
+      "metadata": {
+        "acl": "{postgres=X/postgres}",
+        "cost": 100,
+        "rows": 0,
+        "owner": "postgres",
+        "config": [
+          "search_path=pg_catalog"
+        ],
+        "result": "jsonb",
+        "strict": false,
+        "language": "sql",
+        "parallel": "u",
+        "arguments": "v jsonb, t text",
+        "leakproof": false,
+        "volatility": "i",
+        "security_definer": false
+      },
+      "signature": "private.data_export_array_v5(jsonb,text)"
+    },
+    {
+      "name": "private.data_export_dataset_catalog",
+      "arguments": "",
+      "body_md5": "e08e712c811ab2a093e48ca75a436c25",
+      "definition": "CREATE OR REPLACE FUNCTION private.data_export_dataset_catalog()\n RETURNS jsonb\n LANGUAGE sql\n IMMUTABLE SECURITY DEFINER\n SET search_path TO 'pg_catalog'\nAS $function$ select '[{\"key\": \"account\", \"fields\": [\"activeMode\", \"city\", \"createdAt\", \"email\", \"fullName\", \"id\", \"phone\"], \"dataClass\": \"ACCOUNT_IDENTITY\", \"ownershipFilter\": \"t.id=REQUEST_ACCOUNT\"}, {\"key\": \"profiles\", \"fields\": [\"bio\", \"city\", \"displayName\", \"headline\", \"id\", \"kind\", \"operatingCountryCode\", \"skills\", \"status\"], \"dataClass\": \"PROFILE_DATA\", \"ownershipFilter\": \"t.account_id=REQUEST_ACCOUNT\"}, {\"key\": \"availabilityWindows\", \"fields\": [\"endsAt\", \"id\", \"label\", \"profileId\", \"startsAt\", \"state\"], \"dataClass\": \"PROFILE_DATA\", \"ownershipFilter\": \"p.account_id=REQUEST_ACCOUNT\"}, {\"key\": \"availabilityRules\", \"fields\": [\"active\", \"endTime\", \"endsOn\", \"id\", \"label\", \"profileId\", \"startTime\", \"startsOn\", \"weekdays\"], \"dataClass\": \"PROFILE_DATA\", \"ownershipFilter\": \"p.account_id=REQUEST_ACCOUNT\"}, {\"key\": \"calendar\", \"fields\": [\"agreementId\", \"endsAt\", \"startsAt\", \"state\"], \"dataClass\": \"PROFILE_DATA\", \"ownershipFilter\": \"t.worker_account_id=REQUEST_ACCOUNT\"}, {\"key\": \"needs\", \"fields\": [\"countryCode\", \"description\", \"endsAt\", \"executionMode\", \"id\", \"requiredSlots\", \"revision\", \"startsAt\", \"status\", \"timezone\", \"title\"], \"dataClass\": \"NEED_PUBLIC\", \"ownershipFilter\": \"t.requester_account_id=REQUEST_ACCOUNT\"}, {\"key\": \"needPrivate\", \"fields\": [\"accessNotes\", \"exactAddress\", \"latitude\", \"longitude\", \"needId\", \"resolvedPoints\"], \"dataClass\": \"NEED_SENSITIVE\", \"ownershipFilter\": \"n.requester_account_id=REQUEST_ACCOUNT\"}, {\"key\": \"responses\", \"fields\": [\"coveredSlots\", \"createdAt\", \"id\", \"kind\", \"message\", \"needId\", \"needRevision\", \"priceRsd\", \"scopeNote\", \"status\"], \"dataClass\": \"RESPONSES_SELECTION\", \"ownershipFilter\": \"t.worker_account_id=REQUEST_ACCOUNT\"}, {\"key\": \"ownQuestions\", \"fields\": [\"createdAt\", \"id\", \"needId\", \"question\", \"status\"], \"dataClass\": \"PRESELECTION_QA\", \"ownershipFilter\": \"t.asker_account_id=REQUEST_ACCOUNT\"}, {\"key\": \"ownAnswers\", \"fields\": [\"answer\", \"createdAt\", \"id\", \"questionId\", \"version\"], \"dataClass\": \"PRESELECTION_QA\", \"ownershipFilter\": \"t.answered_by_account_id=REQUEST_ACCOUNT\"}, {\"key\": \"agreements\", \"fields\": [\"createdAt\", \"currentVersion\", \"id\", \"needId\", \"status\"], \"dataClass\": \"AGREEMENT_CORE\", \"ownershipFilter\": \"t.requester_account_id=REQUEST_ACCOUNT or t.worker_account_id=REQUEST_ACCOUNT\"}, {\"key\": \"ownAgreementMessages\", \"fields\": [\"agreementId\", \"body\", \"createdAt\", \"id\", \"agreementVersion\", \"assetIds\", \"voiceAssetId\"], \"dataClass\": \"AGREEMENT_MESSAGES\", \"ownershipFilter\": \"t.sender_account_id=REQUEST_ACCOUNT and (a.requester_account_id=REQUEST_ACCOUNT or a.worker_account_id=REQUEST_ACCOUNT)\"}, {\"key\": \"consent\", \"fields\": [\"acceptedAt\", \"id\", \"privacySha256\", \"privacyVersion\", \"termsSha256\", \"termsVersion\"], \"dataClass\": \"LEGAL_CONSENT\", \"ownershipFilter\": \"t.account_id=REQUEST_ACCOUNT\"}, {\"key\": \"notifications\", \"fields\": [\"body\", \"channel\", \"createdAt\", \"id\", \"readAt\", \"role\", \"state\", \"title\"], \"dataClass\": \"NOTIFICATION_DELIVERY\", \"ownershipFilter\": \"t.recipient_user_id=REQUEST_ACCOUNT\"}, {\"key\": \"aiMessages\", \"fields\": [\"content\", \"conversationId\", \"createdAt\", \"id\", \"role\"], \"dataClass\": \"AI_VOLATILE\", \"ownershipFilter\": \"t.account_id=REQUEST_ACCOUNT and c.account_id=REQUEST_ACCOUNT\"}, {\"key\": \"mediaMetadata\", \"fields\": [\"bytesIncluded\", \"createdAt\", \"name\"], \"dataClass\": \"MEDIA_OBJECTS\", \"ownershipFilter\": \"t.bucket_id=''profile-media'' and split_part(t.name,''/'',1)=REQUEST_ACCOUNT::text\"}, {\"key\": \"exportRequests\", \"fields\": [\"completedAt\", \"id\", \"kind\", \"requestedAt\", \"status\"], \"dataClass\": \"COMMAND_LEDGERS\", \"ownershipFilter\": \"t.account_id=REQUEST_ACCOUNT\"}, {\"key\": \"ownAudit\", \"fields\": [\"createdAt\", \"entityId\", \"entityType\", \"eventType\", \"id\"], \"dataClass\": \"AUDIT_SECURITY_LOGS\", \"ownershipFilter\": \"t.actor_user_id=REQUEST_ACCOUNT\"}, {\"key\": \"ownAgreementReviews\", \"fields\": [\"agreementId\", \"createdAt\", \"id\", \"rating\", \"tags\", \"comment\"], \"dataClass\": \"AGREEMENT_REVIEWS\", \"ownershipFilter\": \"t.reviewer_account_id=REQUEST_ACCOUNT and (a.requester_account_id=REQUEST_ACCOUNT or a.worker_account_id=REQUEST_ACCOUNT)\"}, {\"key\": \"ownSafetyReports\", \"fields\": [\"agreementId\", \"category\", \"createdAt\", \"id\", \"narrative\", \"needId\", \"reason\", \"status\"], \"dataClass\": \"AUDIT_SECURITY_LOGS\", \"ownershipFilter\": \"t.reporter_account_id=REQUEST_ACCOUNT\"}, {\"key\": \"ownBlocks\", \"fields\": [\"active\", \"revision\", \"targetAccountId\", \"updatedAt\"], \"dataClass\": \"AUDIT_SECURITY_LOGS\", \"ownershipFilter\": \"t.blocker_account_id=REQUEST_ACCOUNT\"}, {\"key\": \"workerAiDrafts\", \"fields\": [\"conversationId\", \"createdAt\", \"profile\", \"profileId\", \"revision\", \"safety\"], \"dataClass\": \"AI_VOLATILE\", \"ownershipFilter\": \"t.account_id=REQUEST_ACCOUNT and c.account_id=REQUEST_ACCOUNT\"}, {\"key\": \"workerAiReviews\", \"fields\": [\"activate\", \"conversationId\", \"createdAt\", \"id\", \"profile\", \"revision\"], \"dataClass\": \"AI_VOLATILE\", \"ownershipFilter\": \"t.account_id=REQUEST_ACCOUNT and c.account_id=REQUEST_ACCOUNT\"}, {\"key\": \"taskAiReviews\", \"fields\": [\"conversationId\", \"createdAt\", \"draftId\", \"draftRevision\", \"id\", \"privateFacts\", \"publicFacts\", \"responseDeadline\"], \"dataClass\": \"AI_VOLATILE\", \"ownershipFilter\": \"t.account_id=REQUEST_ACCOUNT and c.account_id=REQUEST_ACCOUNT\"}, {\"key\": \"taskAiFacts\", \"fields\": [\"conversationId\", \"facts\", \"id\"], \"dataClass\": \"AI_VOLATILE\", \"ownershipFilter\": \"c.account_id=REQUEST_ACCOUNT\"}, {\"key\": \"workerAiTurns\", \"fields\": [\"cancelledAt\", \"conversationId\", \"createdAt\", \"id\", \"state\"], \"dataClass\": \"COMMAND_LEDGERS\", \"ownershipFilter\": \"t.account_id=REQUEST_ACCOUNT\"}, {\"key\": \"workerAiSaves\", \"fields\": [\"createdAt\", \"reviewId\"], \"dataClass\": \"COMMAND_LEDGERS\", \"ownershipFilter\": \"t.account_id=REQUEST_ACCOUNT\"}, {\"key\": \"taskReviewCommands\", \"fields\": [\"createdAt\", \"needId\", \"needRevision\", \"reviewId\", \"state\"], \"dataClass\": \"COMMAND_LEDGERS\", \"ownershipFilter\": \"t.account_id=REQUEST_ACCOUNT\"}, {\"key\": \"taskAiTurns\", \"fields\": [\"cancelledAt\", \"conversationId\", \"createdAt\", \"id\", \"state\"], \"dataClass\": \"COMMAND_LEDGERS\", \"ownershipFilter\": \"t.account_id=REQUEST_ACCOUNT\"}, {\"key\": \"qaClassifications\", \"fields\": [\"createdAt\", \"id\", \"materiality\", \"needId\", \"needRevision\", \"outcome\", \"questionId\", \"state\", \"type\"], \"dataClass\": \"COMMAND_LEDGERS\", \"ownershipFilter\": \"t.account_id=REQUEST_ACCOUNT\"}, {\"key\": \"qaCommands\", \"fields\": [\"createdAt\", \"questionId\", \"status\", \"type\"], \"dataClass\": \"COMMAND_LEDGERS\", \"ownershipFilter\": \"t.actor_account_id=REQUEST_ACCOUNT\"}, {\"key\": \"ownedMediaAssets\", \"fields\": [\"byteSize\", \"bytesIncluded\", \"conversationId\", \"createdAt\", \"height\", \"id\", \"profileId\", \"scope\", \"selected\", \"state\", \"width\"], \"dataClass\": \"MEDIA_OBJECTS\", \"ownershipFilter\": \"t.account_id=REQUEST_ACCOUNT\"}, {\"key\": \"testAdmission\", \"fields\": [\"admittedAt\", \"retiredAt\"], \"dataClass\": \"AUDIT_SECURITY_LOGS\", \"ownershipFilter\": \"t.account_id=REQUEST_ACCOUNT\"}, {\"key\": \"testAllocations\", \"fields\": [\"allocatedMaximumMicrousd\", \"createdAt\", \"kind\", \"measuredProviderCharge\", \"settledAt\", \"settledMicrousd\", \"settlementBasis\"], \"dataClass\": \"AUDIT_SECURITY_LOGS\", \"ownershipFilter\": \"t.account_id=REQUEST_ACCOUNT\"}, {\"key\": \"closureRequests\", \"fields\": [\"closedAt\", \"id\", \"preparedAt\", \"requestedAt\", \"revision\", \"state\"], \"dataClass\": \"COMMAND_LEDGERS\", \"ownershipFilter\": \"t.account_id=REQUEST_ACCOUNT\"}, {\"key\": \"closureExecution\", \"fields\": [\"closedAt\", \"requestId\", \"requestedAt\", \"state\"], \"dataClass\": \"COMMAND_LEDGERS\", \"ownershipFilter\": \"t.account_id=REQUEST_ACCOUNT\"}, {\"key\": \"closureActions\", \"fields\": [\"dispatchedAt\", \"evidence\", \"kind\", \"state\", \"verifiedAt\"], \"dataClass\": \"COMMAND_LEDGERS\", \"ownershipFilter\": \"t.account_id=REQUEST_ACCOUNT\"}, {\"key\": \"ownGroupMessages\", \"fields\": [\"id\", \"groupId\", \"body\", \"createdAt\"], \"dataClass\": \"AGREEMENT_MESSAGES\", \"ownershipFilter\": \"t.sender_account_id=REQUEST_ACCOUNT\"}, {\"key\": \"ownGroupMemberships\", \"fields\": [\"groupId\", \"agreementId\", \"joinedAt\", \"endedAt\"], \"dataClass\": \"AGREEMENT_CORE\", \"ownershipFilter\": \"t.account_id=REQUEST_ACCOUNT\"}, {\"key\": \"ownLocationSnapshots\", \"fields\": [\"agreementId\", \"agreementVersion\", \"latitude\", \"longitude\", \"accuracyMeters\", \"capturedAt\", \"sharedAt\"], \"dataClass\": \"NEED_SENSITIVE\", \"ownershipFilter\": \"t.actor_account_id=REQUEST_ACCOUNT and a.worker_account_id=REQUEST_ACCOUNT\"}, {\"key\": \"ownLocationCommands\", \"fields\": [\"agreementId\", \"agreementVersion\", \"kind\", \"state\", \"createdAt\"], \"dataClass\": \"COMMAND_LEDGERS\", \"ownershipFilter\": \"t.actor_account_id=REQUEST_ACCOUNT and REQUEST_ACCOUNT in(a.requester_account_id,a.worker_account_id)\"}, {\"key\": \"ownAcceptedTaskMedia\", \"fields\": [\"agreementId\", \"agreementVersion\", \"needId\", \"needRevision\", \"state\", \"assets\", \"capturedAt\", \"bytesIncluded\"], \"dataClass\": \"MEDIA_OBJECTS\", \"ownershipFilter\": \"t.account_id=REQUEST_ACCOUNT and a.requester_account_id=REQUEST_ACCOUNT\"}, {\"key\": \"ownSupportCases\", \"fields\": [\"id\", \"caseNumber\", \"channel\", \"topic\", \"title\", \"desiredOutcome\", \"context\", \"status\", \"revision\", \"createdAt\", \"updatedAt\"], \"dataClass\": \"AUDIT_SECURITY_LOGS\", \"ownershipFilter\": \"t.account_id=REQUEST_ACCOUNT\"}, {\"key\": \"ownSupportEvents\", \"fields\": [\"id\", \"caseId\", \"sequence\", \"kind\", \"authorRole\", \"body\", \"decisionId\", \"appealId\", \"createdAt\"], \"dataClass\": \"AUDIT_SECURITY_LOGS\", \"ownershipFilter\": \"c.account_id=REQUEST_ACCOUNT\"}, {\"key\": \"ownSupportDecisions\", \"fields\": [\"id\", \"caseId\", \"caseRevision\", \"outcome\", \"reasonCode\", \"explanation\", \"effect\", \"evidenceIds\", \"priorDecisionId\", \"createdAt\"], \"dataClass\": \"AUDIT_SECURITY_LOGS\", \"ownershipFilter\": \"c.account_id=REQUEST_ACCOUNT\"}, {\"key\": \"ownSupportAppeals\", \"fields\": [\"id\", \"caseId\", \"decisionId\", \"status\", \"decisionResultId\", \"createdAt\"], \"dataClass\": \"AUDIT_SECURITY_LOGS\", \"ownershipFilter\": \"t.account_id=REQUEST_ACCOUNT and c.account_id=REQUEST_ACCOUNT\"}, {\"key\": \"ownSupportEvidence\", \"fields\": [\"id\", \"caseId\", \"eventId\", \"reference\", \"createdAt\", \"bytesIncluded\"], \"dataClass\": \"AUDIT_SECURITY_LOGS\", \"ownershipFilter\": \"t.submitted_by_account_id=REQUEST_ACCOUNT and c.account_id=REQUEST_ACCOUNT\"}, {\"key\": \"ownSupportCommands\", \"fields\": [\"kind\", \"state\", \"caseId\", \"createdAt\"], \"dataClass\": \"COMMAND_LEDGERS\", \"ownershipFilter\": \"t.account_id=REQUEST_ACCOUNT\"}, {\"key\": \"ownSupportReadMarkers\", \"fields\": [\"caseId\", \"sequence\", \"updatedAt\"], \"dataClass\": \"NOTIFICATION_DELIVERY\", \"ownershipFilter\": \"t.account_id=REQUEST_ACCOUNT\"}, {\"key\": \"ownAgreementPhotos\", \"fields\": [\"id\", \"agreementId\", \"agreementVersion\", \"messageId\", \"state\", \"width\", \"height\", \"byteSize\", \"createdAt\", \"cancelledAt\", \"bytesIncluded\"], \"dataClass\": \"MEDIA_OBJECTS\", \"ownershipFilter\": \"t.account_id=REQUEST_ACCOUNT\"}, {\"key\": \"ownErasureSteps\", \"fields\": [\"generation\", \"ordinal\", \"state\", \"rowsChanged\", \"verifiedAt\"], \"dataClass\": \"COMMAND_LEDGERS\", \"ownershipFilter\": \"t.account_id=REQUEST_ACCOUNT\"}, {\"key\": \"ownAgreementVoice\", \"fields\": [\"id\", \"agreementId\", \"agreementVersion\", \"messageId\", \"state\", \"durationMs\", \"byteSize\", \"createdAt\", \"cancelledAt\", \"bytesIncluded\"], \"dataClass\": \"MEDIA_OBJECTS\", \"ownershipFilter\": \"t.account_id=REQUEST_ACCOUNT\"}]'::jsonb || private.closure_taxonomy_export_catalog_v1() || '[{\"key\":\"needRequirements\",\"fields\":[\"needId\",\"criticalConditions\",\"handoff\"],\"dataClass\":\"NEED_PUBLIC\",\"ownershipFilter\":\"n.requester_account_id=REQUEST_ACCOUNT\"}]'::jsonb $function$\n",
+      "owner": "postgres",
+      "security_definer": true,
+      "acl": "{postgres=X/postgres}",
+      "metadata": {
+        "acl": "{postgres=X/postgres}",
+        "cost": 100,
+        "rows": 0,
+        "owner": "postgres",
+        "config": [
+          "search_path=pg_catalog"
+        ],
+        "result": "jsonb",
+        "strict": false,
+        "language": "sql",
+        "parallel": "u",
+        "arguments": "",
+        "leakproof": false,
+        "volatility": "i",
+        "security_definer": true
+      },
+      "signature": "private.data_export_dataset_catalog()"
+    },
+    {
+      "name": "private.data_export_projection_sha_v5",
+      "arguments": "",
+      "body_md5": "ffd64be69db4663dcb3e2d07713176cd",
+      "definition": "CREATE OR REPLACE FUNCTION private.data_export_projection_sha_v5()\n RETURNS text\n LANGUAGE sql\n STABLE SECURITY DEFINER\n SET search_path TO 'pg_catalog'\nAS $function$ select encode(extensions.digest(convert_to(string_agg(signature||':'||md5(replace(p.prosrc,E'\\r\\n',E'\\n')),E'\\n' order by signature),'UTF8'),'sha256'),'hex') from unnest(array['private.data_export_dataset_catalog()','private.data_export_snapshot(uuid,uuid,jsonb,timestamptz)','private.data_export_scalar_v5(jsonb,text)','private.data_export_array_v5(jsonb,text)','private.data_export_worker_candidate_v5(jsonb)','private.data_export_task_facts_v5(jsonb)','private.closure_taxonomy_inventory_v1()','private.closure_taxonomy_semantic_keys_v1()','private.closure_taxonomy_reset_sections_v1()','private.closure_taxonomy_scope_v1(text)','private.closure_taxonomy_semantic_v1(jsonb)','private.closure_taxonomy_project_v1(text,jsonb,uuid)','private.closure_taxonomy_export_rows_v1(uuid)','private.closure_taxonomy_export_catalog_v1()']) signature join pg_proc p on p.oid=to_regprocedure(signature) having count(*)=14 $function$\n",
+      "owner": "postgres",
+      "security_definer": true,
+      "acl": "{postgres=X/postgres}",
+      "metadata": {
+        "acl": "{postgres=X/postgres}",
+        "cost": 100,
+        "rows": 0,
+        "owner": "postgres",
+        "config": [
+          "search_path=pg_catalog"
+        ],
+        "result": "text",
+        "strict": false,
+        "language": "sql",
+        "parallel": "u",
+        "arguments": "",
+        "leakproof": false,
+        "volatility": "s",
+        "security_definer": true
+      },
+      "signature": "private.data_export_projection_sha_v5()"
+    },
+    {
+      "name": "private.data_export_scalar_v5",
+      "arguments": "v jsonb, t text",
+      "body_md5": "e02fe0db0a56b90b74a29c2b81a38357",
+      "definition": "CREATE OR REPLACE FUNCTION private.data_export_scalar_v5(v jsonb, t text)\n RETURNS jsonb\n LANGUAGE sql\n IMMUTABLE\n SET search_path TO 'pg_catalog'\nAS $function$ select case when jsonb_typeof(v)=t and t in('string','number','boolean') then v else 'null'::jsonb end $function$\n",
+      "owner": "postgres",
+      "security_definer": false,
+      "acl": "{postgres=X/postgres}",
+      "metadata": {
+        "acl": "{postgres=X/postgres}",
+        "cost": 100,
+        "rows": 0,
+        "owner": "postgres",
+        "config": [
+          "search_path=pg_catalog"
+        ],
+        "result": "jsonb",
+        "strict": false,
+        "language": "sql",
+        "parallel": "u",
+        "arguments": "v jsonb, t text",
+        "leakproof": false,
+        "volatility": "i",
+        "security_definer": false
+      },
+      "signature": "private.data_export_scalar_v5(jsonb,text)"
+    },
+    {
+      "name": "private.data_export_snapshot",
+      "arguments": "p_account_id uuid, p_receipt_id uuid, p_binding jsonb, p_cutoff timestamp with time zone",
+      "body_md5": "c3bde16e2175c7ec33c1a171e0ad04a3",
+      "definition": "CREATE OR REPLACE FUNCTION private.data_export_snapshot(p_account_id uuid, p_receipt_id uuid, p_binding jsonb, p_cutoff timestamp with time zone)\n RETURNS text\n LANGUAGE sql\n STABLE SECURITY DEFINER\n SET search_path TO 'pg_catalog'\nAS $function$\n with configured as (select value as config from jsonb_array_elements(p_binding#>'{delivery,datasets}')),\n owned_rows as materialized (select 'account' as key,jsonb_build_object('id',t.id,'email',t.email,'fullName',t.full_name,'city',t.city,'phone',t.phone,'activeMode',t.active_mode,'createdAt',t.created_at) as value from public.app_accounts t where t.id=p_account_id\nunion all\nselect 'profiles' as key,jsonb_build_object('id',t.id,'kind',t.kind,'displayName',t.display_name,'city',t.city,'headline',t.headline,'bio',t.bio,'status',t.profile_status,'skills',t.skills,'operatingCountryCode',t.operating_country_code) as value from public.app_profiles t where t.account_id=p_account_id\nunion all\nselect 'availabilityWindows' as key,jsonb_build_object('id',t.id,'profileId',t.profile_id,'startsAt',t.starts_at,'endsAt',t.ends_at,'state',t.availability_state,'label',t.label) as value from public.profile_availability_windows t join public.app_profiles p on p.id=t.profile_id where p.account_id=p_account_id\nunion all\nselect 'availabilityRules' as key,jsonb_build_object('id',t.id,'profileId',t.profile_id,'weekdays',t.weekdays,'startTime',t.start_time,'endTime',t.end_time,'startsOn',t.starts_on,'endsOn',t.ends_on,'active',t.active,'label',t.label) as value from public.profile_availability_rules t join public.app_profiles p on p.id=t.profile_id where p.account_id=p_account_id\nunion all\nselect 'calendar' as key,jsonb_build_object('agreementId',t.agreement_id,'startsAt',t.starts_at,'endsAt',t.ends_at,'state',t.state) as value from private.worker_calendar_events t where t.worker_account_id=p_account_id\nunion all\nselect 'needs' as key,jsonb_build_object('id',t.id,'title',t.title,'description',t.description,'status',t.status,'revision',t.revision,'countryCode',t.task_country_code,'timezone',t.task_timezone,'executionMode',t.execution_location_mode,'startsAt',t.starts_at,'endsAt',t.ends_at,'requiredSlots',t.required_slots) as value from public.needs t where t.requester_account_id=p_account_id\nunion all\nselect 'needPrivate' as key,jsonb_build_object('needId',t.need_id,'exactAddress',t.exact_address,'accessNotes',t.access_notes,'latitude',t.exact_lat,'longitude',t.exact_lng,'resolvedPoints',coalesce((select jsonb_agg(jsonb_build_object('slot',v->'slot','latitudeE6',v->'latitudeE6','longitudeE6',v->'longitudeE6','address',v->'address','accessNotes',v->'accessNotes') order by v->>'slot') from jsonb_array_elements(t.resolved_location#>'{value,points}') v),'[]'::jsonb)) as value from public.need_sensitive t join public.needs n on n.id=t.need_id where n.requester_account_id=p_account_id\nunion all\nselect 'responses' as key,jsonb_build_object('id',t.id,'needId',t.need_id,'kind',t.response_kind,'status',t.status,'needRevision',t.submitted_against_need_revision,'priceRsd',t.price_rsd,'coveredSlots',t.covered_slots,'scopeNote',t.scope_note,'message',t.bounded_message,'createdAt',t.created_at) as value from public.marketplace_responses t where t.worker_account_id=p_account_id\nunion all\nselect 'ownQuestions' as key,jsonb_build_object('id',t.id,'needId',t.need_id,'question',t.question_text,'status',t.status,'createdAt',t.created_at) as value from private.preselection_qa_questions t where t.asker_account_id=p_account_id\nunion all\nselect 'ownAnswers' as key,jsonb_build_object('id',t.id,'questionId',t.question_id,'version',t.answer_version,'answer',t.answer_text,'createdAt',t.created_at) as value from private.preselection_qa_answer_versions t where t.answered_by_account_id=p_account_id\nunion all\nselect 'agreements' as key,jsonb_build_object('id',t.id,'needId',t.need_id,'status',t.status,'currentVersion',t.current_version,'createdAt',t.created_at) as value from public.agreements t where t.requester_account_id=p_account_id or t.worker_account_id=p_account_id\nunion all\nselect 'ownAgreementMessages' as key,jsonb_build_object('id',t.id,'agreementId',t.agreement_id,'body',t.body,'createdAt',t.created_at,'agreementVersion',t.agreement_version,'assetIds',to_jsonb(t.photo_asset_ids),'voiceAssetId',t.voice_asset_id) as value from public.agreement_messages t join public.agreements a on a.id=t.agreement_id where t.sender_account_id=p_account_id and (a.requester_account_id=p_account_id or a.worker_account_id=p_account_id)\nunion all\nselect 'consent' as key,jsonb_build_object('id',t.id,'termsVersion',t.terms_version_label,'termsSha256',t.terms_content_sha256,'privacyVersion',t.privacy_version_label,'privacySha256',t.privacy_content_sha256,'acceptedAt',t.accepted_at) as value from public.account_legal_acceptance_events t where t.account_id=p_account_id\nunion all\nselect 'notifications' as key,jsonb_build_object('id',t.id,'role',t.recipient_role,'channel',t.channel,'state',t.state,'title',t.title,'body',t.body,'createdAt',t.created_at,'readAt',t.read_at) as value from public.notification_deliveries t where t.recipient_user_id=p_account_id\nunion all\nselect 'aiMessages' as key,jsonb_build_object('id',t.id,'conversationId',t.conversation_id,'role',t.role,'content',t.body,'createdAt',t.created_at) as value from public.ai_messages t join public.ai_conversations c on c.id=t.conversation_id where t.account_id=p_account_id and c.account_id=p_account_id\nunion all\nselect 'mediaMetadata' as key,jsonb_build_object('name',t.name,'createdAt',t.created_at,'bytesIncluded',false) as value from storage.objects t where t.bucket_id='profile-media' and split_part(t.name,'/',1)=p_account_id::text\nunion all\nselect 'exportRequests' as key,jsonb_build_object('id',t.id,'kind',t.request_kind,'status',t.status,'requestedAt',t.requested_at,'completedAt',t.completed_at) as value from public.data_export_requests t where t.account_id=p_account_id\nunion all\nselect 'ownAudit' as key,jsonb_build_object('id',t.id,'eventType',t.event_type,'entityType',t.entity_type,'entityId',t.entity_id,'createdAt',t.created_at) as value from private.marketplace_audit_log t where t.actor_user_id=p_account_id\nunion all\nselect 'ownAgreementReviews' as key,jsonb_build_object('id',t.id,'agreementId',t.agreement_id,'rating',t.rating,'tags',t.tags,'createdAt',t.created_at,'comment',(select c.comment from private.agreement_review_comments_v1 c where c.review_id=t.id)) as value from private.agreement_reviews t join public.agreements a on a.id=t.agreement_id where t.reviewer_account_id=p_account_id and (a.requester_account_id=p_account_id or a.worker_account_id=p_account_id)\nunion all\nselect 'ownSafetyReports' as key,jsonb_build_object('id',t.id,'needId',t.need_id,'agreementId',t.agreement_id,'category',t.category,'reason',t.reason,'narrative',t.narrative,'status',t.status,'createdAt',t.created_at) as value from private.safety_reports t where t.reporter_account_id=p_account_id\nunion all\nselect 'ownBlocks' as key,jsonb_build_object('targetAccountId',t.blocked_account_id,'active',t.active,'revision',t.revision,'updatedAt',t.updated_at) as value from private.account_blocks t where t.blocker_account_id=p_account_id\nunion all\nselect 'workerAiDrafts' as key,jsonb_build_object('conversationId',t.conversation_id,'profileId',t.profile_id,'revision',t.revision,'safety',t.safety,'profile',private.data_export_worker_candidate_v5(t.candidate),'createdAt',t.created_at) as value from private.worker_ai_sessions t join public.ai_conversations c on c.id=t.conversation_id where t.account_id=p_account_id and c.account_id=p_account_id\nunion all\nselect 'workerAiReviews' as key,jsonb_build_object('id',t.id,'conversationId',t.conversation_id,'revision',t.revision,'activate',private.data_export_scalar_v5(t.envelope->'activate','boolean'),'profile',private.data_export_worker_candidate_v5(t.envelope->'profile'),'createdAt',t.created_at) as value from private.worker_ai_reviews t join public.ai_conversations c on c.id=t.conversation_id where t.account_id=p_account_id and c.account_id=p_account_id\nunion all\nselect 'taskAiReviews' as key,jsonb_build_object('id',t.id,'conversationId',t.conversation_id,'draftId',private.data_export_scalar_v5(t.envelope->'draftId','string'),'draftRevision',private.data_export_scalar_v5(t.envelope->'draftRevision','number'),'responseDeadline',private.data_export_scalar_v5(t.envelope->'responseDeadline','string'),'publicFacts',private.data_export_task_facts_v5(t.envelope->'publicProjection'),'privateFacts',private.data_export_task_facts_v5(t.envelope->'ownerPrivateProjection'),'createdAt',t.created_at) as value from private.ai_task_reviews t join public.ai_conversations c on c.id=t.conversation_id where t.account_id=p_account_id and c.account_id=p_account_id\nunion all\nselect 'taskAiFacts' as key,jsonb_build_object('id',t.id,'conversationId',t.conversation_id,'facts',private.data_export_task_facts_v5(jsonb_build_array(jsonb_build_object('key',t.fact_key,'value',t.fact_value,'displayValue',t.display_value,'status',t.status)))) as value from public.ai_structured_facts t join public.ai_conversations c on c.id=t.conversation_id where c.account_id=p_account_id\nunion all\nselect 'workerAiTurns' as key,jsonb_build_object('id',t.turn_id,'conversationId',t.conversation_id,'state',t.state,'createdAt',t.created_at,'cancelledAt',t.cancelled_at) as value from private.worker_ai_turns t where t.account_id=p_account_id\nunion all\nselect 'workerAiSaves' as key,jsonb_build_object('reviewId',t.review_id,'createdAt',t.created_at) as value from private.worker_ai_saves t where t.account_id=p_account_id\nunion all\nselect 'taskReviewCommands' as key,jsonb_build_object('reviewId',t.review_id,'needId',t.need_id,'needRevision',t.need_revision,'state',t.state,'createdAt',t.created_at) as value from private.ai_task_review_commands t where t.account_id=p_account_id\nunion all\nselect 'taskAiTurns' as key,jsonb_build_object('id',t.turn_id,'conversationId',t.conversation_id,'state',t.state,'cancelledAt',t.cancelled_at,'createdAt',t.created_at) as value from private.ai_need_turn_commands t where t.account_id=p_account_id\nunion all\nselect 'qaClassifications' as key,jsonb_build_object('id',t.id,'needId',t.need_id,'needRevision',t.need_revision,'questionId',t.question_id,'type',t.command_type,'state',t.state,'outcome',t.outcome,'materiality',t.materiality,'createdAt',t.created_at) as value from private.qa_ai_commands t where t.account_id=p_account_id\nunion all\nselect 'qaCommands' as key,jsonb_build_object('type',t.command_type,'questionId',private.data_export_scalar_v5(t.result->'questionId','string'),'status',private.data_export_scalar_v5(t.result->'status','string'),'createdAt',t.created_at) as value from private.preselection_qa_commands t where t.actor_account_id=p_account_id\nunion all\nselect 'ownedMediaAssets' as key,jsonb_build_object('id',t.id,'scope',t.scope,'conversationId',t.conversation_id,'profileId',t.profile_id,'state',t.state,'selected',t.selected,'width',t.width,'height',t.height,'byteSize',t.byte_size,'bytesIncluded',false,'createdAt',t.created_at) as value from private.owned_media_assets t where t.account_id=p_account_id\nunion all\nselect 'testAdmission' as key,jsonb_build_object('admittedAt',t.admitted_at,'retiredAt',t.retired_at) as value from private.ai_test_accounts_v5 t where t.account_id=p_account_id\nunion all\nselect 'testAllocations' as key,jsonb_build_object('kind',t.kind,'allocatedMaximumMicrousd',t.max_cost_microusd,'measuredProviderCharge',coalesce(t.settlement_basis='MEASURED',false),'settledMicrousd',t.settled_microusd,'settlementBasis',t.settlement_basis,'settledAt',t.settled_at,'createdAt',t.created_at) as value from private.ai_test_reservations_v5 t where t.account_id=p_account_id\nunion all\nselect 'closureRequests' as key,jsonb_build_object('id',t.id,'state',t.state,'revision',t.revision,'requestedAt',t.requested_at,'preparedAt',t.prepared_at,'closedAt',t.closed_at) as value from private.account_closure_requests t where t.account_id=p_account_id\nunion all\nselect 'closureExecution' as key,jsonb_build_object('requestId',t.request_id,'state',t.state,'requestedAt',t.requested_at,'closedAt',t.closed_at) as value from private.closure_executions_v5 t where t.account_id=p_account_id\nunion all\nselect 'closureActions' as key,jsonb_build_object('kind',t.kind,'state',t.state,'dispatchedAt',t.dispatched_at,'verifiedAt',t.verified_at,'evidence',t.evidence) as value from private.closure_actions_v5 t where t.account_id=p_account_id\nunion all\nselect 'ownGroupMessages' as key,jsonb_build_object('id',t.id,'groupId',t.group_id,'body',t.body,'createdAt',t.created_at) as value\n from private.group_messages_v5 t where t.sender_account_id=p_account_id\nunion all\nselect 'ownGroupMemberships' as key,jsonb_build_object('groupId',t.group_id,'agreementId',t.agreement_id,'joinedAt',t.joined_at,'endedAt',t.ended_at) as value\n from private.group_memberships_v5 t where t.account_id=p_account_id\nunion all\nselect 'ownLocationSnapshots' as key,jsonb_build_object('agreementId',c.agreement_id,'agreementVersion',c.agreement_version,\n 'latitude',t.latitude,'longitude',t.longitude,'accuracyMeters',t.accuracy_meters,'capturedAt',t.captured_at,'sharedAt',t.shared_at) as value\n from private.agreement_location_points t join private.agreement_location_commands c using(actor_account_id,client_request_id)\n join public.agreements a on a.id=c.agreement_id where t.actor_account_id=p_account_id and a.worker_account_id=p_account_id and c.kind='SHARE' and c.state='COMMITTED'\nunion all\nselect 'ownLocationCommands' as key,jsonb_build_object('agreementId',t.agreement_id,'agreementVersion',t.agreement_version,'kind',t.kind,'state',t.state,'createdAt',t.created_at) as value\n from private.agreement_location_commands t join public.agreements a on a.id=t.agreement_id where t.actor_account_id=p_account_id and p_account_id in(a.requester_account_id,a.worker_account_id)\nunion all\nselect 'ownAcceptedTaskMedia' as key,jsonb_build_object('agreementId',t.agreement_id,'agreementVersion',t.agreement_version,'needId',t.need_id,'needRevision',t.need_revision,'state',t.state,'capturedAt',t.captured_at,'bytesIncluded',false,\n 'assets',(select coalesce(jsonb_agg(jsonb_build_object('assetId',x->>'assetId','width',private.data_export_scalar_v5(x->'width','number'),'height',private.data_export_scalar_v5(x->'height','number'),'byteSize',private.data_export_scalar_v5(x->'byteSize','number')) order by ordinal),'[]') from jsonb_array_elements(t.assets) with ordinality as j(x,ordinal))) as value\n from private.agreement_media_snapshots_v5 t join public.agreements a on a.id=t.agreement_id where t.account_id=p_account_id and a.requester_account_id=p_account_id\nunion all\nselect 'ownSupportCases',jsonb_build_object('id',t.id,'caseNumber',t.case_number::text,'channel',t.channel,'topic',t.topic,'title',t.title,'desiredOutcome',t.desired_outcome,'context',t.context,'status',t.status,'revision',t.revision,'createdAt',t.created_at,'updatedAt',t.updated_at) from private.support_cases_v5 t where t.account_id=p_account_id\nunion all\nselect 'ownSupportEvents',jsonb_build_object('id',t.id,'caseId',t.case_id,'sequence',t.sequence::text,'kind',t.kind,'authorRole',t.author_role,'body',case when t.kind='SAFETY_REPORT' then (select narrative from private.safety_reports where id=c.safety_report_id) else t.body end,'decisionId',t.decision_id,'appealId',t.appeal_id,'createdAt',t.created_at) from private.support_events_v5 t join private.support_cases_v5 c on c.id=t.case_id where c.account_id=p_account_id\nunion all\nselect 'ownSupportDecisions',jsonb_build_object('id',t.id,'caseId',t.case_id,'caseRevision',t.case_revision,'outcome',t.outcome,'reasonCode',t.reason_code,'explanation',t.explanation,'effect',t.effect,'evidenceIds',to_jsonb(t.evidence_ids),'priorDecisionId',t.prior_decision_id,'createdAt',t.created_at) from private.support_decisions_v5 t join private.support_cases_v5 c on c.id=t.case_id where c.account_id=p_account_id\nunion all\nselect 'ownSupportAppeals',jsonb_build_object('id',t.id,'caseId',t.case_id,'decisionId',t.decision_id,'status',t.status,'decisionResultId',t.decision_result_id,'createdAt',t.created_at) from private.support_appeals_v5 t join private.support_cases_v5 c on c.id=t.case_id where t.account_id=p_account_id and c.account_id=p_account_id\nunion all\nselect 'ownSupportEvidence',jsonb_build_object('id',t.id,'caseId',t.case_id,'eventId',t.event_id,'reference',t.snapshot,'createdAt',t.created_at,'bytesIncluded',false) from private.support_evidence_v5 t join private.support_cases_v5 c on c.id=t.case_id where t.submitted_by_account_id=p_account_id and c.account_id=p_account_id\nunion all\nselect 'ownSupportCommands',jsonb_build_object('kind',t.kind,'state',t.state,'caseId',t.case_id,'createdAt',t.created_at) from private.support_commands_v5 t where t.account_id=p_account_id\nunion all\nselect 'ownSupportReadMarkers',jsonb_build_object('caseId',t.case_id,'sequence',t.sequence::text,'updatedAt',t.updated_at) from private.support_read_markers_v5 t where t.account_id=p_account_id\nunion all\nselect 'ownAgreementPhotos',jsonb_build_object('id',t.id,'agreementId',t.agreement_id,'agreementVersion',t.agreement_version,'messageId',t.attached_message_id,'state',t.state,\n 'width',t.width,'height',t.height,'byteSize',t.byte_size,'createdAt',t.created_at,'cancelledAt',t.cancelled_at,'bytesIncluded',false) from private.agreement_photo_uploads_v5 t where t.account_id=p_account_id\nunion all\nselect 'ownAgreementVoice',jsonb_build_object('id',t.id,'agreementId',t.agreement_id,'agreementVersion',t.agreement_version,'messageId',t.attached_message_id,'state',t.state,\n 'durationMs',t.duration_ms,'byteSize',t.byte_size,'createdAt',t.created_at,'cancelledAt',t.cancelled_at,'bytesIncluded',false) from private.agreement_voice_uploads_v1 t where t.account_id=p_account_id\nunion all\nselect 'ownErasureSteps',jsonb_build_object('generation',t.generation,'ordinal',t.ordinal,'state',t.state,'rowsChanged',t.affected_rows,'verifiedAt',t.verified_at) from private.closure_redaction_steps_v5 t where t.account_id=p_account_id\n union all select key,value from private.closure_taxonomy_export_rows_v1(p_account_id) union all select 'needRequirements',jsonb_build_object('needId',t.need_id,'criticalConditions',t.critical_conditions,'handoff',t.handoff) from public.need_requirement_details t join public.needs n on n.id=t.need_id where n.requester_account_id=p_account_id),\n projected as (select r.key,(select jsonb_object_agg(field,r.value->field order by field) from jsonb_array_elements_text(c.config->'fields') field) as value\n from owned_rows r join configured c on c.config->>'key'=r.key and c.config->>'mode'='INCLUDE'),\n grouped as (select c.config->>'key' as key,coalesce(jsonb_agg(p.value order by p.value::text) filter(where p.key is not null),'[]'::jsonb) as rows\n from configured c left join projected p on p.key=c.config->>'key' where c.config->>'mode'='INCLUDE' group by c.config->>'key')\n select jsonb_build_object('schemaVersion','USKOCI_DATA_EXPORT_V2','receiptId',p_receipt_id,'accountId',p_account_id,'snapshotAt',p_cutoff,\n 'projectionVersion','OWN_ACCOUNT_V5_11','policy',jsonb_build_object('policyId',p_binding->'policyId','policyVersion',p_binding->'policyVersion','privacyDocumentId',p_binding->'privacyDocumentId','privacyContentSha256',p_binding->'privacyContentSha256','sha256',p_binding->'sha256'),\n 'datasets',(select jsonb_object_agg(key,rows order by key) from grouped),\n 'datasetCounts',(select jsonb_object_agg(key,jsonb_array_length(rows) order by key) from grouped),\n 'reviewedOmissions',(select coalesce(jsonb_agg(config order by config->>'key'),'[]'::jsonb) from configured where config->>'mode'='EXCLUDE'))::text\n where exists(select 1 from public.app_accounts where id=p_account_id);\n$function$\n",
+      "owner": "postgres",
+      "security_definer": true,
+      "acl": "{postgres=X/postgres}",
+      "metadata": {
+        "acl": "{postgres=X/postgres}",
+        "cost": 100,
+        "rows": 0,
+        "owner": "postgres",
+        "config": [
+          "search_path=pg_catalog"
+        ],
+        "result": "text",
+        "strict": false,
+        "language": "sql",
+        "parallel": "u",
+        "arguments": "p_account_id uuid, p_receipt_id uuid, p_binding jsonb, p_cutoff timestamp with time zone",
+        "leakproof": false,
+        "volatility": "s",
+        "security_definer": true
+      },
+      "signature": "private.data_export_snapshot(uuid,uuid,jsonb,timestamp with time zone)"
+    },
+    {
+      "name": "private.closure_taxonomy_export_catalog_v1",
+      "signature": "private.closure_taxonomy_export_catalog_v1()",
+      "arguments": "",
+      "body_md5": "6753530b240ef747d5a18f9e74ce6fb0",
+      "definition": "CREATE OR REPLACE FUNCTION private.closure_taxonomy_export_catalog_v1()\n RETURNS jsonb\n LANGUAGE sql\n IMMUTABLE SECURITY DEFINER\n SET search_path TO 'pg_catalog'\nAS $function$\n SELECT jsonb_agg(jsonb_build_object('key',x->>'key','fields',x->'fields','dataClass',x->>'dataClass',\n 'ownershipFilter',private.closure_taxonomy_scope_v1(x->>'relation')) ORDER BY x->>'key')\n FROM jsonb_array_elements(private.closure_taxonomy_inventory_v1()) x;\n$function$\n",
+      "owner": "postgres",
+      "security_definer": true,
+      "acl": "{postgres=X/postgres}",
+      "metadata": {
+        "acl": "{postgres=X/postgres}",
+        "cost": 100,
+        "rows": 0,
+        "owner": "postgres",
+        "config": [
+          "search_path=pg_catalog"
+        ],
+        "result": "jsonb",
+        "strict": false,
+        "language": "sql",
+        "parallel": "u",
+        "arguments": "",
+        "leakproof": false,
+        "volatility": "i",
+        "security_definer": true
+      }
+    },
+    {
+      "name": "private.closure_taxonomy_export_rows_v1",
+      "signature": "private.closure_taxonomy_export_rows_v1(uuid)",
+      "arguments": "a uuid",
+      "body_md5": "2845351ac34bceeb346257dbc37a686c",
+      "definition": "CREATE OR REPLACE FUNCTION private.closure_taxonomy_export_rows_v1(a uuid)\n RETURNS TABLE(key text, value jsonb)\n LANGUAGE plpgsql\n STABLE SECURITY DEFINER\n SET search_path TO 'pg_catalog'\nAS $function$\nDECLARE c jsonb;r record;\nBEGIN\n IF a IS NULL THEN RAISE EXCEPTION 'F01_EXPORT_OWNER_REQUIRED';END IF;\n FOR c IN SELECT x FROM jsonb_array_elements(private.closure_taxonomy_inventory_v1()) x LOOP\n  FOR r IN EXECUTE format('select to_jsonb(t) value from %s t where (%s)',(c->>'relation')::regclass,private.closure_taxonomy_scope_v1(c->>'relation')) USING a LOOP\n   key:=c->>'key';value:=private.closure_taxonomy_project_v1(c->>'relation',r.value,a);RETURN NEXT;\n  END LOOP;\n END LOOP;\nEND $function$\n",
+      "owner": "postgres",
+      "security_definer": true,
+      "acl": "{postgres=X/postgres}",
+      "metadata": {
+        "acl": "{postgres=X/postgres}",
+        "cost": 100,
+        "rows": 1000,
+        "owner": "postgres",
+        "config": [
+          "search_path=pg_catalog"
+        ],
+        "result": "TABLE(key text, value jsonb)",
+        "strict": false,
+        "language": "plpgsql",
+        "parallel": "u",
+        "arguments": "a uuid",
+        "leakproof": false,
+        "volatility": "s",
+        "security_definer": true
+      }
+    },
+    {
+      "name": "private.closure_taxonomy_held_v1",
+      "signature": "private.closure_taxonomy_held_v1(text,jsonb,uuid)",
+      "arguments": "r text, t jsonb, a uuid",
+      "body_md5": "6d9000e634489b43342297d73f6e8809",
+      "definition": "CREATE OR REPLACE FUNCTION private.closure_taxonomy_held_v1(r text, t jsonb, a uuid)\n RETURNS boolean\n LANGUAGE plpgsql\n STABLE SECURITY DEFINER\n SET search_path TO 'pg_catalog'\nAS $function$\nDECLARE cid uuid;rid uuid;\nBEGIN\n IF r='private.work_taxonomy_gemini_turn_hints_v1' THEN cid:=(t->>'conversation_id')::uuid;\n ELSIF t?'source_review_id' THEN\n  rid:=(t->>'source_review_id')::uuid;\n  SELECT conversation_id INTO cid FROM (\n   SELECT conversation_id FROM private.worker_ai_reviews WHERE id=rid AND account_id=a\n   UNION SELECT conversation_id FROM private.ai_task_reviews WHERE id=rid AND account_id=a) s;\n ELSIF r IN('private.work_taxonomy_need_skills','private.work_taxonomy_need_snapshots') THEN\n  RETURN EXISTS(SELECT 1 FROM private.work_taxonomy_need_bindings_v1 b\n   JOIN private.ai_task_reviews v ON v.id=b.source_review_id AND v.account_id=a\n   JOIN private.retention_holds h ON h.account_id=a AND h.conversation_id=v.conversation_id AND h.active\n   WHERE b.owner_account_id=a AND b.need_id=(t->>'need_id')::uuid AND b.need_revision=(t->>'need_revision')::integer);\n ELSIF r IN('private.work_taxonomy_worker_capabilities','private.worker_execution_mode_choices') THEN\n  RETURN EXISTS(SELECT 1 FROM private.taxonomy_confirmed_worker_modes_v1 m\n   JOIN private.worker_ai_reviews v ON v.id=m.source_review_id AND v.account_id=a\n   JOIN private.retention_holds h ON h.account_id=a AND h.conversation_id=v.conversation_id AND h.active\n   WHERE m.worker_account_id=a AND (r='private.worker_execution_mode_choices' OR m.category_id=(t->>'category_id')::uuid));\n END IF;\n RETURN cid IS NOT NULL AND EXISTS(SELECT 1 FROM private.retention_holds h WHERE h.account_id=a AND h.active AND h.conversation_id=cid);\nEND $function$\n",
+      "owner": "postgres",
+      "security_definer": true,
+      "acl": "{postgres=X/postgres}",
+      "metadata": {
+        "acl": "{postgres=X/postgres}",
+        "cost": 100,
+        "rows": 0,
+        "owner": "postgres",
+        "config": [
+          "search_path=pg_catalog"
+        ],
+        "result": "boolean",
+        "strict": false,
+        "language": "plpgsql",
+        "parallel": "u",
+        "arguments": "r text, t jsonb, a uuid",
+        "leakproof": false,
+        "volatility": "s",
+        "security_definer": true
+      }
+    },
+    {
+      "name": "private.closure_taxonomy_semantic_keys_v1",
+      "signature": "private.closure_taxonomy_semantic_keys_v1()",
+      "arguments": "",
+      "body_md5": "079dfd89aec66efbf2513cf8cad4eda9",
+      "definition": "CREATE OR REPLACE FUNCTION private.closure_taxonomy_semantic_keys_v1()\n RETURNS text[]\n LANGUAGE sql\n IMMUTABLE\n SET search_path TO 'pg_catalog'\nAS $function$ SELECT ARRAY['action','service','mode','reason','parentId','parentCategoryId','existingCategoryId','childLabel','categoryId','categoryIds','catalogVersion','status','profileId','needId','needRevision','services','items','path','rootLabel','label','canonicalKey','executionScope','sourceCategoryId','targetCategoryId','confirmed','active','verification','confidence','classificationState','proposedPath','sourceCanonicalLabel','targetCanonicalLabel','meaning','canonicalAction','canonicalObject','newRoot','handoff','required','shippingCountries','localExchange','city','countryCode']::text[]; $function$\n",
+      "owner": "postgres",
+      "security_definer": false,
+      "acl": "{postgres=X/postgres}",
+      "metadata": {
+        "acl": "{postgres=X/postgres}",
+        "cost": 100,
+        "rows": 0,
+        "owner": "postgres",
+        "config": [
+          "search_path=pg_catalog"
+        ],
+        "result": "text[]",
+        "strict": false,
+        "language": "sql",
+        "parallel": "u",
+        "arguments": "",
+        "leakproof": false,
+        "volatility": "i",
+        "security_definer": false
+      }
+    },
+    {
+      "name": "private.data_export_task_facts_v5",
+      "signature": "private.data_export_task_facts_v5(jsonb)",
+      "arguments": "v jsonb",
+      "body_md5": "b1552206df3434002e6d294befbca5b6",
+      "definition": "CREATE OR REPLACE FUNCTION private.data_export_task_facts_v5(v jsonb)\n RETURNS jsonb\n LANGUAGE sql\n IMMUTABLE\n SET search_path TO 'pg_catalog'\nAS $function$ select coalesce(jsonb_agg(jsonb_build_object('key',x->>'key','value',case x->>'key' when 'need.title' then private.data_export_scalar_v5(x->'value','string') when 'need.description' then private.data_export_scalar_v5(x->'value','string') when 'need.category' then private.data_export_scalar_v5(x->'value','string') when 'need.price_mode' then private.data_export_scalar_v5(x->'value','string') when 'need.price_rsd' then private.data_export_scalar_v5(x->'value','number') when 'need.schedule_kind' then private.data_export_scalar_v5(x->'value','string') when 'need.starts_at' then private.data_export_scalar_v5(x->'value','string') when 'need.ends_at' then private.data_export_scalar_v5(x->'value','string') when 'need.people_needed' then private.data_export_scalar_v5(x->'value','number') when 'need.required_skills' then private.data_export_array_v5(x->'value','string') when 'need.required_tools' then private.data_export_array_v5(x->'value','string') when 'need.required_vehicles' then private.data_export_array_v5(x->'value','string') when 'need.required_licenses' then private.data_export_array_v5(x->'value','string') when 'need.minimum_experience_years' then private.data_export_scalar_v5(x->'value','number') when 'need.verified_identity_required' then private.data_export_scalar_v5(x->'value','boolean') when 'need.task_country_code' then private.data_export_scalar_v5(x->'value','string') when 'need.task_geography' then jsonb_build_object('mode',private.data_export_scalar_v5((x->'value')->'mode','string'),'start',jsonb_build_object('label',private.data_export_scalar_v5((x->'value')->'start'->'label','string'),'city',private.data_export_scalar_v5((x->'value')->'start'->'city','string'),'area',private.data_export_scalar_v5((x->'value')->'start'->'area','string')),'end',jsonb_build_object('label',private.data_export_scalar_v5((x->'value')->'end'->'label','string'),'city',private.data_export_scalar_v5((x->'value')->'end'->'city','string'),'area',private.data_export_scalar_v5((x->'value')->'end'->'area','string')),'serviceArea',jsonb_build_object('label',private.data_export_scalar_v5((x->'value')->'serviceArea'->'label','string'),'city',private.data_export_scalar_v5((x->'value')->'serviceArea'->'city','string'),'area',private.data_export_scalar_v5((x->'value')->'serviceArea'->'area','string')),'waypoints',coalesce((select jsonb_agg(jsonb_build_object('label',private.data_export_scalar_v5(x->'label','string'),'city',private.data_export_scalar_v5(x->'city','string'),'area',private.data_export_scalar_v5(x->'area','string')) order by ordinal) from jsonb_array_elements(case when jsonb_typeof((x->'value')->'waypoints')='array' then (x->'value')->'waypoints' else '[]'::jsonb end) with ordinality as a(x,ordinal) where jsonb_typeof(x)='object'),'[]'::jsonb)) when 'need.critical_conditions' then private.data_export_array_v5(x->'value','string') when 'need.public_photo_paths' then private.data_export_array_v5(x->'value','string') when 'need.exact_address' then private.data_export_scalar_v5(x->'value','string') when 'need.access_notes' then private.data_export_scalar_v5(x->'value','string') when 'need.resolved_location' then jsonb_build_object('points',coalesce((select jsonb_agg(jsonb_build_object('slot',private.data_export_scalar_v5(x->'slot','string'),'address',private.data_export_scalar_v5(x->'address','string'),'accessNotes',private.data_export_scalar_v5(x->'accessNotes','string'),'latitudeE6',private.data_export_scalar_v5(x->'latitudeE6','number'),'longitudeE6',private.data_export_scalar_v5(x->'longitudeE6','number')) order by ordinal) from jsonb_array_elements(case when jsonb_typeof(x#>'{value,points}')='array' then x#>'{value,points}' else '[]'::jsonb end) with ordinality as a(x,ordinal) where jsonb_typeof(x)='object'),'[]'::jsonb)) else null end,'displayValue',private.data_export_scalar_v5(x->'displayValue','string'),'status',private.data_export_scalar_v5(x->'status','string')) order by x->>'key'),'[]'::jsonb) from jsonb_array_elements(case when jsonb_typeof(v)='array' then v else '[]'::jsonb end) a(x) where jsonb_typeof(x)='object' and x->>'key' in('need.title','need.description','need.category','need.price_mode','need.price_rsd','need.schedule_kind','need.starts_at','need.ends_at','need.people_needed','need.required_skills','need.required_tools','need.required_vehicles','need.required_licenses','need.minimum_experience_years','need.verified_identity_required','need.task_country_code','need.task_geography','need.critical_conditions','need.public_photo_paths','need.exact_address','need.access_notes','need.resolved_location') $function$\n",
+      "owner": "postgres",
+      "security_definer": false,
+      "acl": "{postgres=X/postgres}",
+      "metadata": {
+        "acl": "{postgres=X/postgres}",
+        "cost": 100,
+        "rows": 0,
+        "owner": "postgres",
+        "config": [
+          "search_path=pg_catalog"
+        ],
+        "result": "jsonb",
+        "strict": false,
+        "language": "sql",
+        "parallel": "u",
+        "arguments": "v jsonb",
+        "leakproof": false,
+        "volatility": "i",
+        "security_definer": false
+      }
+    }
+  ],
+  "baselineComparison": [
+    {
+      "name": "private.validate_worker_areas_v1",
+      "live_body_md5": "8f1cd592eb48eb9da31e0af02c0bdd2e",
+      "matching_migration_bodies": [
+        {
+          "path": "supabase/migrations/20261023210000_matching_work_areas_and_public_grants.sql",
+          "body_md5": "8f1cd592eb48eb9da31e0af02c0bdd2e"
+        }
+      ],
+      "latest_literal_definition": {
+        "path": "supabase/migrations/20261023210000_matching_work_areas_and_public_grants.sql",
+        "body_md5": "8f1cd592eb48eb9da31e0af02c0bdd2e"
+      }
+    },
+    {
+      "name": "private.closure_taxonomy_project_v1",
+      "live_body_md5": "6877307e228608f6283eec166c98016a",
+      "matching_migration_bodies": [],
+      "latest_literal_definition": {
+        "path": "supabase/migrations/20261021104455_closure_taxonomy_archive_copy_coverage.sql",
+        "body_md5": "bf004f543c92940845b570d8860288cc"
+      }
+    },
+    {
+      "name": "private.closure_taxonomy_scope_v1",
+      "live_body_md5": "48a8c7d266e86586a457aa2d2fa51e45",
+      "matching_migration_bodies": [
+        {
+          "path": "supabase/migrations/20261021104455_closure_taxonomy_archive_copy_coverage.sql",
+          "body_md5": "48a8c7d266e86586a457aa2d2fa51e45"
+        }
+      ],
+      "latest_literal_definition": {
+        "path": "supabase/migrations/20261021104455_closure_taxonomy_archive_copy_coverage.sql",
+        "body_md5": "48a8c7d266e86586a457aa2d2fa51e45"
+      }
+    },
+    {
+      "name": "private.data_export_worker_candidate_v5",
+      "live_body_md5": "aa9c5f1b7ab4711cda7cb16905de55a4",
+      "matching_migration_bodies": [
+        {
+          "path": "supabase/migrations/20260913001000_clean_v5_owned_export_projection.sql",
+          "body_md5": "aa9c5f1b7ab4711cda7cb16905de55a4"
+        }
+      ],
+      "latest_literal_definition": {
+        "path": "supabase/migrations/20260913001000_clean_v5_owned_export_projection.sql",
+        "body_md5": "aa9c5f1b7ab4711cda7cb16905de55a4"
+      }
+    },
+    {
+      "name": "private.closure_redaction_patch_v5",
+      "live_body_md5": "55ba7bf41ce39d9c914929270b916570",
+      "matching_migration_bodies": [
+        {
+          "path": "supabase/migrations/20261021104455_closure_taxonomy_archive_copy_coverage.sql",
+          "body_md5": "55ba7bf41ce39d9c914929270b916570"
+        }
+      ],
+      "latest_literal_definition": {
+        "path": "supabase/migrations/20261021104455_closure_taxonomy_archive_copy_coverage.sql",
+        "body_md5": "55ba7bf41ce39d9c914929270b916570"
+      }
+    },
+    {
+      "name": "private.closure_redaction_relations_v5",
+      "live_body_md5": "102e417ab6d52ab0eec421a8bda5c0c4",
+      "matching_migration_bodies": [
+        {
+          "path": "supabase/migrations/20261021104455_closure_taxonomy_archive_copy_coverage.sql",
+          "body_md5": "102e417ab6d52ab0eec421a8bda5c0c4"
+        }
+      ],
+      "latest_literal_definition": {
+        "path": "supabase/migrations/20261021104455_closure_taxonomy_archive_copy_coverage.sql",
+        "body_md5": "102e417ab6d52ab0eec421a8bda5c0c4"
+      }
+    },
+    {
+      "name": "private.closure_taxonomy_inventory_v1",
+      "live_body_md5": "16ed9d5077dd2662e4502a5040a83f80",
+      "matching_migration_bodies": [],
+      "latest_literal_definition": {
+        "path": "supabase/migrations/20261021104455_closure_taxonomy_archive_copy_coverage.sql",
+        "body_md5": "3bf217135064c6e8c45275c4442355cd"
+      }
+    },
+    {
+      "name": "private.closure_taxonomy_patch_v1",
+      "live_body_md5": "5c88c60b705d2d99c61da935536ec137",
+      "matching_migration_bodies": [
+        {
+          "path": "supabase/migrations/20261021104455_closure_taxonomy_archive_copy_coverage.sql",
+          "body_md5": "5c88c60b705d2d99c61da935536ec137"
+        }
+      ],
+      "latest_literal_definition": {
+        "path": "supabase/migrations/20261021104455_closure_taxonomy_archive_copy_coverage.sql",
+        "body_md5": "5c88c60b705d2d99c61da935536ec137"
+      }
+    },
+    {
+      "name": "private.closure_taxonomy_reset_sections_v1",
+      "live_body_md5": "0b1c4a0b5884cdcf9c3b3db67e6bdc41",
+      "matching_migration_bodies": [],
+      "latest_literal_definition": {
+        "path": "supabase/migrations/20261021104455_closure_taxonomy_archive_copy_coverage.sql",
+        "body_md5": "dd0577a0f6a347da8f2c14cb6b912b3b"
+      }
+    },
+    {
+      "name": "private.closure_taxonomy_semantic_v1",
+      "live_body_md5": "1d4c6fd6725c00cb2c65bccc091cecc9",
+      "matching_migration_bodies": [
+        {
+          "path": "supabase/migrations/20261021104455_closure_taxonomy_archive_copy_coverage.sql",
+          "body_md5": "1d4c6fd6725c00cb2c65bccc091cecc9"
+        }
+      ],
+      "latest_literal_definition": {
+        "path": "supabase/migrations/20261021104455_closure_taxonomy_archive_copy_coverage.sql",
+        "body_md5": "1d4c6fd6725c00cb2c65bccc091cecc9"
+      }
+    },
+    {
+      "name": "private.data_export_array_v5",
+      "live_body_md5": "00933c589c16905b09318c080a2150f6",
+      "matching_migration_bodies": [
+        {
+          "path": "supabase/migrations/20260913001000_clean_v5_owned_export_projection.sql",
+          "body_md5": "00933c589c16905b09318c080a2150f6"
+        }
+      ],
+      "latest_literal_definition": {
+        "path": "supabase/migrations/20260913001000_clean_v5_owned_export_projection.sql",
+        "body_md5": "00933c589c16905b09318c080a2150f6"
+      }
+    },
+    {
+      "name": "private.data_export_dataset_catalog",
+      "live_body_md5": "e08e712c811ab2a093e48ca75a436c25",
+      "matching_migration_bodies": [
+        {
+          "path": "supabase/migrations/20261021104455_closure_taxonomy_archive_copy_coverage.sql",
+          "body_md5": "e08e712c811ab2a093e48ca75a436c25"
+        }
+      ],
+      "latest_literal_definition": {
+        "path": "supabase/migrations/20261021104455_closure_taxonomy_archive_copy_coverage.sql",
+        "body_md5": "e08e712c811ab2a093e48ca75a436c25"
+      }
+    },
+    {
+      "name": "private.data_export_projection_sha_v5",
+      "live_body_md5": "ffd64be69db4663dcb3e2d07713176cd",
+      "matching_migration_bodies": [
+        {
+          "path": "supabase/migrations/20261021104455_closure_taxonomy_archive_copy_coverage.sql",
+          "body_md5": "ffd64be69db4663dcb3e2d07713176cd"
+        }
+      ],
+      "latest_literal_definition": {
+        "path": "supabase/migrations/20261021104455_closure_taxonomy_archive_copy_coverage.sql",
+        "body_md5": "ffd64be69db4663dcb3e2d07713176cd"
+      }
+    },
+    {
+      "name": "private.data_export_scalar_v5",
+      "live_body_md5": "e02fe0db0a56b90b74a29c2b81a38357",
+      "matching_migration_bodies": [
+        {
+          "path": "supabase/migrations/20260913001000_clean_v5_owned_export_projection.sql",
+          "body_md5": "e02fe0db0a56b90b74a29c2b81a38357"
+        }
+      ],
+      "latest_literal_definition": {
+        "path": "supabase/migrations/20260913001000_clean_v5_owned_export_projection.sql",
+        "body_md5": "e02fe0db0a56b90b74a29c2b81a38357"
+      }
+    },
+    {
+      "name": "private.data_export_snapshot",
+      "live_body_md5": "c3bde16e2175c7ec33c1a171e0ad04a3",
+      "matching_migration_bodies": [
+        {
+          "path": "supabase/migrations/20261021104455_closure_taxonomy_archive_copy_coverage.sql",
+          "body_md5": "c3bde16e2175c7ec33c1a171e0ad04a3"
+        }
+      ],
+      "latest_literal_definition": {
+        "path": "supabase/migrations/20261021104455_closure_taxonomy_archive_copy_coverage.sql",
+        "body_md5": "c3bde16e2175c7ec33c1a171e0ad04a3"
+      }
+    },
+    {
+      "name": "private.closure_taxonomy_export_catalog_v1",
+      "live_body_md5": "6753530b240ef747d5a18f9e74ce6fb0",
+      "matching_migration_bodies": [
+        {
+          "path": "supabase/migrations/20261021104455_closure_taxonomy_archive_copy_coverage.sql",
+          "body_md5": "6753530b240ef747d5a18f9e74ce6fb0"
+        }
+      ],
+      "latest_literal_definition": {
+        "path": "supabase/migrations/20261021104455_closure_taxonomy_archive_copy_coverage.sql",
+        "body_md5": "6753530b240ef747d5a18f9e74ce6fb0"
+      }
+    },
+    {
+      "name": "private.closure_taxonomy_export_rows_v1",
+      "live_body_md5": "2845351ac34bceeb346257dbc37a686c",
+      "matching_migration_bodies": [
+        {
+          "path": "supabase/migrations/20261021104455_closure_taxonomy_archive_copy_coverage.sql",
+          "body_md5": "2845351ac34bceeb346257dbc37a686c"
+        }
+      ],
+      "latest_literal_definition": {
+        "path": "supabase/migrations/20261021104455_closure_taxonomy_archive_copy_coverage.sql",
+        "body_md5": "2845351ac34bceeb346257dbc37a686c"
+      }
+    },
+    {
+      "name": "private.closure_taxonomy_held_v1",
+      "live_body_md5": "6d9000e634489b43342297d73f6e8809",
+      "matching_migration_bodies": [
+        {
+          "path": "supabase/migrations/20261021104455_closure_taxonomy_archive_copy_coverage.sql",
+          "body_md5": "6d9000e634489b43342297d73f6e8809"
+        }
+      ],
+      "latest_literal_definition": {
+        "path": "supabase/migrations/20261021104455_closure_taxonomy_archive_copy_coverage.sql",
+        "body_md5": "6d9000e634489b43342297d73f6e8809"
+      }
+    },
+    {
+      "name": "private.closure_taxonomy_semantic_keys_v1",
+      "live_body_md5": "079dfd89aec66efbf2513cf8cad4eda9",
+      "matching_migration_bodies": [
+        {
+          "path": "supabase/migrations/20261021104455_closure_taxonomy_archive_copy_coverage.sql",
+          "body_md5": "079dfd89aec66efbf2513cf8cad4eda9"
+        }
+      ],
+      "latest_literal_definition": {
+        "path": "supabase/migrations/20261021104455_closure_taxonomy_archive_copy_coverage.sql",
+        "body_md5": "079dfd89aec66efbf2513cf8cad4eda9"
+      }
+    },
+    {
+      "name": "private.data_export_task_facts_v5",
+      "live_body_md5": "b1552206df3434002e6d294befbca5b6",
+      "matching_migration_bodies": [
+        {
+          "path": "supabase/migrations/20260913001000_clean_v5_owned_export_projection.sql",
+          "body_md5": "b1552206df3434002e6d294befbca5b6"
+        }
+      ],
+      "latest_literal_definition": {
+        "path": "supabase/migrations/20260913001000_clean_v5_owned_export_projection.sql",
+        "body_md5": "b1552206df3434002e6d294befbca5b6"
+      }
+    }
+  ]
+}

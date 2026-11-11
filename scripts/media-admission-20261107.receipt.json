@@ -1,0 +1,75 @@
+{
+  "format_version": 1,
+  "project": "leqcwgzvjsxugfgzdmth",
+  "status": "SOURCE_IMPLEMENTED_AND_LOCAL_HANDLER_TESTED",
+  "scope": "Media v28 to current entrypoint and existing bounded admission helper; two received-buffer cleanup fixes. No secret/auth/header, SQL, Storage contract, admission limit or business-rule change.",
+  "captured_deployment": {
+    "function": "uskoci-media",
+    "version": 28,
+    "verify_jwt": true,
+    "deployed_ezbr_sha256": "34e4a23149d30c4abbf606aa5b1fddf12fd370fbf3904b6a20eb29c7a446d1ac",
+    "full_package_manifest_sha256": "93c734c2443b2a43629f36280da1c26cae93366e57886f51a9eba442ceac7561",
+    "entrypoint_sha256": "2fb262527c35d6b4539205eda2d4e1de9d26cc42702738239e75df91b18e2226"
+  },
+  "source": [
+    {
+      "file": "supabase/functions/uskoci-media/index.ts",
+      "sha256": "553dd5e5072af0b41bc940c1b80d3025d567653ffa0ed62d4da2678be6462ec1"
+    },
+    {
+      "file": "supabase/functions/_shared/mediaUploadAdmission.mjs",
+      "sha256": "3ab0c07b3203bd52b6b8eefea69689b20b79c26d3dd077b6d02d679f7e5a3171"
+    }
+  ],
+  "test": {
+    "file": "scripts/media-handler-admission.test.cjs",
+    "command": "node --test scripts/media-handler-admission.test.cjs",
+    "passed": 15,
+    "failed": 0,
+    "deployed_v28_reproduction": "Second image and voice both refused while one image owns the global busy flag.",
+    "pre_fix_reproductions": [
+      {
+        "observed": "Oversized final received chunk was not registered for cleanup. Earlier chunks were zeroed, offending chunk remained nonzero.",
+        "result": "13 of14 tests passed; this single regression failed.",
+        "assertion": "the offending chunk must not remain outside final cleanup"
+      },
+      {
+        "observed": "read() resolves a chunk, an Abort microtask runs before the handler resumes, and the delivered chunk was outside cleanup.",
+        "result": "The targeted regression failed before the common cleanup fix.",
+        "assertion": "already-delivered bytes remain owned until cleanup"
+      }
+    ],
+    "common_fix": "Register every !part.done received chunk immediately after await reader.read(), before checking AbortSignal or size; register once; keep original cancel/finally cleanup.",
+    "verified": [
+      "Two image requests finish FIFO; waiting body is not read",
+      "Two independent voice uploads can progress while image body is held; third voice waits",
+      "Image queue capacity4 and existing TASK/Agreement error codes",
+      "Queue deadline/cancellation never reads waiting body",
+      "Active cancellation and read failure clear collected chunks and free admission",
+      "Oversized last chunk and read-resolve/abort race both clear received data",
+      "Writer ownership and photo-limit refusals propagate before Storage",
+      "Account identity derives from Auth; mismatched receipt and session rejected",
+      "Task and Agreement photo claim-stage-dispatch-positive readback-settle",
+      "Sanitizer/Storage errors free admission; unknown dispatch is not falsely rejected",
+      "Lost Storage response reconciles same upload without secondPOST",
+      "Foreign private read denied; Agreement grant rechecked after Storage await"
+    ],
+    "runtime_seams": [
+      "Local stub Auth",
+      "Local RPC and Storage transport",
+      "Manual timers",
+      "Synthetic WASM decoder API; actual image-sanitizer and M4A inspector source loaded"
+    ],
+    "synthetic_bytes_only": true,
+    "provider_calls": 0
+  },
+  "proof_boundary": {
+    "dev_deployed": false,
+    "real_wasm_codec_verified": false,
+    "hosted_auth_rls_verified": false,
+    "native_verified": false,
+    "real_user_media_used": false,
+    "voice_success_case": "Authoritative existing PROCESSING receipt; no AAC encoding claim.",
+    "six_photo_limit_case": "Existing server error is preserved by handler; this fixture does not independently prove SQL counting."
+  }
+}

@@ -1,0 +1,210 @@
+{
+  "schema": "USKOCI_CONTINUATION_ROUND2_VERIFICATION_V1",
+  "source_base": "94f2801db54bcbd7cb294cda983e048cd5885939",
+  "branch": "work/uskoci-cist-proizvod-20261104",
+  "checked_at_utc": "2026-11-07 17:09:17 UTC",
+  "local": {
+    "active_tests": {
+      "command": "npm test",
+      "tests": 683,
+      "pass": 683,
+      "fail": 0,
+      "skipped": 0,
+      "todo": 0,
+      "log_sha256": "dcd388ed763bc9092dee8d4ae30f989a515f25d75804988d13c8a2f17095e3c2",
+      "log_bytes": 72380
+    },
+    "typescript": {
+      "command": "node node_modules/typescript/bin/tsc --noEmit",
+      "exit_code": 0,
+      "diagnostics": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "log_bytes": 0
+    },
+    "migrations": {
+      "physical_sql_files": 211,
+      "python_tests": 35,
+      "fail": 0,
+      "historical_sql_rewritten": false,
+      "manifest_sha256": "49d131cdcf20bcc1ab23426068615e4e99cffd54ef9d28169b6d64638058b8ac",
+      "provenance_sha256": "01c2ae68731c3c46196337881a3b62240328c41d67e1be7e4083f70b66ec6b1b"
+    },
+    "new_test_counts": {
+      "qa_usage": 20,
+      "selection_cold_restart": 29,
+      "cancellation_reason": 14,
+      "worker_work_areas_export": 39
+    },
+    "source_secret_scan": {
+      "scope": "34 changed/new text files at this checkpoint; JWT payload role and long sb_secret literal patterns",
+      "actual_privileged_literals_found": 0,
+      "not_full_binary_security_audit": true
+    }
+  },
+  "dev": {
+    "project": "leqcwgzvjsxugfgzdmth",
+    "ledger": 346,
+    "migrations": [
+      {
+        "version": "20261107165358",
+        "sha256": "4f28d8817ec498687db4bd8c329cc67d2893559e075182b42e54e77fc6821e46"
+      },
+      {
+        "version": "20261107165752",
+        "sha256": "d269d4eedb38a8727f44162cc6e8640a8dc34d2d52a60b72bc86efa1dee28074"
+      }
+    ],
+    "qa_classifier": {
+      "version": 29,
+      "files": 7,
+      "byte_exact": true,
+      "verify_jwt": true
+    },
+    "retention_source_ready": false,
+    "export_policy_binding": null,
+    "paid_ai_calls_in_this_round": 0,
+    "cap_raised": false
+  },
+  "advisors": {
+    "security": {
+      "before": [
+        {
+          "name": "rls_enabled_no_policy",
+          "level": "INFO",
+          "count": 123,
+          "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy"
+        },
+        {
+          "name": "extension_in_public",
+          "level": "WARN",
+          "count": 1,
+          "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0014_extension_in_public"
+        },
+        {
+          "name": "anon_security_definer_function_executable",
+          "level": "WARN",
+          "count": 3,
+          "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0028_anon_security_definer_function_executable"
+        },
+        {
+          "name": "authenticated_security_definer_function_executable",
+          "level": "WARN",
+          "count": 201,
+          "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0029_authenticated_security_definer_function_executable"
+        },
+        {
+          "name": "auth_leaked_password_protection",
+          "level": "WARN",
+          "count": 1,
+          "remediation": "https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection"
+        }
+      ],
+      "after": [
+        {
+          "name": "rls_enabled_no_policy",
+          "level": "INFO",
+          "count": 123,
+          "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy"
+        },
+        {
+          "name": "extension_in_public",
+          "level": "WARN",
+          "count": 1,
+          "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0014_extension_in_public"
+        },
+        {
+          "name": "anon_security_definer_function_executable",
+          "level": "WARN",
+          "count": 3,
+          "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0028_anon_security_definer_function_executable"
+        },
+        {
+          "name": "authenticated_security_definer_function_executable",
+          "level": "WARN",
+          "count": 201,
+          "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0029_authenticated_security_definer_function_executable"
+        },
+        {
+          "name": "auth_leaked_password_protection",
+          "level": "WARN",
+          "count": 1,
+          "remediation": "https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection"
+        }
+      ],
+      "same_names_levels_counts": true
+    },
+    "performance": {
+      "before": [
+        {
+          "name": "unindexed_foreign_keys",
+          "level": "INFO",
+          "count": 93,
+          "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0001_unindexed_foreign_keys"
+        },
+        {
+          "name": "no_primary_key",
+          "level": "INFO",
+          "count": 7,
+          "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0004_no_primary_key"
+        },
+        {
+          "name": "unused_index",
+          "level": "INFO",
+          "count": 12,
+          "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index"
+        },
+        {
+          "name": "multiple_permissive_policies",
+          "level": "WARN",
+          "count": 5,
+          "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0006_multiple_permissive_policies"
+        }
+      ],
+      "after": [
+        {
+          "name": "unindexed_foreign_keys",
+          "level": "INFO",
+          "count": 93,
+          "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0001_unindexed_foreign_keys"
+        },
+        {
+          "name": "no_primary_key",
+          "level": "INFO",
+          "count": 7,
+          "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0004_no_primary_key"
+        },
+        {
+          "name": "unused_index",
+          "level": "INFO",
+          "count": 12,
+          "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index"
+        },
+        {
+          "name": "multiple_permissive_policies",
+          "level": "WARN",
+          "count": 5,
+          "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0006_multiple_permissive_policies"
+        }
+      ],
+      "same_names_levels_counts": true
+    },
+    "health": {
+      "before": [],
+      "after": [],
+      "same_names_levels_counts": true
+    }
+  },
+  "limits": [
+    "Existing advisory findings remain; identical counts do not close RLS, auth, legal, legacy-key or release gates.",
+    "No native emulator/phone acceptance or production deployment in this round.",
+    "Latest confirmed APK before this source publication is QA47; the new source still requires its own CI/artifact readback."
+  ],
+  "evidence": [
+    "scripts/r06-reconciliation-20261107.receipt.json",
+    "scripts/r06-qa-usage-dev-20261107.receipt.json",
+    "scripts/r07-selection-cold-restart-20261107.receipt.json",
+    "scripts/sql/r08_cancellation_reason_readback_20261107.receipt.json",
+    "scripts/sql/r10_work_areas_projection_20261107.receipt.json",
+    "scripts/sql/r10_work_areas_projection_20261107.dev.receipt.json"
+  ]
+}

@@ -1,0 +1,92 @@
+{
+  "kind": "R08_CANCELLATION_REASON_READBACK_FORWARD_EXECUTION",
+  "source_head": "94f2801db54bcbd7cb294cda983e048cd5885939",
+  "project": "leqcwgzvjsxugfgzdmth",
+  "checked_at": "2026-11-07T16:54:13.320756+00:00",
+  "ledger_count": 345,
+  "migration": {
+    "name": "r08_cancellation_reason_readback_20261107",
+    "version": "20261107165358",
+    "joined_md5": "5ff443353ad37f3f20802bb008aee043",
+    "joined_bytes": 8429,
+    "joined_sha256": "4f28d8817ec498687db4bd8c329cc67d2893559e075182b42e54e77fc6821e46",
+    "statements_count": 1
+  },
+  "functions": [
+    {
+      "acl": "{postgres=X/postgres,service_role=X/postgres,authenticated=X/postgres}",
+      "owner": "postgres",
+      "config": [
+        "search_path=pg_catalog"
+      ],
+      "result": "void",
+      "strict": false,
+      "definer": true,
+      "body_md5": "e592af7aead2172ff769f38aada8e056",
+      "signature": "rpc_cancel_agreement(uuid,text)",
+      "volatility": "v"
+    },
+    {
+      "acl": "{postgres=X/postgres}",
+      "owner": "postgres",
+      "config": [
+        "search_path=pg_catalog"
+      ],
+      "result": "jsonb",
+      "strict": false,
+      "definer": true,
+      "body_md5": "ec935f3da29105d0308f9952f9acd58f",
+      "signature": "private.agreement_cancellation_facts_v1(uuid)",
+      "volatility": "s"
+    },
+    {
+      "acl": "{postgres=X/postgres,authenticated=X/postgres,service_role=X/postgres}",
+      "owner": "postgres",
+      "config": [
+        "search_path=pg_catalog"
+      ],
+      "result": "jsonb",
+      "strict": false,
+      "definer": true,
+      "body_md5": "f54af14827bdd1c0906f512ee8aa9043",
+      "signature": "rpc_agreement_cancellation_v1(uuid[])",
+      "volatility": "s"
+    },
+    {
+      "acl": "{postgres=X/postgres}",
+      "owner": "postgres",
+      "config": [
+        "search_path=pg_catalog"
+      ],
+      "result": "jsonb",
+      "strict": false,
+      "definer": true,
+      "body_md5": "b5a39dfa80fe43990c264205edd0ed06",
+      "signature": "private.work_trust_counts_v1(uuid)",
+      "volatility": "s"
+    }
+  ],
+  "change": "Reconstruct the complete, already stored two/three-part cancellation reason; existing writer, public authorization reader, work-trust counter, grants and privacy behavior unchanged.",
+  "verification": {
+    "targeted_test_file": "scripts/r08-cancellation-reason-readback.test.cjs",
+    "targeted_pass": 14,
+    "existing_cancellation_pass": 26,
+    "fail": 0,
+    "independent_review": "ai_availability reviewed complete sequence identity, length, Unicode and guards; no blocking finding",
+    "preimage_isolated_reproduced": true,
+    "dev_definition_and_ledger_exact": true,
+    "ordinary_auth_new_flow": "PENDING_SEPARATE_RECEIPT",
+    "native": false
+  },
+  "privacy": {
+    "blocked_or_closing_message_creation_not_bypassed": true,
+    "missing_or_redacted_piece_no_invented_text": true,
+    "retention_source_ready": false,
+    "export_policy_binding_is_null": true
+  },
+  "limits": [
+    "The isolated fixture is not a full account-closure or native Android proof.",
+    "The existing NOT_KEPT case for blocked/closing participants remains open.",
+    "Future writer format changes must review this reader contract."
+  ]
+}

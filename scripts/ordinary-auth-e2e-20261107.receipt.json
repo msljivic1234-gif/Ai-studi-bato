@@ -1,0 +1,1074 @@
+{
+  "schemaVersion": "USKOCI_ORDINARY_AUTH_E2E_RECEIPT_V1",
+  "observedAtUtc": "2026-11-07T12:34:37.027928+00:00",
+  "projectRef": "leqcwgzvjsxugfgzdmth",
+  "baseSourceCommit": "20903892d7f5def28ce33a15027918e5ca19c342",
+  "status": "DEV_API_BUSINESS_FLOW_CONFIRMED_WITH_OPEN_P1_WEEKLY_AVAILABILITY",
+  "scope": "Two distinct ordinary authenticated TEST accounts, public client RPC/Edge contracts, owned synthetic QA objects. This is API evidence, not a native-device or production-release acceptance.",
+  "sourceIdentity": {
+    "edgePackagesUsed": [
+      {
+        "function": "uskoci-ai-interview",
+        "version": 192,
+        "packageSha256": "95ce5a1ddd799560bb6eb8192c59f7be20cde2cf315f72468ea69d54d6d40f5c",
+        "fullPackageByteIdenticalReadback": true,
+        "deploymentReceipt": "scripts/ai-intent-dev-20261107.receipt.json",
+        "changedSourceFiles": [
+          {
+            "name": "supabase/functions/uskoci-ai-interview/index.ts",
+            "sha256": "1a93ef373c18a1451502205d50faf35608757289e9b5db4f618d907c72764bce"
+          },
+          {
+            "name": "supabase/functions/_shared/conversationIntent.mjs",
+            "sha256": "5c99f4a30ad7e3b30189dfeb143f45ab66f19060b5e58cbde5d6498f0badffc7"
+          }
+        ]
+      },
+      {
+        "function": "uskoci-worker-interview",
+        "version": 141,
+        "packageSha256": "f61c66e4ad984caba26e22a65e35a6d0bbcf4acf41d21937af0d11627baa3419",
+        "fullPackageByteIdenticalReadback": true,
+        "deploymentReceipt": "scripts/ai-intent-dev-20261107.receipt.json",
+        "changedSourceFiles": [
+          {
+            "name": "supabase/functions/uskoci-worker-interview/index.ts",
+            "sha256": "10618663f04be9666c0674e1f803d6fc57c23c2820890ec53cc57ed826a68957"
+          },
+          {
+            "name": "supabase/functions/_shared/conversationIntent.mjs",
+            "sha256": "5c99f4a30ad7e3b30189dfeb143f45ab66f19060b5e58cbde5d6498f0badffc7"
+          }
+        ]
+      },
+      {
+        "function": "uskoci-worker-interview",
+        "version": 142,
+        "packageSha256": "efbdd810c6c055be1c613033a073554e784e9d93493d01c3e1a12567fde11d5b",
+        "fullPackageByteIdenticalReadback": true,
+        "deploymentReceipt": "scripts/worker-speech-dev-20261107.receipt.json",
+        "changedSourceFiles": [
+          {
+            "name": "supabase/functions/uskoci-worker-interview/index.ts",
+            "sha256": "84496c119e7808811a741f1c1a82e47cb3edbeae554612dab595ae514a216026"
+          }
+        ]
+      },
+      {
+        "function": "uskoci-worker-interview",
+        "version": 143,
+        "packageSha256": "c201dc446ff6d2689518d734ac1e4adb9ffe5880d7d56fd9896d320a119a332e",
+        "fullPackageByteIdenticalReadback": true,
+        "deploymentReceipt": "scripts/worker-output-diagnostics-dev-20261107.receipt.json",
+        "changedSourceFiles": [
+          {
+            "name": "supabase/functions/uskoci-worker-interview/index.ts",
+            "sha256": "a3a5919e218fdf63529d221ff48e1476d0731efa35e7da4eb0c0373a9ce0d54d"
+          }
+        ]
+      }
+    ],
+    "clientFilesAtOfflineReplay": {
+      "src/contracts/aiConversationIntent.ts": "d7cf0e48580dfc7932706e5ad95adb22e65003e1502cdc83944ca487315f8486",
+      "src/data/aiNeedTurnStream.ts": "829d3a4851eeeffd9cca958ff7b0f5ce6cfc165e3b301d3ec1ce2b04f692a42f",
+      "src/data/aiNeedV2Production.ts": "98af9b2da94f92076bc5269f3e9a75f06a11e22623f6cc0cc581174ade5fb957",
+      "src/data/workerAiClientService.ts": "d8cd3591bce3d77878e2cfb53ada7a39f33d986bfc32f7b8f075a4c63a0d0ede",
+      "src/data/agreementClientService.ts": "281cfddc5260be5d752a91a5ff4d3c6fe60dd4c5e4fbbc50988aab9e134ebd11",
+      "src/data/discoveryV1Contract.ts": "beca5c34aafaca6a76b6bafba90dbf3cd23b6f4e61501bd5d6c128403d2cf3f5",
+      "src/data/discoveryV1SpatialContract.ts": "54c75735d619e70da01548de1bff4f68008a70380cb24ba36008d48f2fac6091",
+      "src/data/reviewsClientService.ts": "a5fef24af95ed77df2574a72fd32a09337aa3e18e4864f556151b0e8d07e226b",
+      "src/data/reviewCommentsClientService.ts": "b53109d557c3818878695bce925c69aa32f13ae55540a2a5bce68accce9f3a59"
+    },
+    "testedForwardMigrations": [
+      "20261107100529_r07b_price_snapshot_20261107",
+      "20261107113611_r08_agreement_cancellation_20261107",
+      "20261107114458_r01_needs_projection_20261107",
+      "20261107121408_r08_blind_reviews_20261107",
+      "20261107121943_r05_discovery_contract_20261107"
+    ],
+    "newSourceCheckpointAndCI": "Recorded separately by the coordinator; no new build, installation or CI claim is inferred from these API calls."
+  },
+  "actorsAndIsolation": {
+    "ordinaryPasswordAuthentication": true,
+    "confirmedEmailOwnAuthReadback": true,
+    "distinctAccountCount": 2,
+    "jwtRole": "authenticated",
+    "jwtAlgorithm": "ES256",
+    "jwtKidPresent": true,
+    "canonicalWorld": "TEST",
+    "canonicalLineage": "SYNTHETIC_ACCEPTANCE_FIXTURE",
+    "lineageRevision": 1,
+    "nonProduction": true,
+    "aiAdmissionConfirmed": true,
+    "lineageSetupReceiptSha256": "1da811f999c2c3899b23b8c27330917e461abfe527795ad0eb7b84258a72fb94",
+    "lineageSetupBoundary": "The coordinator first used the canonical service-only fixture-admission writer for these two proven QA identities. All business actions reported below used the accounts ordinary JWTs, not an admin simulator.",
+    "adminBusinessWriterUsed": false,
+    "historicalSimulatorExecuted": false,
+    "newOwnedQaTaskAndAgreementOnly": true,
+    "existingOwnQaWorkerProfileExplicitlySaved": true,
+    "accountIdentityHashes": {
+      "worker": "2c6c7605a3e6a6ed941a6608185b60a8bc96b2bce6ff02bf84453e612008be40",
+      "requester": "0c0907e99f626948eef05c174763117d611cf612802bcd89ede83422859e9875"
+    },
+    "testObjectIdentityHashes": {
+      "needConversation": "de397377d8cf24b3d79dcf4850bf5317aa16bb508d03f7925ba379385030ee71",
+      "workerConversation": "9d505623fc948c37a3815c820c68efabacf49859777af5ac5e8a7d52e0fe8133",
+      "workerProfile": "5f21f1ca8ad1a8145c25953ba290be433238b13327962da70931b4634ad8afcb",
+      "need": "4e10aa37d6dd309fc7de36fc6cb4677e72643065ffc3a37b7aef5ce736654241",
+      "response": "1e057b67750a1c962f1b3574d0e3246b8ea8bf554b441f1eab04ff8a9a1a1477",
+      "agreement": "1cdbb16b6a73fb3a63b6d3632aa6ceca67e22dcb723f9b34a7cdb0e1bce25c8d",
+      "priceChangeProposal": "16f38aa088b552050a6d8f26d088311d82d2403f9953cddc251eaffa2089f757",
+      "workerCorrectionConversation": "204497e0c342042f80f8bb456e8b436ada98b200de529897a32df51f1a2b3822",
+      "requesterReview": "8c43b39da72e1fcec760d216932b60c2e8e541bc2f3817678de6dbf85c03d203",
+      "workerReview": "1216cf3dfef5df9a748c9f1896e1e99935c34a8b6e2ffe3c0e9dfb366b9491f0",
+      "needHandoffConversation": "bb05e769426bdaff3b881108454915c46d68bff5968df43c2df3a8b734b1b329",
+      "workerDiagnosticConversation": "204497e0c342042f80f8bb456e8b436ada98b200de529897a32df51f1a2b3822"
+    },
+    "credentialsTokensEmailsRawIdentifiersOrConversationTextIncluded": false
+  },
+  "businessFlow": {
+    "status": "DEV_API_CONFIRMED",
+    "need": {
+      "aiProposal": {
+        "people_needed": 5,
+        "price_mode": "MY_PRICE",
+        "price_rsd": 1200,
+        "price_basis": "HOURLY",
+        "schedule_kind": "REMOTE_ANYTIME",
+        "task_country_code": "RS",
+        "canAccept": true,
+        "missingRequired": [],
+        "classificationState": "READY",
+        "remote": true
+      },
+      "signedReviewExplicitlyAccepted": true,
+      "publishedOnlyAfterEvaluationAndExplicitWriter": true
+    },
+    "workerProfile": {
+      "serviceCount": 1,
+      "remote": true,
+      "explicitSignedSaveAndActivation": true,
+      "weeklyAvailabilityAcceptance": "FAIL_SEPARATE_FINDING_BELOW",
+      "inventedVehicleEquipmentOrCity": false
+    },
+    "application": {
+      "applicationPriceBasis": "HOURLY",
+      "currency": "RSD",
+      "priceRsd": 1200,
+      "coveredSlots": 2,
+      "needRevision": 1,
+      "version": 1
+    },
+    "requesterCandidate": {
+      "applicationPriceBasis": "HOURLY",
+      "currency": "RSD",
+      "priceRsd": 1200,
+      "coveredSlots": 2,
+      "remainingSlots": 5,
+      "state": "SELECTABLE",
+      "canSelect": true
+    },
+    "acceptedVersion1": {
+      "price_rsd": 1200,
+      "priceBasis": "HOURLY",
+      "currency": "RSD",
+      "covered_slots": 2,
+      "required_slots": 5,
+      "pricingMode": "MY_PRICE"
+    },
+    "bothParticipantsReadSameAcceptedTerms": true,
+    "partialCoverage": {
+      "requiredPeople": 5,
+      "offeredAndAcceptedPeople": 2,
+      "remainingPeople": 3
+    },
+    "messages": {
+      "bothSentAndRead": true,
+      "sameKeyReplaySameId": true,
+      "newMessagesExactlyOnceEach": true,
+      "historyCounts": {
+        "requester": 2,
+        "worker": 2
+      }
+    },
+    "acceptedVersion2": {
+      "proposer": "requester",
+      "acceptedBy": "worker",
+      "version": 2,
+      "priceRsd": 1250,
+      "priceBasis": "HOURLY",
+      "currency": "RSD",
+      "covered_slots": 2,
+      "required_slots": 5,
+      "pricingMode": "MY_PRICE",
+      "previousVersionPriceRsd": 1200,
+      "parentPriceRsd": 1200,
+      "proposalDidNotChangeAcceptedPrice": true,
+      "bothParticipantsHistoryConfirmed": true
+    },
+    "completion": {
+      "workerMarkedDone": true,
+      "repeatSameDeadline": true,
+      "requesterCancelAfterDoneDenied": true,
+      "requesterConfirmed": true,
+      "confirmationReplaySameCompletedAt": true,
+      "bothParticipantsCompleted": true,
+      "acceptedPriceRsd": 1250,
+      "priceBasis": "HOURLY"
+    },
+    "priceMeaning": "1200 RSD per person per hour remains 1200 HOURLY for two people through proposal, task, application, candidate and accepted version 1. Both parties explicitly accepted 1250 RSD per person per hour in version 2; version 1 and parent-task 1200 remain unchanged.",
+    "hostedPriceModesCovered": [
+      "MY_PRICE/HOURLY"
+    ],
+    "otherPriceModeCoverage": "TOTAL, PER_PERSON and OFFERS are not claimed by this hosted flow; their source/SQL tests are separate evidence."
+  },
+  "ratings": {
+    "status": "DEV_API_CONFIRMED",
+    "policy": "Publish after both parties review, or after the 14-day window; reject new submissions after expiry.",
+    "freshPostfixBaseline": {
+      "requester": {
+        "reviewCount": 0,
+        "profileReviewCount": 0,
+        "receivedCount": 0,
+        "publicCommentCount": 0
+      },
+      "worker": {
+        "reviewCount": 0,
+        "profileReviewCount": 0,
+        "receivedCount": 0,
+        "publicCommentCount": 0
+      }
+    },
+    "firstOnly": {
+      "hiddenFromPublicAndRecipient": true,
+      "ownAuthoritativeReceiptReadable": true,
+      "oppositeReviewAbsent": true,
+      "publicCounts": {
+        "requester": 0,
+        "worker": 0
+      },
+      "publicProfileCountsAgree": true,
+      "receivedCountsAgree": true,
+      "commentHidden": true,
+      "secondReviewNotYetSubmitted": true
+    },
+    "afterSecond": {
+      "bothPublishedOnlyAfterSecond": true,
+      "publicCounts": {
+        "requester": 1,
+        "worker": 1
+      },
+      "bothPublicProfileCountsAgree": true,
+      "bothCommentsVisible": true,
+      "bothReceivedListsVisible": true,
+      "firstReviewReplaySameId": true,
+      "expiredWindowHostedProof": false,
+      "deadlineProof": "isolated actual-SQL tests only"
+    },
+    "readersVerified": [
+      "own v2 receipt/context",
+      "account reputation",
+      "public profile trust",
+      "public comments as opposite account",
+      "received-review list as recipient"
+    ],
+    "immutableSameCommandReplayConfirmed": true,
+    "fourHistoricalEarlySingleFixtureReviewsPreservedAndHiddenByPolicy": true,
+    "hosted14DayExpiryNotRun": true,
+    "elapsed336HourAndDSTBoundaryEvidence": "scripts/r08-blind-reviews-sql.test.cjs: 16/16 actual isolated SQL tests passed."
+  },
+  "discovery": {
+    "preimage": {
+      "httpStatus": 400,
+      "safeCode": "P6_INVALID_FILTER",
+      "status": "FAIL_CLIENT_FILTER_REJECTED",
+      "forMe": true
+    },
+    "postfix": {
+      "httpStatus": 200,
+      "forMeFoundBySearchNotId": true,
+      "sameMatcherAndProfile": true,
+      "taskStatus": "SELECTION",
+      "remainingSlots": 3,
+      "priceBasis": "HOURLY",
+      "publicPriceRsd": 1200,
+      "agreementPriceRsd": 1250,
+      "minimumMembership": [
+        {
+          "minBudgetRsd": 1200,
+          "included": true
+        },
+        {
+          "minBudgetRsd": 1201,
+          "included": false
+        }
+      ],
+      "mapRemoteHasNoPin": true,
+      "placesRemoteHasNoInventedCity": true,
+      "exactPublicSameTask": true,
+      "nativeClaim": false,
+      "currentP6BuildGateClaim": false
+    },
+    "status": "DEV_API_CONFIRMED",
+    "modesWithActualClientDecode": [
+      "PAGE ForMe",
+      "PAGE minimum 1200",
+      "PAGE minimum 1201",
+      "MAP",
+      "PLACES CITY",
+      "EXACT_PUBLIC"
+    ],
+    "matchingEvidence": "The owned active REMOTE worker profile found the same published/selection task through ForMe text search, not only through a direct task ID.",
+    "p6BuildFlagEnabled": false,
+    "nativeDiscoveryAcceptance": "NOT_RUN"
+  },
+  "privacyAndAuthorization": {
+    "ownNeedConversationPositiveThenOtherAccountNegative": {
+      "ownerConversationVisible": true,
+      "otherConversationVisible": false,
+      "otherMessagesVisible": false
+    },
+    "ownWorkerAiMessagesPositiveThenOtherAccountNegative": {
+      "ownerPositiveCount": 2,
+      "otherCount": 0,
+      "sameConversation": true
+    },
+    "directNeedsProjectionBeforeGrantChange": {
+      "otherAccountRowVisible": true,
+      "internalFieldSelectionAllowed": true,
+      "testedInternalValuesNull": true
+    },
+    "directNeedsProjectionAfterGrantChange": {
+      "denials": [
+        {
+          "actor": "worker",
+          "selection": "internal",
+          "sqlstate": "42501",
+          "denied": true
+        },
+        {
+          "actor": "worker",
+          "selection": "wildcard",
+          "sqlstate": "42501",
+          "denied": true
+        },
+        {
+          "actor": "requester",
+          "selection": "internal",
+          "sqlstate": "42501",
+          "denied": true
+        },
+        {
+          "actor": "requester",
+          "selection": "wildcard",
+          "sqlstate": "42501",
+          "denied": true
+        }
+      ],
+      "publicProjection": true,
+      "publicTaskReader": true,
+      "publicTaskExcludesInternalFields": true,
+      "sameTestTaskAndOrdinaryAccounts": true
+    },
+    "exactLocation": {
+      "remoteTask": true,
+      "ownerRowExists": false,
+      "ownerHasSensitiveValues": false,
+      "status": "NOT_APPLICABLE_REMOTE_NO_SENSITIVE_VALUES",
+      "exactLocationDenialClaim": false
+    },
+    "exactLocationDenialOrRevokeProof": "NOT_APPLICABLE_TO_THIS_REMOTE_TASK: owner has no sensitive row; an empty other-account response is not counted as an exact-address denial proof.",
+    "unrelatedThirdPartyAgreementMessageAccess": "NOT_RUN: only the two bilateral participants and private AI conversations were tested."
+  },
+  "semanticProbes": {
+    "needWrongDomainOffer": {
+      "needVersion": 192,
+      "confirmedReceipt": true,
+      "intentKind": "WORKER_OFFER",
+      "workerOfferSuggested": true,
+      "needFactsUnchangedEmpty": true,
+      "canonicalOwnedUserAssistantPair": true,
+      "saveOrPublishDispatched": false,
+      "navigationDispatched": false,
+      "nativeClaim": false,
+      "advisoryOnly": true
+    },
+    "initialWorker141RecurringGap": {
+      "requestedWeeklyRecurrence": true,
+      "savedWeeklyRules": 0,
+      "savedDatedWindows": 1,
+      "status": "OPEN_P1",
+      "r07Scope": "signed current-day availability only; recurring intent not proven"
+    },
+    "fourthAttemptWorker142": {
+      "wire": "safe_error",
+      "code": "AI_TURN_NOT_CONFIRMED",
+      "recoveryState": "FAILED",
+      "snapshotRevision": 0,
+      "snapshotTurnState": "FAILED",
+      "weeklyRuleCount": 0,
+      "datedWindowCount": 1,
+      "serviceCount": 1,
+      "saveDispatched": false,
+      "modelRetryDispatched": false,
+      "status": "NOT_CONFIRMED_NO_EXTRA_MODEL",
+      "providerDispatched": true,
+      "retryAllowed": false,
+      "authoritative": true,
+      "failureBoundary": "Provider dispatched and paid usage recorded; no SQL completion call observed by the read-only server review. Exact failed output field or provider finish reason was not established.",
+      "canonicalProfileSave": false
+    },
+    "sixthAttemptWorker143": {
+      "workerVersion": 143,
+      "newCommandNotRetry": true,
+      "initialRevision": 0,
+      "confirmedFinal": true,
+      "wire": "final",
+      "safeCode": null,
+      "recoveryState": "SUCCEEDED",
+      "providerDispatched": true,
+      "retryAllowed": false,
+      "authoritative": true,
+      "revision": 1,
+      "weeklyDays": [],
+      "timezone": "Europe/Belgrade",
+      "datedWindowCount": 1,
+      "servicesUnchanged": true,
+      "validWeeklyPreview": false,
+      "saveDispatched": false,
+      "noFurtherModelAttempt": true,
+      "canonicalSafety": "CLARIFY",
+      "assistantTemplate": "RECURRING_SCOPE_CLARIFICATION",
+      "closedServerDiagnostic": "WORKER_AVAILABILITY_GUARD RECURRENCE_SHAPE_MISMATCH",
+      "providerCalendarShapeFromClosedDiagnostic": {
+        "ruleChangesArrayPresent": false,
+        "windowsUpsertCount": 0,
+        "windowIdsRemoveCount": 1
+      },
+      "entireCalendarPatchRejected": true,
+      "strictOutputParserFailure": false,
+      "sameOwnedConversationReopenedWithNewCommand": true,
+      "failureBoundary": "The turn completed successfully and returned a valid intent, but the availability guard asked for clarification and left zero weekly rules plus the earlier dated window. The explicit all-seven-days correction was not achieved.",
+      "canonicalProfileSave": false
+    },
+    "openP1": "A real request for recurring daily 08:00–22:00 Europe/Belgrade availability still fails to produce the requested saved weekly schedule. Do not mark recurrence DEV DONE.",
+    "guardProtectedSavedProfile": true
+  },
+  "boundedAiExecution": {
+    "initialApprovedMaximum": 4,
+    "explicitlyExtendedMaximum": 6,
+    "actualEdgeModelDispatchRequests": 6,
+    "automaticModelRetries": 0,
+    "furtherPaidProbePermittedByThisReceipt": false,
+    "speechProviderCalls": 0,
+    "probes": [
+      {
+        "number": 1,
+        "domain": "NEED",
+        "edgeVersion": 192,
+        "commandEnvelopeSha256": "4f8228ea15e88d009a902433310f7eef963ff538683babfd7c76e004e1198f72",
+        "requestPayloadIncluded": false,
+        "startedAtUtc": "2026-11-07T11:37:51.755342+00:00",
+        "httpStatus": 200,
+        "eventKinds": [
+          "accepted",
+          "text_delta",
+          "text_delta",
+          "text_delta",
+          "final"
+        ],
+        "intentKind": "NEED_REQUEST",
+        "canonicalState": "SUCCEEDED",
+        "semanticOutcome": "REQUEST_FACTS_CONFIRMED",
+        "timingMs": {
+          "requestToHeadersAndBody": 17944.5,
+          "accepted": 7343.7,
+          "firstApiTextDelta": 10887.7,
+          "acceptedToFirstApiDelta": 3544.1,
+          "final": 17944.3
+        },
+        "separateCanonicalReadRequestMs": 5610.2,
+        "providerLatencyMeasuredSeparately": false,
+        "serverCompletionLatencyMeasuredSeparately": false,
+        "firstDeltaIsVisibleNativeText": false,
+        "previewMode": "CURRENT_CLIENT_OPT_IN_SSE",
+        "savedProfileOrPublishedTaskAfterThisProbe": true
+      },
+      {
+        "number": 2,
+        "domain": "WORKER",
+        "edgeVersion": 141,
+        "commandEnvelopeSha256": "a7d469feb17a0beba7885ba266e6adb21d9c22bd565ad8593138bd4aec1eb6d7",
+        "requestPayloadIncluded": false,
+        "startedAtUtc": "2026-11-07T11:38:54.659134+00:00",
+        "httpStatus": 200,
+        "eventKinds": [
+          "accepted",
+          "text_delta",
+          "final"
+        ],
+        "intentKind": "WORKER_OFFER",
+        "canonicalState": "SUCCEEDED",
+        "semanticOutcome": "SERVICE_CONFIRMED_WEEKLY_INTENT_NOT_SATISFIED",
+        "timingMs": {
+          "requestToHeadersAndBody": 14390.2,
+          "accepted": 7641.4,
+          "firstApiTextDelta": 14390.1,
+          "acceptedToFirstApiDelta": 6748.7,
+          "final": 14390.1
+        },
+        "separateCanonicalReadRequestMs": 5717.3,
+        "providerLatencyMeasuredSeparately": false,
+        "serverCompletionLatencyMeasuredSeparately": false,
+        "firstDeltaIsVisibleNativeText": false,
+        "previewMode": "COMPLETED_ONLY_HARNESS_DID_NOT_SEND_WORKER_PREVIEW_HEADER",
+        "savedProfileOrPublishedTaskAfterThisProbe": true
+      },
+      {
+        "number": 3,
+        "domain": "PUBLICATION",
+        "edgeVersion": null,
+        "commandEnvelopeSha256": "42418849ba48d67f74dac8348abf9b7404e56b74d64568fc9096165661601aa2",
+        "requestPayloadIncluded": false,
+        "startedAtUtc": "2026-11-07T11:43:28.766440+00:00",
+        "httpStatus": 200,
+        "eventKinds": [],
+        "intentKind": null,
+        "canonicalState": "PUBLISHED",
+        "semanticOutcome": "ALLOW_THEN_EXPLICIT_PUBLISH",
+        "timingMs": {
+          "requestToHeadersAndBody": 10560.9
+        },
+        "separateCanonicalReadRequestMs": 5655.5,
+        "providerLatencyMeasuredSeparately": false,
+        "serverCompletionLatencyMeasuredSeparately": false,
+        "firstDeltaIsVisibleNativeText": false,
+        "previewMode": "NOT_STREAMED",
+        "savedProfileOrPublishedTaskAfterThisProbe": true
+      },
+      {
+        "number": 4,
+        "domain": "WORKER_CORRECTION",
+        "edgeVersion": 142,
+        "commandEnvelopeSha256": "8fac3564f559dc44d671cc135d9a579c6cbb2d05d170d4e6dfa98345e20b50ec",
+        "requestPayloadIncluded": false,
+        "startedAtUtc": "2026-11-07T12:04:02.674566+00:00",
+        "httpStatus": 200,
+        "eventKinds": [
+          "accepted",
+          "text_delta",
+          "text_delta",
+          "text_delta",
+          "text_delta",
+          "safe_error"
+        ],
+        "intentKind": null,
+        "canonicalState": "FAILED",
+        "semanticOutcome": "FAILED_BEFORE_SQL_COMPLETION_NO_SAVE",
+        "timingMs": {
+          "requestToHeadersAndBody": 13139.8,
+          "accepted": 8555.4,
+          "firstApiTextDelta": 10309.9,
+          "acceptedToFirstApiDelta": 1754.5,
+          "final": null
+        },
+        "separateCanonicalReadRequestMs": 4748.1,
+        "providerLatencyMeasuredSeparately": false,
+        "serverCompletionLatencyMeasuredSeparately": false,
+        "firstDeltaIsVisibleNativeText": false,
+        "previewMode": "CURRENT_CLIENT_OPT_IN_SSE",
+        "savedProfileOrPublishedTaskAfterThisProbe": false
+      },
+      {
+        "number": 5,
+        "domain": "NEED_HANDOFF",
+        "edgeVersion": 192,
+        "commandEnvelopeSha256": "2b7b5521236221d62e97434d35fc3b688f50b502afa19ff04a4cf1bd3ef16569",
+        "requestPayloadIncluded": false,
+        "startedAtUtc": "2026-11-07T12:28:30.135111+00:00",
+        "httpStatus": 200,
+        "eventKinds": [
+          "accepted",
+          "text_delta",
+          "text_delta",
+          "text_delta",
+          "text_delta",
+          "final"
+        ],
+        "intentKind": "WORKER_OFFER",
+        "canonicalState": "SUCCEEDED",
+        "semanticOutcome": "OPPOSITE_DOMAIN_ADVISORY_WITH_NO_NEED_FACTS",
+        "timingMs": {
+          "requestToHeadersAndBody": 10844.1,
+          "accepted": 6222.3,
+          "firstApiTextDelta": 9057.0,
+          "acceptedToFirstApiDelta": 2834.7,
+          "final": 10843.9
+        },
+        "separateCanonicalReadRequestMs": 4907.0,
+        "providerLatencyMeasuredSeparately": false,
+        "serverCompletionLatencyMeasuredSeparately": false,
+        "firstDeltaIsVisibleNativeText": false,
+        "previewMode": "CURRENT_CLIENT_OPT_IN_SSE",
+        "savedProfileOrPublishedTaskAfterThisProbe": false
+      },
+      {
+        "number": 6,
+        "domain": "WORKER_DIAGNOSTIC",
+        "edgeVersion": 143,
+        "commandEnvelopeSha256": "f70aed46b14b3972ebee3dc3db7a69b5ff47f27cda5892e0d65e521a93f19d9b",
+        "requestPayloadIncluded": false,
+        "startedAtUtc": "2026-11-07T12:29:21.626258+00:00",
+        "httpStatus": 200,
+        "eventKinds": [
+          "accepted",
+          "text_delta",
+          "text_delta",
+          "text_delta",
+          "text_delta",
+          "final"
+        ],
+        "intentKind": "WORKER_AVAILABILITY",
+        "canonicalState": "SUCCEEDED",
+        "semanticOutcome": "SUCCEEDED_CLARIFICATION_WEEKLY_CHANGE_NOT_APPLIED",
+        "timingMs": {
+          "requestToHeadersAndBody": 12119.7,
+          "accepted": 7319.9,
+          "firstApiTextDelta": 9308.0,
+          "acceptedToFirstApiDelta": 1988.1,
+          "final": 12092.8
+        },
+        "separateCanonicalReadRequestMs": 5808.8,
+        "providerLatencyMeasuredSeparately": false,
+        "serverCompletionLatencyMeasuredSeparately": false,
+        "firstDeltaIsVisibleNativeText": false,
+        "previewMode": "CURRENT_CLIENT_OPT_IN_SSE",
+        "savedProfileOrPublishedTaskAfterThisProbe": false
+      }
+    ],
+    "timingBoundary": "Client-side API wall times are measured once from the same real calls. First API text delta is not native visible text. Separate read-request time is not provider latency or the server completion subspan; the initial Worker141 call used completed-only mode because this harness lacked the preview header.",
+    "accounting": {
+      "format_version": 1,
+      "project": "leqcwgzvjsxugfgzdmth",
+      "observed_at_utc": "2026-11-07",
+      "scope": "Read-only accounting verification for exactly six bounded ordinary-Auth QA operations approved by the coordinator. Query selection used only hashes of harness request/review identifiers. No conversation, task body, user row, raw identifier, auth token or provider key was returned.",
+      "operations": [
+        {
+          "domain": "NEED",
+          "state": "SUCCEEDED",
+          "stored_attempt_identity_present": true,
+          "provider_dispatched": true,
+          "recorded_attempt_count": 1,
+          "test_world_owner": true,
+          "reservation_present": true,
+          "kind": "LLM",
+          "max_cost_microusd": 250000,
+          "settled_microusd": 11341,
+          "settlement_basis": "MEASURED",
+          "settled_at_present": true,
+          "usage_recorded": true,
+          "usage_owner_matches": true,
+          "model": "gemini-3.8-flash",
+          "prompt_tokens": 8221,
+          "output_tokens": 1380,
+          "total_tokens": 9601,
+          "cost_evidence": "TOKEN_MEASURED_POLICY_PRICED"
+        },
+        {
+          "domain": "PUBLICATION",
+          "state": "PUBLISHED",
+          "stored_attempt_identity_present": true,
+          "provider_dispatched": null,
+          "recorded_attempt_count": null,
+          "test_world_owner": true,
+          "reservation_present": true,
+          "kind": "LLM",
+          "max_cost_microusd": 250000,
+          "settled_microusd": 1131,
+          "settlement_basis": "MEASURED",
+          "settled_at_present": true,
+          "usage_recorded": true,
+          "usage_owner_matches": true,
+          "model": "gemini-3.8-flash",
+          "prompt_tokens": 1373,
+          "output_tokens": 27,
+          "total_tokens": 1400,
+          "cost_evidence": "TOKEN_MEASURED_POLICY_PRICED"
+        },
+        {
+          "domain": "WORKER",
+          "state": "SUCCEEDED",
+          "stored_attempt_identity_present": true,
+          "provider_dispatched": true,
+          "recorded_attempt_count": null,
+          "test_world_owner": true,
+          "reservation_present": true,
+          "kind": "LLM",
+          "max_cost_microusd": 250000,
+          "settled_microusd": 8568,
+          "settlement_basis": "MEASURED",
+          "settled_at_present": true,
+          "usage_recorded": true,
+          "usage_owner_matches": true,
+          "model": "gemini-3.8-flash",
+          "prompt_tokens": 7874,
+          "output_tokens": 710,
+          "total_tokens": 8584,
+          "cost_evidence": "TOKEN_MEASURED_POLICY_PRICED"
+        },
+        {
+          "domain": "WORKER_CORRECTION",
+          "state": "FAILED",
+          "stored_attempt_identity_present": true,
+          "provider_dispatched": true,
+          "recorded_attempt_count": null,
+          "reservation_present": true,
+          "kind": "LLM",
+          "max_cost_microusd": 250000,
+          "settled_microusd": 7920,
+          "settlement_basis": "MEASURED",
+          "settled_at_present": true,
+          "usage_recorded": true,
+          "usage_owner_matches": true,
+          "model": "gemini-3.8-flash",
+          "prompt_tokens": 8324,
+          "output_tokens": 447,
+          "total_tokens": 8771,
+          "cost_evidence": "TOKEN_MEASURED_POLICY_PRICED",
+          "failure_cause_or_finish_reason_not_inferred_from_usage": true
+        },
+        {
+          "domain": "NEED_HANDOFF",
+          "recorded_attempt_count": 1,
+          "state": "SUCCEEDED",
+          "provider_dispatched": true,
+          "stored_attempt_identity_present": true,
+          "reservation_present": true,
+          "kind": "LLM",
+          "max_cost_microusd": 250000,
+          "settled_microusd": 6914,
+          "settlement_basis": "MEASURED",
+          "settled_at_present": true,
+          "usage_recorded": true,
+          "usage_owner_matches": true,
+          "model": "gemini-3.8-flash",
+          "prompt_tokens": 8073,
+          "output_tokens": 229,
+          "total_tokens": 8302,
+          "cost_evidence": "TOKEN_MEASURED_POLICY_PRICED",
+          "semantic_profile_save_verified_by_this_accounting_read": false
+        },
+        {
+          "domain": "WORKER_DIAGNOSTIC",
+          "recorded_attempt_count": null,
+          "state": "SUCCEEDED",
+          "provider_dispatched": true,
+          "stored_attempt_identity_present": true,
+          "reservation_present": true,
+          "kind": "LLM",
+          "max_cost_microusd": 250000,
+          "settled_microusd": 7881,
+          "settlement_basis": "MEASURED",
+          "settled_at_present": true,
+          "usage_recorded": true,
+          "usage_owner_matches": true,
+          "model": "gemini-3.8-flash",
+          "prompt_tokens": 8437,
+          "output_tokens": 414,
+          "total_tokens": 8851,
+          "cost_evidence": "TOKEN_MEASURED_POLICY_PRICED",
+          "semantic_profile_save_verified_by_this_accounting_read": false
+        }
+      ],
+      "totals": {
+        "operations": 6,
+        "prompt_tokens": 42302,
+        "output_tokens": 3207,
+        "total_tokens": 45509,
+        "reserved_before_settlement_microusd": 1500000,
+        "settled_microusd": 43755,
+        "unknown_cost_operations": 0,
+        "failed_operations": 1
+      },
+      "price_evidence": {
+        "source": "private.ai_test_price_microusd and rpc_ai_test_record_usage_service",
+        "formula": "ceil(prompt_tokens * 0.75 + output_tokens * 3.75) microusd, bounded by the operation reservation",
+        "classification": "Provider-reported tokens persisted by the canonical writer, priced by the current internal tariff. Actual provider invoice / billing reconciliation not verified.",
+        "provider_invoice_verified": false
+      },
+      "proof_boundary": {
+        "need_recorded_attempt_count": 1,
+        "worker_and_publication_full_attempt_history_available": false,
+        "worker_publication_single_stored_attempt_identity_and_one_linked_usage_verified": true,
+        "no_new_provider_calls_made_by_this_verification": true,
+        "private_content_or_identifier_output": false,
+        "provider_succeeded_is_not_a_business_fact_save": true
+      }
+    },
+    "accountingReceiptSha256": "feeb632988a767414323cf063b85c8d3a3669bf079cd8127337493118d75476e"
+  },
+  "localValidation": {
+    "conversationIntentActualHandlerAndClientBoundaryTests": {
+      "path": "scripts/conversation-intent-integration.test.cjs",
+      "passed": 39,
+      "sha256": "ebb59867aab96e3d91bb97b32f3cb829023e5a46f4d6b056446341c1d8a3af81",
+      "scope": "Actual handlers/client code with controlled provider/RPC/transport fixtures; not additional live model calls or natural-language accuracy proof."
+    },
+    "reviewClientBehaviorTests": {
+      "path": "scripts/review-publication-client.test.cjs",
+      "passed": 10,
+      "sha256": "9f33afcc6e92e7f1cddbc98798b195624df715a11f561c424753e252cfbf7f18",
+      "scope": "Actual service decoders and React behavior with boundary mocks; no pixel/native claim."
+    },
+    "independentBlindReviewSqlTests": {
+      "path": "scripts/r08-blind-reviews-sql.test.cjs",
+      "passed": 16
+    },
+    "actualDevBytesThroughCurrentClient": {
+      "passedGroups": 26,
+      "checks": [
+        {
+          "domain": "need",
+          "actualDevSseAccepted": true,
+          "fullReceiptDecoded": true,
+          "intentKind": "NEED_REQUEST",
+          "canonicalDocumentDecoded": true,
+          "localReplayOnly": true,
+          "newNetworkRequests": 0
+        },
+        {
+          "domain": "worker",
+          "actualDevSseAccepted": true,
+          "fullReceiptDecoded": true,
+          "intentKind": "WORKER_OFFER",
+          "canonicalDocumentDecoded": true,
+          "localReplayOnly": true,
+          "newNetworkRequests": 0
+        },
+        {
+          "domain": "needWrongDomainOffer",
+          "actualDevSseAccepted": true,
+          "fullReceiptDecoded": true,
+          "intentKind": "WORKER_OFFER",
+          "oppositeDomain": "WORKER",
+          "noSqlWriter": true,
+          "noAutomaticNavigation": true,
+          "localReplayOnly": true,
+          "newNetworkRequests": 0
+        },
+        {
+          "domain": "workerCorrectionFailure",
+          "actualDevSafeErrorNotSuccess": true,
+          "noIntentHint": true,
+          "authoritativeRecoveryDecoded": true,
+          "providerDispatched": true,
+          "retryAllowed": false,
+          "localReplayOnly": true,
+          "newNetworkRequests": 0,
+          "newProviderCalls": 0
+        },
+        {
+          "domain": "worker143CorrectionClarification",
+          "actualDevSseAccepted": true,
+          "fullReceiptDecoded": true,
+          "intentKind": "WORKER_AVAILABILITY",
+          "canonicalSafety": "CLARIFY",
+          "weeklyChangeConfirmed": false,
+          "noProfileSave": true,
+          "authoritativeRecoveryDecoded": true,
+          "localReplayOnly": true,
+          "newNetworkRequests": 0
+        },
+        {
+          "domain": "requesterMessageHistory",
+          "actualDevReceiptDecoded": true,
+          "localReplayOnly": true,
+          "newNetworkRequests": 0
+        },
+        {
+          "domain": "requesterAgreementRead",
+          "actualDevReceiptDecoded": true,
+          "priceRsd": 1200,
+          "basis": "HOURLY",
+          "acceptedPeople": 2,
+          "originalRequiredPeople": 5,
+          "localReplayOnly": true,
+          "newNetworkRequests": 0
+        },
+        {
+          "domain": "requesterChangedAgreementRead",
+          "actualDevReceiptDecoded": true,
+          "priceRsd": 1250,
+          "basis": "HOURLY",
+          "acceptedPeople": 2,
+          "originalRequiredPeople": 5,
+          "localReplayOnly": true,
+          "newNetworkRequests": 0
+        },
+        {
+          "domain": "requesterCompletedAgreementRead",
+          "actualDevReceiptDecoded": true,
+          "priceRsd": 1250,
+          "basis": "HOURLY",
+          "acceptedPeople": 2,
+          "originalRequiredPeople": 5,
+          "localReplayOnly": true,
+          "newNetworkRequests": 0
+        },
+        {
+          "domain": "workerMessageHistory",
+          "actualDevReceiptDecoded": true,
+          "localReplayOnly": true,
+          "newNetworkRequests": 0
+        },
+        {
+          "domain": "workerAgreementRead",
+          "actualDevReceiptDecoded": true,
+          "priceRsd": 1200,
+          "basis": "HOURLY",
+          "acceptedPeople": 2,
+          "originalRequiredPeople": 5,
+          "localReplayOnly": true,
+          "newNetworkRequests": 0
+        },
+        {
+          "domain": "workerChangedAgreementRead",
+          "actualDevReceiptDecoded": true,
+          "priceRsd": 1250,
+          "basis": "HOURLY",
+          "acceptedPeople": 2,
+          "originalRequiredPeople": 5,
+          "localReplayOnly": true,
+          "newNetworkRequests": 0
+        },
+        {
+          "domain": "workerCompletedAgreementRead",
+          "actualDevReceiptDecoded": true,
+          "priceRsd": 1250,
+          "basis": "HOURLY",
+          "acceptedPeople": 2,
+          "originalRequiredPeople": 5,
+          "localReplayOnly": true,
+          "newNetworkRequests": 0
+        },
+        {
+          "domain": "r05ForMePage",
+          "actualDevReceiptDecoded": true,
+          "mode": "PAGE",
+          "localReplayOnly": true,
+          "newNetworkRequests": 0,
+          "p6EnabledClaim": false
+        },
+        {
+          "domain": "r05Minimum1200",
+          "actualDevReceiptDecoded": true,
+          "mode": "PAGE",
+          "localReplayOnly": true,
+          "newNetworkRequests": 0,
+          "p6EnabledClaim": false
+        },
+        {
+          "domain": "r05Minimum1201",
+          "actualDevReceiptDecoded": true,
+          "mode": "PAGE",
+          "localReplayOnly": true,
+          "newNetworkRequests": 0,
+          "p6EnabledClaim": false
+        },
+        {
+          "domain": "r05ForMeMap",
+          "actualDevReceiptDecoded": true,
+          "mode": "MAP",
+          "localReplayOnly": true,
+          "newNetworkRequests": 0,
+          "p6EnabledClaim": false
+        },
+        {
+          "domain": "r05ForMePlacesCity",
+          "actualDevReceiptDecoded": true,
+          "mode": "PLACES",
+          "localReplayOnly": true,
+          "newNetworkRequests": 0,
+          "p6EnabledClaim": false
+        },
+        {
+          "domain": "r05ExactPublic",
+          "actualDevReceiptDecoded": true,
+          "mode": "EXACT_PUBLIC",
+          "localReplayOnly": true,
+          "newNetworkRequests": 0,
+          "p6EnabledClaim": false
+        },
+        {
+          "domain": "requesterFirstRating",
+          "actualDevReceiptDecoded": true,
+          "fullCommandMatched": true,
+          "ownContextDecoded": true,
+          "idempotentReplay": false,
+          "localReplayOnly": true,
+          "newNetworkRequests": 0
+        },
+        {
+          "domain": "workerSecondRating",
+          "actualDevReceiptDecoded": true,
+          "fullCommandMatched": true,
+          "ownContextDecoded": true,
+          "idempotentReplay": false,
+          "localReplayOnly": true,
+          "newNetworkRequests": 0
+        },
+        {
+          "domain": "requesterRatingReplayAfterBoth",
+          "actualDevReceiptDecoded": true,
+          "fullCommandMatched": true,
+          "ownContextDecoded": false,
+          "idempotentReplay": true,
+          "localReplayOnly": true,
+          "newNetworkRequests": 0
+        },
+        {
+          "domain": "afterFirstrequesterReviewPublication",
+          "actualDevReceiptDecoded": true,
+          "publicCount": 0,
+          "localReplayOnly": true,
+          "newNetworkRequests": 0
+        },
+        {
+          "domain": "afterFirstworkerReviewPublication",
+          "actualDevReceiptDecoded": true,
+          "publicCount": 0,
+          "localReplayOnly": true,
+          "newNetworkRequests": 0
+        },
+        {
+          "domain": "afterBothrequesterReviewPublication",
+          "actualDevReceiptDecoded": true,
+          "publicCount": 1,
+          "localReplayOnly": true,
+          "newNetworkRequests": 0
+        },
+        {
+          "domain": "afterBothworkerReviewPublication",
+          "actualDevReceiptDecoded": true,
+          "publicCount": 1,
+          "localReplayOnly": true,
+          "newNetworkRequests": 0
+        }
+      ],
+      "newNetworkRequests": 0,
+      "newProviderCalls": 0,
+      "receiptSha256": "2262029d9a55f4ae62d5ec456b8b685303a642b40a3901dea42ef5dcfc1c4b03"
+    }
+  },
+  "notVerifiedInThisReceipt": [
+    "Native APK installation, screen appearance, 360dp, font scaling, TalkBack, keyboard, background/foreground, device network interruption or Android/iOS E2E.",
+    "Production release, signed AAB, store target, Play review, production backend or push delivery.",
+    "New public registration/email delivery or general-user admission; these are existing ordinary QA identities.",
+    "On-site exact address, route/map pin, positive sensitive-row access, revoke/logout/offline address invalidation.",
+    "Concurrent last-place selection, non-divisible overfill race, changed task revision during a real concurrent application.",
+    "Hosted successful cancellation with persisted reason; this flow proves requester cancellation denial after worker completion, while positive reason/event paths have separate SQL evidence.",
+    "Hosted wait until the 14-day review boundary; that boundary is covered by isolated actual SQL tests.",
+    "Provider invoice reconciliation or complete historical attempt-count logs for Worker/publication.",
+    "A successfully saved recurring weekly Worker availability correction."
+  ]
+}

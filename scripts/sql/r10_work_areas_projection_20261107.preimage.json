@@ -1,0 +1,118 @@
+{
+  "schema": "R10_WORK_AREAS_PROJECTION_PREIMAGE_V1",
+  "project": "leqcwgzvjsxugfgzdmth",
+  "capturedAt": "2026-11-07T16:37:48.584Z",
+  "sourceCommit": "94f2801db54bcbd7cb294cda983e048cd5885939",
+  "readOnly": true,
+  "scope": "Exact live function definitions and metadata only; no user rows or policy updates.",
+  "functions": [
+    {
+      "name": "private.validate_worker_areas_v1",
+      "arguments": "areas jsonb",
+      "body_md5": "8f1cd592eb48eb9da31e0af02c0bdd2e",
+      "definition": "CREATE OR REPLACE FUNCTION private.validate_worker_areas_v1(areas jsonb)\n RETURNS jsonb\n LANGUAGE plpgsql\n IMMUTABLE\n SET search_path TO 'pg_catalog'\nAS $function$\ndeclare a jsonb; seen text[]:='{}'; key text;\nbegin\n if jsonb_typeof(areas) is distinct from 'array' or jsonb_array_length(areas)>5 then raise exception 'WORKER_AREA_INVALID' using errcode='22023'; end if;\n for a in select value from jsonb_array_elements(areas) loop\n  if jsonb_typeof(a)<>'object' or a-array['kind','countryCode','label','city','sourceRef','latitude','longitude','radiusKm']<>'{}'\n   or not a?&array['kind','countryCode','label','city','sourceRef','latitude','longitude','radiusKm']\n   or jsonb_typeof(a->'kind')<>'string' or a->>'kind' not in ('COUNTRY','CITY','RADIUS') or a->>'countryCode' is distinct from 'RS'\n   or jsonb_typeof(a->'label')<>'string' or length(a->>'label') not between 2 and 200 or a->>'label'~'[[:cntrl:]]'\n  then raise exception 'WORKER_AREA_INVALID' using errcode='22023'; end if;\n  if a->>'kind'='COUNTRY' then\n   if jsonb_array_length(areas)<>1 or a->>'label'<>'Cela Srbija'\n    or a->'city'<>'null' or a->'sourceRef'<>'null' or a->'latitude'<>'null' or a->'longitude'<>'null' or a->'radiusKm'<>'null'\n   then raise exception 'WORKER_AREA_INVALID' using errcode='22023'; end if;\n   key:='RS';\n  else\n   if jsonb_typeof(a->'city')<>'string' or length(a->>'city') not between 2 and 160 or a->>'city'~'[[:cntrl:]]'\n    or jsonb_typeof(a->'sourceRef')<>'string' or a->>'sourceRef'!~'^osm:(node|way|relation):[1-9][0-9]{0,19}$'\n    or jsonb_typeof(a->'latitude')<>'number' or jsonb_typeof(a->'longitude')<>'number'\n   then raise exception 'WORKER_AREA_INVALID' using errcode='22023'; end if;\n   if (a->>'latitude')::numeric not between -90 and 90 or (a->>'longitude')::numeric not between -180 and 180\n    or round((a->>'latitude')::numeric,2)<>(a->>'latitude')::numeric or round((a->>'longitude')::numeric,2)<>(a->>'longitude')::numeric\n   then raise exception 'WORKER_AREA_INVALID' using errcode='22023'; end if;\n   if a->>'kind'='CITY' then\n    if a->'radiusKm'<>'null' or a->>'label'<>a->>'city' then raise exception 'WORKER_AREA_INVALID' using errcode='22023'; end if;\n   else\n    if jsonb_typeof(a->'radiusKm')<>'number' or a->>'radiusKm'!~'^([1-9]|[1-9][0-9]|1[0-9][0-9]|200)$'\n      or a->>'label'<>((a->>'city')||' · do '||(a->>'radiusKm')||' km') then raise exception 'WORKER_AREA_INVALID' using errcode='22023'; end if;\n   end if;\n   key:=a->>'sourceRef';\n  end if;\n  if key=any(seen) then raise exception 'WORKER_AREA_INVALID' using errcode='22023'; end if;\n  seen:=array_append(seen,key);\n end loop;\n return areas;\nend $function$\n",
+      "owner": "postgres",
+      "security_definer": false,
+      "acl": "{postgres=X/postgres}",
+      "metadata": {
+        "acl": "{postgres=X/postgres}",
+        "cost": 100,
+        "rows": 0,
+        "owner": "postgres",
+        "config": [
+          "search_path=pg_catalog"
+        ],
+        "result": "jsonb",
+        "strict": false,
+        "language": "plpgsql",
+        "parallel": "u",
+        "arguments": "areas jsonb",
+        "leakproof": false,
+        "volatility": "i",
+        "security_definer": false
+      },
+      "signature": "private.validate_worker_areas_v1(jsonb)"
+    },
+    {
+      "name": "private.closure_taxonomy_project_v1",
+      "arguments": "r text, t jsonb, a uuid",
+      "body_md5": "6877307e228608f6283eec166c98016a",
+      "definition": "CREATE OR REPLACE FUNCTION private.closure_taxonomy_project_v1(r text, t jsonb, a uuid)\n RETURNS jsonb\n LANGUAGE plpgsql\n STABLE SECURITY DEFINER\n SET search_path TO 'pg_catalog'\nAS $function$\nDECLARE c jsonb;p jsonb:='{}';k text;semantic_key text;v jsonb;s jsonb;entry jsonb;rowvalue jsonb;projected jsonb;sections jsonb:='{}';owner text;\nBEGIN\n SELECT x INTO c FROM jsonb_array_elements(private.closure_taxonomy_inventory_v1()) x WHERE x->>'relation'=r;\n IF c IS NULL THEN RAISE EXCEPTION 'F01_EXPORT_RELATION_INVALID';END IF;\n FOR k IN SELECT jsonb_array_elements_text(c->'fields') LOOP\n  v:=t->k;\n  IF k IN('proposals','plan','plans','result','binding_result','catalog_resolution') THEN v:=private.closure_taxonomy_semantic_v1(v);\n  ELSIF k='portfolio' THEN v:=private.data_export_array_v5(v,'string');\n  ELSIF k='payload' THEN\n   FOR s IN SELECT jsonb_build_object('key',key,'fields',value) FROM jsonb_each(private.closure_taxonomy_reset_sections_v1()) LOOP\n    entry:=v->(s->>'key');projected:='[]';\n    FOR rowvalue IN SELECT value FROM jsonb_array_elements(CASE WHEN jsonb_typeof(entry)='array' THEN entry WHEN jsonb_typeof(entry)='object' THEN jsonb_build_array(entry) ELSE '[]' END) LOOP\n     owner:=coalesce(rowvalue->>'account_id',rowvalue->>'owner_account_id',rowvalue->>'worker_account_id');\n     -- Snapshot arrays can contain foreign source copies; never trust only the outer owner.\n     IF owner IS NOT NULL AND owner<>a::text THEN CONTINUE;END IF;\n     SELECT coalesce(jsonb_object_agg(field,rowvalue->field),'{}') INTO entry FROM jsonb_array_elements_text(s->'fields') field;\n     IF entry?'portfolio' THEN entry:=jsonb_set(entry,'{portfolio}',private.data_export_array_v5(entry->'portfolio','string'));END IF;\n     IF entry?'candidate' THEN entry:=jsonb_set(entry,'{candidate}',private.data_export_worker_candidate_v5(entry->'candidate'));END IF;\n     IF entry?'envelope' THEN entry:=jsonb_set(entry,'{envelope}',jsonb_build_object('profile',private.data_export_worker_candidate_v5(entry#>'{envelope,profile}')));END IF;\n     FOR semantic_key IN SELECT unnest(ARRAY['proposals','plan','plans','result','binding_result','catalog_resolution']) LOOP\n      IF entry?semantic_key THEN entry:=jsonb_set(entry,ARRAY[semantic_key],private.closure_taxonomy_semantic_v1(entry->semantic_key));END IF;\n     END LOOP;\n     projected:=projected||jsonb_build_array(entry);\n    END LOOP;\n    sections:=sections||jsonb_build_object(s->>'key',projected);\n   END LOOP;\n   v:=sections;\n  END IF;\n  p:=p||jsonb_build_object(k,v);\n END LOOP;\n RETURN p;\nEND $function$\n",
+      "owner": "postgres",
+      "security_definer": true,
+      "acl": "{postgres=X/postgres}",
+      "metadata": {
+        "acl": "{postgres=X/postgres}",
+        "cost": 100,
+        "rows": 0,
+        "owner": "postgres",
+        "config": [
+          "search_path=pg_catalog"
+        ],
+        "result": "jsonb",
+        "strict": false,
+        "language": "plpgsql",
+        "parallel": "u",
+        "arguments": "r text, t jsonb, a uuid",
+        "leakproof": false,
+        "volatility": "s",
+        "security_definer": true
+      },
+      "signature": "private.closure_taxonomy_project_v1(text,jsonb,uuid)"
+    },
+    {
+      "name": "private.closure_taxonomy_scope_v1",
+      "arguments": "r text",
+      "body_md5": "48a8c7d266e86586a457aa2d2fa51e45",
+      "definition": "CREATE OR REPLACE FUNCTION private.closure_taxonomy_scope_v1(r text)\n RETURNS text\n LANGUAGE plpgsql\n IMMUTABLE SECURITY DEFINER\n SET search_path TO 'pg_catalog'\nAS $function$\nDECLARE c jsonb;\nBEGIN\n SELECT x INTO c FROM jsonb_array_elements(private.closure_taxonomy_inventory_v1()) x WHERE x->>'relation'=r;\n IF c IS NULL THEN RAISE EXCEPTION 'F01_RELATION_NOT_ADMITTED'; END IF;\n IF c->>'mode'='NEED' THEN\n  RETURN format('t.%I in(select id from public.needs where requester_account_id=$1 union select s.id from private.dev_phase1_20261014_needs_snapshot s where s.requester_account_id=$1 and not exists(select 1 from public.needs n where n.id=s.id))',c->>'ownerColumn');\n END IF;\n RETURN format('t.%I=$1',c->>'ownerColumn');\nEND $function$\n",
+      "owner": "postgres",
+      "security_definer": true,
+      "acl": "{postgres=X/postgres}",
+      "metadata": {
+        "acl": "{postgres=X/postgres}",
+        "cost": 100,
+        "rows": 0,
+        "owner": "postgres",
+        "config": [
+          "search_path=pg_catalog"
+        ],
+        "result": "text",
+        "strict": false,
+        "language": "plpgsql",
+        "parallel": "u",
+        "arguments": "r text",
+        "leakproof": false,
+        "volatility": "i",
+        "security_definer": true
+      },
+      "signature": "private.closure_taxonomy_scope_v1(text)"
+    },
+    {
+      "name": "private.data_export_worker_candidate_v5",
+      "arguments": "v jsonb",
+      "body_md5": "aa9c5f1b7ab4711cda7cb16905de55a4",
+      "definition": "CREATE OR REPLACE FUNCTION private.data_export_worker_candidate_v5(v jsonb)\n RETURNS jsonb\n LANGUAGE sql\n IMMUTABLE\n SET search_path TO 'pg_catalog'\nAS $function$ select jsonb_build_object('displayName',private.data_export_scalar_v5(v->'displayName','string'),'bio',private.data_export_scalar_v5(v->'bio','string'),'skills',private.data_export_array_v5(v->'skills','string'),'tools',private.data_export_array_v5(v->'tools','string'),'licenses',private.data_export_array_v5(v->'licenses','string'),'vehicles',private.data_export_array_v5(v->'vehicles','string'),'teamCapacity',private.data_export_scalar_v5(v->'teamCapacity','number'),'location',jsonb_build_object('operatingCountryCode',private.data_export_scalar_v5(v#>'{location,operatingCountryCode}','string'),'city',private.data_export_scalar_v5(v#>'{location,city}','string'),'radiusKm',private.data_export_scalar_v5(v#>'{location,radiusKm}','number'),'approximatePosition',jsonb_build_object('latitude',private.data_export_scalar_v5(v#>'{location,approximatePosition,latitude}','number'),'longitude',private.data_export_scalar_v5(v#>'{location,approximatePosition,longitude}','number'))),'availability',jsonb_build_object('timezone',private.data_export_scalar_v5(v#>'{availability,timezone}','string'),'availableNow',private.data_export_scalar_v5(v#>'{availability,availableNow}','boolean'),'rules',coalesce((select jsonb_agg(jsonb_build_object('id',private.data_export_scalar_v5(x->'id','string'),'startTime',private.data_export_scalar_v5(x->'startTime','string'),'endTime',private.data_export_scalar_v5(x->'endTime','string'),'startsOn',private.data_export_scalar_v5(x->'startsOn','string'),'endsOn',private.data_export_scalar_v5(x->'endsOn','string'),'label',private.data_export_scalar_v5(x->'label','string'),'active',private.data_export_scalar_v5(x->'active','boolean'),'weekdays',private.data_export_array_v5(x->'weekdays','number')) order by ordinal) from jsonb_array_elements(case when jsonb_typeof(v#>'{availability,rules}')='array' then v#>'{availability,rules}' else '[]'::jsonb end) with ordinality as a(x,ordinal) where jsonb_typeof(x)='object'),'[]'::jsonb),'windows',coalesce((select jsonb_agg(jsonb_build_object('id',private.data_export_scalar_v5(x->'id','string'),'startsAt',private.data_export_scalar_v5(x->'startsAt','string'),'endsAt',private.data_export_scalar_v5(x->'endsAt','string'),'state',private.data_export_scalar_v5(x->'state','string'),'label',private.data_export_scalar_v5(x->'label','string')) order by ordinal) from jsonb_array_elements(case when jsonb_typeof(v#>'{availability,windows}')='array' then v#>'{availability,windows}' else '[]'::jsonb end) with ordinality as a(x,ordinal) where jsonb_typeof(x)='object'),'[]'::jsonb))) $function$\n",
+      "owner": "postgres",
+      "security_definer": false,
+      "acl": "{postgres=X/postgres}",
+      "metadata": {
+        "acl": "{postgres=X/postgres}",
+        "cost": 100,
+        "rows": 0,
+        "owner": "postgres",
+        "config": [
+          "search_path=pg_catalog"
+        ],
+        "result": "jsonb",
+        "strict": false,
+        "language": "sql",
+        "parallel": "u",
+        "arguments": "v jsonb",
+        "leakproof": false,
+        "volatility": "i",
+        "security_definer": false
+      },
+      "signature": "private.data_export_worker_candidate_v5(jsonb)"
+    }
+  ]
+}

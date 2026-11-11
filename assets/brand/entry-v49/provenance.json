@@ -1,0 +1,35 @@
+{
+  "source": "USKOCI_V5_AI_FIRST_PAKET/07_REFERENCA/USKOCI_SPOJ_V4_9_COMPOSITION.html",
+  "sourceBytes": 2241863,
+  "sourceSha256": "e272a5bf81971765d871bdf8ad9e16a02b9a731bec835477f0cda09415f2dcdc",
+  "assets": [
+    {
+      "name": "requester.webp",
+      "bytes": 73762,
+      "sha256": "0b995b273406eac9ba85b722ceafe506a235783400047c1765a8317c063b5631",
+      "sourceDeclaredMime": "image/webp",
+      "mime": "image/webp"
+    },
+    {
+      "name": "worker.jpg",
+      "bytes": 239882,
+      "sha256": "c25266122c8c47f96994c6cff05f9e5e5b7428de4a9d78521eb6f4084612d3d3",
+      "sourceDeclaredMime": "image/png",
+      "mime": "image/jpeg"
+    },
+    {
+      "name": "requester-note.svg",
+      "bytes": 13435,
+      "sha256": "09b0b787780a11cb1775765c65cbb3bda41fcc6116abf42c2778103369a5986a",
+      "sourceDeclaredMime": "image/svg+xml",
+      "mime": "image/svg+xml"
+    },
+    {
+      "name": "worker-note.svg",
+      "bytes": 15446,
+      "sha256": "90a1eeca10e93740752b6fdc61e422fc6f48ea5a21887cdaf7670c77eb0054a0",
+      "sourceDeclaredMime": "image/svg+xml",
+      "mime": "image/svg+xml"
+    }
+  ]
+}

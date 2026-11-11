@@ -1,0 +1,137 @@
+{
+  "task": "R04/R05 Worker availability provider contract",
+  "checkedAtUtc": "2026-11-07 15:19:07 UTC",
+  "projectRef": "leqcwgzvjsxugfgzdmth",
+  "baseSourceCommit": "833885296d6e4bad0e49acb58ac72a247df911aa",
+  "status": "SOURCE_IMPLEMENTED_AND_LOCAL_TESTED; EXISTING_DEV_WRITER_READ_ONLY_CONTRACT_CONFIRMED",
+  "diagnosis": {
+    "observedPriorFailure": "Worker143 hosted attempt #6 omitted ruleChanges while proposing one window removal; existing guard rejected the whole availability patch.",
+    "sourceGap": "Provider schema allowed all operation arrays to be omitted. Optional calendar collection wording did not explicitly require recording already supplied hours before review.",
+    "inferenceBoundary": "These are confirmed output/schema/instruction gaps, not proof of the provider's internal reasoning. Semantic model accuracy after the change requires a bounded hosted test."
+  },
+  "change": [
+    "Require ruleChanges, windowsUpsert and windowIdsRemove in non-null provider availability; empty arrays mean no operations.",
+    "Describe local weekly hours, ongoing end date, owned IDs, daily/weekdays/weekend mapping and dated exceptions.",
+    "Clarify that optional-to-ask calendar details must still be recorded when clearly supplied; weekly correction plus explicit dated deletion needs both operations.",
+    "Keep the existing semantic guard, SQL writer, Save/activation boundaries, sparse scalar fields and one-provider-call behavior."
+  ],
+  "files": [
+    "supabase/functions/uskoci-worker-interview/index.ts",
+    "scripts/worker-availability-intent.test.cjs",
+    "scripts/worker-output-diagnostic.test.cjs",
+    "scripts/sql/r05_worker_availability_contract_20261107.probe.sql"
+  ],
+  "sourceFunctionSha256": {
+    "workerProviderSchema": "d5f2f591ac20683daccbd0effa44ed286e5ae004311587f80c065e56f4141ba2",
+    "guardAvailabilityChange": "fa137a3814995f064795d55868d681be8226e9123cdd7b0d3059c01d3622b5b1",
+    "instruction": "a04ab7059a107ed7a3b4273b419aa7083b3541268f74aba1bc77105e7adc18f3"
+  },
+  "local": {
+    "command": "node --test scripts/worker-availability-intent.test.cjs scripts/worker-output-diagnostic.test.cjs scripts/conversation-intent-integration.test.cjs",
+    "node": "v24.22.1",
+    "typescript": "Actual handler/module transpilation passed; full project typecheck belongs to coordinator's integrated checkpoint.",
+    "availabilityTests": 28,
+    "outputDiagnosticTests": 11,
+    "intentIntegrationTests": 39,
+    "passed": 78,
+    "failed": 0,
+    "skipped": 0,
+    "todo": 0,
+    "actualHandlersExecuted": true,
+    "providerResponses": "CONTROLLED_FIXTURES; NOT_REAL_GEMINI"
+  },
+  "existingDevWriter": {
+    "method": "SELECT existing private functions with synthetic candidate JSON only",
+    "functions": [
+      {
+        "signature": "private.normalize_worker_ai_availability(uuid,uuid,jsonb)",
+        "body_md5": "80ab9bc1c1cb1a27567c17068725d93a"
+      },
+      {
+        "signature": "private.worker_ai_patch(jsonb,jsonb,uuid,uuid,boolean)",
+        "body_md5": "72c241bc11a844f9e5779f046bb56e20"
+      }
+    ],
+    "probe": "scripts/sql/r05_worker_availability_contract_20261107.probe.sql",
+    "probeSha256": "c061e69c689153f4ccb4aa89d295f4198763511e8aed528cacb09a2b40704c1c",
+    "positives": [
+      {
+        "name": "change_monday",
+        "unrelated_profile_unchanged": true,
+        "timezone_preserved": true,
+        "intended_delta_only": true,
+        "pass": true
+      },
+      {
+        "name": "daily_and_dated_removal",
+        "unrelated_profile_unchanged": true,
+        "timezone_preserved": true,
+        "intended_delta_only": true,
+        "pass": true
+      },
+      {
+        "name": "empty_lists",
+        "unrelated_profile_unchanged": true,
+        "timezone_preserved": true,
+        "intended_delta_only": true,
+        "pass": true
+      },
+      {
+        "name": "new_daily",
+        "unrelated_profile_unchanged": true,
+        "timezone_preserved": true,
+        "intended_delta_only": true,
+        "pass": true
+      },
+      {
+        "name": "now_only",
+        "unrelated_profile_unchanged": true,
+        "timezone_preserved": true,
+        "intended_delta_only": true,
+        "pass": true
+      },
+      {
+        "name": "tomorrow_exception",
+        "unrelated_profile_unchanged": true,
+        "timezone_preserved": true,
+        "intended_delta_only": true,
+        "pass": true
+      },
+      {
+        "name": "weekend",
+        "unrelated_profile_unchanged": true,
+        "timezone_preserved": true,
+        "intended_delta_only": true,
+        "pass": true
+      }
+    ],
+    "negative": [
+      {
+        "name": "unknown_rule_id",
+        "query": "select private.worker_ai_patch($base${\"availability\":{\"timezone\":\"Europe/Belgrade\",\"availableNow\":false,\"rules\":[],\"windows\":[]}}$base$::jsonb,$patch${\"availability\":{\"ruleChanges\":[{\"ruleId\":\"a1500000-0000-4000-8000-000000000099\",\"weekdays\":[1],\"value\":null}],\"windowsUpsert\":[],\"windowIdsRemove\":[]}}$patch$::jsonb,'a1500000-0000-4000-8000-000000000001'::uuid,'a1500000-0000-4000-8000-000000000002'::uuid,false);",
+        "expectedSqlstate": "PT409",
+        "observedSqlstate": "PT409",
+        "observedMessage": "WORKER_AI_RULE_STALE",
+        "pass": true
+      },
+      {
+        "name": "reversed_hours",
+        "query": "select private.worker_ai_patch($base${\"availability\":{\"timezone\":\"Europe/Belgrade\",\"availableNow\":false,\"rules\":[],\"windows\":[]}}$base$::jsonb,$patch${\"availability\":{\"ruleChanges\":[{\"ruleId\":null,\"weekdays\":[0,1,2,3,4,5,6],\"value\":{\"startTime\":\"22:00\",\"endTime\":\"08:00\",\"startsOn\":\"2026-11-07\",\"endsOn\":null,\"label\":\"Synthetic invalid\",\"active\":true}}],\"windowsUpsert\":[],\"windowIdsRemove\":[]}}$patch$::jsonb,'a1500000-0000-4000-8000-000000000001'::uuid,'a1500000-0000-4000-8000-000000000002'::uuid,false);",
+        "expectedSqlstate": "22023",
+        "observedSqlstate": "22023",
+        "observedMessage": "AVAILABILITY_ITEM_INVALID",
+        "pass": true
+      }
+    ],
+    "noPersistedWrites": true,
+    "noOrdinaryJwtClaim": true,
+    "noSavedProfileClaim": true,
+    "probeDevelopment": "Initial probe had SQL operator precedence error 42883; parenthesized JSON operand, then all seven positive rows passed. No application change or stored write was involved."
+  },
+  "limitations": [
+    "No paid Gemini call after this source correction; real recurring-language success remains unproven.",
+    "No Edge deployment is claimed by this receipt; coordinator must attach deployed package readback separately.",
+    "No native Android, Save/activate, full calendar matching, daylight-saving transition or ordinary-user E2E claim.",
+    "Existing FAIL-CLOSED recurrence guard remains necessary even with schema-compliant empty arrays."
+  ]
+}

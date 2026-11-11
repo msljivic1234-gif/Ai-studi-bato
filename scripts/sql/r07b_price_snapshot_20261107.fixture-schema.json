@@ -1,0 +1,2816 @@
+{
+  "scope": "Only current column/default/PK/UNIQUE/CHECK metadata for isolated R07 SQL tests. Foreign keys, RLS, triggers and Auth/PostgREST are not simulated by these definitions.",
+  "project": "leqcwgzvjsxugfgzdmth",
+  "tables": [
+    {
+      "name": "private.connection_activations",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "extensions.gen_random_uuid()",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "requester_account_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "beneficiary_account_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "client_request_id",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "request_hash",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "policy_key",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "policy_version",
+          "type": "integer",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "policy_snapshot",
+          "type": "jsonb",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "activation_reason",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "need_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "need_revision",
+          "type": "integer",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "selection_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "agreement_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "response_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "response_version",
+          "type": "integer",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "response_content_hash",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "worker_account_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "worker_profile_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "units",
+          "type": "integer",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "platform_cost_rsd",
+          "type": "integer",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "state",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "statement_timestamp()",
+          "notNull": true,
+          "generated": ""
+        }
+      ],
+      "constraints": [
+        {
+          "name": "connection_activations_agreement_key",
+          "type": "u",
+          "definition": "UNIQUE (agreement_id)"
+        },
+        {
+          "name": "connection_activations_client_request_id",
+          "type": "c",
+          "definition": "CHECK (((char_length(btrim(client_request_id)) >= 8) AND (char_length(btrim(client_request_id)) <= 200)))"
+        },
+        {
+          "name": "connection_activations_need_revision",
+          "type": "c",
+          "definition": "CHECK ((need_revision > 0))"
+        },
+        {
+          "name": "connection_activations_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (id)"
+        },
+        {
+          "name": "connection_activations_reason",
+          "type": "c",
+          "definition": "CHECK ((activation_reason = 'SELECTION'::text))"
+        },
+        {
+          "name": "connection_activations_request_hash",
+          "type": "c",
+          "definition": "CHECK ((request_hash ~ '^[0-9a-f]{64}$'::text))"
+        },
+        {
+          "name": "connection_activations_request_key",
+          "type": "u",
+          "definition": "UNIQUE (requester_account_id, client_request_id)"
+        },
+        {
+          "name": "connection_activations_requester_beneficiary",
+          "type": "c",
+          "definition": "CHECK ((beneficiary_account_id = requester_account_id))"
+        },
+        {
+          "name": "connection_activations_response_hash",
+          "type": "c",
+          "definition": "CHECK ((response_content_hash ~ '^[0-9a-f]{64}$'::text))"
+        },
+        {
+          "name": "connection_activations_response_version",
+          "type": "c",
+          "definition": "CHECK ((response_version > 0))"
+        },
+        {
+          "name": "connection_activations_selection_key",
+          "type": "u",
+          "definition": "UNIQUE (selection_id)"
+        },
+        {
+          "name": "connection_activations_snapshot_object",
+          "type": "c",
+          "definition": "CHECK ((jsonb_typeof(policy_snapshot) = 'object'::text))"
+        },
+        {
+          "name": "connection_activations_state",
+          "type": "c",
+          "definition": "CHECK ((state = 'SATISFIED'::text))"
+        },
+        {
+          "name": "connection_activations_units",
+          "type": "c",
+          "definition": "CHECK (((units >= 1) AND (units <= 50)))"
+        },
+        {
+          "name": "connection_activations_zero_platform_cost",
+          "type": "c",
+          "definition": "CHECK ((platform_cost_rsd = 0))"
+        }
+      ]
+    },
+    {
+      "name": "private.connection_policy_versions",
+      "columns": [
+        {
+          "name": "policy_key",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "version",
+          "type": "integer",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "beneficiary_role",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "activation_reason",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "charge_mode",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "unit_basis",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "platform_cost_rsd",
+          "type": "integer",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "policy_snapshot",
+          "type": "jsonb",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "statement_timestamp()",
+          "notNull": true,
+          "generated": ""
+        }
+      ],
+      "constraints": [
+        {
+          "name": "connection_policy_versions_headcount_only",
+          "type": "c",
+          "definition": "CHECK ((unit_basis = 'HEADCOUNT'::text))"
+        },
+        {
+          "name": "connection_policy_versions_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (policy_key, version)"
+        },
+        {
+          "name": "connection_policy_versions_policy_key_nonempty",
+          "type": "c",
+          "definition": "CHECK ((btrim(policy_key) <> ''::text))"
+        },
+        {
+          "name": "connection_policy_versions_promotional_free_only",
+          "type": "c",
+          "definition": "CHECK ((charge_mode = 'PROMOTIONAL_FREE'::text))"
+        },
+        {
+          "name": "connection_policy_versions_requester_only",
+          "type": "c",
+          "definition": "CHECK ((beneficiary_role = 'REQUESTER'::text))"
+        },
+        {
+          "name": "connection_policy_versions_selection_only",
+          "type": "c",
+          "definition": "CHECK ((activation_reason = 'SELECTION'::text))"
+        },
+        {
+          "name": "connection_policy_versions_snapshot_identity",
+          "type": "c",
+          "definition": "CHECK ((((policy_snapshot ->> 'schema'::text) = 'CONNECTION_POLICY_V1'::text) AND ((policy_snapshot ->> 'policyKey'::text) = policy_key) AND ((NULLIF((policy_snapshot ->> 'version'::text), ''::text))::integer = version) AND ((policy_snapshot ->> 'beneficiaryRole'::text) = beneficiary_role) AND ((policy_snapshot ->> 'activationReason'::text) = activation_reason) AND ((policy_snapshot ->> 'chargeMode'::text) = charge_mode) AND ((policy_snapshot ->> 'unitBasis'::text) = unit_basis) AND ((NULLIF((policy_snapshot ->> 'platformCostRsd'::text), ''::text))::integer = platform_cost_rsd)))"
+        },
+        {
+          "name": "connection_policy_versions_snapshot_object",
+          "type": "c",
+          "definition": "CHECK ((jsonb_typeof(policy_snapshot) = 'object'::text))"
+        },
+        {
+          "name": "connection_policy_versions_version_positive",
+          "type": "c",
+          "definition": "CHECK ((version > 0))"
+        },
+        {
+          "name": "connection_policy_versions_zero_cost_only",
+          "type": "c",
+          "definition": "CHECK ((platform_cost_rsd = 0))"
+        }
+      ]
+    },
+    {
+      "name": "private.response_application_snapshots",
+      "columns": [
+        {
+          "name": "response_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "response_version",
+          "type": "integer",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "snapshot_schema",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "worker_profile_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "worker_team_capacity",
+          "type": "integer",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "covered_slots",
+          "type": "integer",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "need_required_slots",
+          "type": "integer",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "need_selected_slots_before_submit",
+          "type": "integer",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "need_remaining_slots_before_submit",
+          "type": "integer",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "pricing_mode",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "requester_price_rsd",
+          "type": "integer",
+          "default": null,
+          "notNull": false,
+          "generated": ""
+        },
+        {
+          "name": "worker_skills",
+          "type": "text[]",
+          "default": "ARRAY[]::text[]",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "worker_tools",
+          "type": "text[]",
+          "default": "ARRAY[]::text[]",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "worker_licenses",
+          "type": "text[]",
+          "default": "ARRAY[]::text[]",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "worker_vehicles",
+          "type": "text[]",
+          "default": "ARRAY[]::text[]",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "statement_timestamp()",
+          "notNull": true,
+          "generated": ""
+        }
+      ],
+      "constraints": [
+        {
+          "name": "response_application_snapsho_need_remaining_slots_before__check",
+          "type": "c",
+          "definition": "CHECK (((need_remaining_slots_before_submit >= 1) AND (need_remaining_slots_before_submit <= 50)))"
+        },
+        {
+          "name": "response_application_snapsho_need_selected_slots_before_s_check",
+          "type": "c",
+          "definition": "CHECK (((need_selected_slots_before_submit >= 0) AND (need_selected_slots_before_submit <= 50)))"
+        },
+        {
+          "name": "response_application_snapshots_covered_slots_check",
+          "type": "c",
+          "definition": "CHECK (((covered_slots >= 1) AND (covered_slots <= 50)))"
+        },
+        {
+          "name": "response_application_snapshots_need_required_slots_check",
+          "type": "c",
+          "definition": "CHECK (((need_required_slots >= 1) AND (need_required_slots <= 50)))"
+        },
+        {
+          "name": "response_application_snapshots_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (response_id, response_version)"
+        },
+        {
+          "name": "response_application_snapshots_pricing_mode_check",
+          "type": "c",
+          "definition": "CHECK ((pricing_mode = ANY (ARRAY['MY_PRICE'::text, 'OFFERS'::text])))"
+        },
+        {
+          "name": "response_application_snapshots_requester_price_rsd_check",
+          "type": "c",
+          "definition": "CHECK (((requester_price_rsd IS NULL) OR (requester_price_rsd > 0)))"
+        },
+        {
+          "name": "response_application_snapshots_response_version_check",
+          "type": "c",
+          "definition": "CHECK ((response_version >= 1))"
+        },
+        {
+          "name": "response_application_snapshots_snapshot_schema_check",
+          "type": "c",
+          "definition": "CHECK ((snapshot_schema = 'APPLICATION_V1_SELF_DECLARED'::text))"
+        },
+        {
+          "name": "response_application_snapshots_worker_team_capacity_check",
+          "type": "c",
+          "definition": "CHECK (((worker_team_capacity >= 1) AND (worker_team_capacity <= 50)))"
+        }
+      ]
+    },
+    {
+      "name": "private.response_revision_resolution_commands",
+      "columns": [
+        {
+          "name": "worker_account_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "client_request_id",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "request_hash",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "response_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "result",
+          "type": "jsonb",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "statement_timestamp()",
+          "notNull": true,
+          "generated": ""
+        }
+      ],
+      "constraints": [
+        {
+          "name": "response_revision_resolution_commands_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (worker_account_id, client_request_id)"
+        },
+        {
+          "name": "response_revision_resolution_hash_hex",
+          "type": "c",
+          "definition": "CHECK ((request_hash ~ '^[0-9a-f]{64}$'::text))"
+        },
+        {
+          "name": "response_revision_resolution_request_id_length",
+          "type": "c",
+          "definition": "CHECK (((char_length(btrim(client_request_id)) >= 8) AND (char_length(btrim(client_request_id)) <= 200)))"
+        },
+        {
+          "name": "response_revision_resolution_result_object",
+          "type": "c",
+          "definition": "CHECK ((jsonb_typeof(result) = 'object'::text))"
+        }
+      ]
+    },
+    {
+      "name": "private.response_submit_commands",
+      "columns": [
+        {
+          "name": "worker_account_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "client_request_id",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "request_hash",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "response_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "response_version",
+          "type": "integer",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "result",
+          "type": "jsonb",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "statement_timestamp()",
+          "notNull": true,
+          "generated": ""
+        }
+      ],
+      "constraints": [
+        {
+          "name": "response_submit_commands_client_request_id_check",
+          "type": "c",
+          "definition": "CHECK (((char_length(btrim(client_request_id)) >= 8) AND (char_length(btrim(client_request_id)) <= 200)))"
+        },
+        {
+          "name": "response_submit_commands_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (worker_account_id, client_request_id)"
+        },
+        {
+          "name": "response_submit_commands_request_hash_check",
+          "type": "c",
+          "definition": "CHECK ((char_length(request_hash) = 64))"
+        },
+        {
+          "name": "response_submit_commands_response_version_check",
+          "type": "c",
+          "definition": "CHECK ((response_version >= 1))"
+        }
+      ]
+    },
+    {
+      "name": "private.selection_commands",
+      "columns": [
+        {
+          "name": "requester_account_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "client_request_id",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "request_hash",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "need_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "need_revision",
+          "type": "integer",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "response_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "response_version",
+          "type": "integer",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "response_content_hash",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "covered_slots",
+          "type": "integer",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "selection_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "agreement_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "statement_timestamp()",
+          "notNull": true,
+          "generated": ""
+        }
+      ],
+      "constraints": [
+        {
+          "name": "selection_commands_agreement_key",
+          "type": "u",
+          "definition": "UNIQUE (agreement_id)"
+        },
+        {
+          "name": "selection_commands_client_request_id_check",
+          "type": "c",
+          "definition": "CHECK (((char_length(btrim(client_request_id)) >= 8) AND (char_length(btrim(client_request_id)) <= 200)))"
+        },
+        {
+          "name": "selection_commands_covered_slots_check",
+          "type": "c",
+          "definition": "CHECK (((covered_slots >= 1) AND (covered_slots <= 50)))"
+        },
+        {
+          "name": "selection_commands_need_revision_check",
+          "type": "c",
+          "definition": "CHECK ((need_revision >= 1))"
+        },
+        {
+          "name": "selection_commands_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (requester_account_id, client_request_id)"
+        },
+        {
+          "name": "selection_commands_request_hash_check",
+          "type": "c",
+          "definition": "CHECK ((char_length(request_hash) = 64))"
+        },
+        {
+          "name": "selection_commands_response_content_hash_check",
+          "type": "c",
+          "definition": "CHECK ((char_length(response_content_hash) = 64))"
+        },
+        {
+          "name": "selection_commands_response_version_check",
+          "type": "c",
+          "definition": "CHECK ((response_version >= 1))"
+        },
+        {
+          "name": "selection_commands_selection_key",
+          "type": "u",
+          "definition": "UNIQUE (selection_id)"
+        }
+      ]
+    },
+    {
+      "name": "public.agreement_change_proposals",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "gen_random_uuid()",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "agreement_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "base_version",
+          "type": "integer",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "proposed_terms",
+          "type": "jsonb",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "content_hash",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "reason",
+          "type": "text",
+          "default": null,
+          "notNull": false,
+          "generated": ""
+        },
+        {
+          "name": "client_request_id",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "proposed_by_account_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "status",
+          "type": "text",
+          "default": "'PENDING'::text",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "responded_by_account_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": false,
+          "generated": ""
+        },
+        {
+          "name": "responded_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "notNull": false,
+          "generated": ""
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "statement_timestamp()",
+          "notNull": true,
+          "generated": ""
+        }
+      ],
+      "constraints": [
+        {
+          "name": "agreement_change_proposals_agreement_id_proposed_by_account_key",
+          "type": "u",
+          "definition": "UNIQUE (agreement_id, proposed_by_account_id, client_request_id)"
+        },
+        {
+          "name": "agreement_change_proposals_base_version_check",
+          "type": "c",
+          "definition": "CHECK ((base_version >= 1))"
+        },
+        {
+          "name": "agreement_change_proposals_client_request_id_check",
+          "type": "c",
+          "definition": "CHECK ((char_length(btrim(client_request_id)) >= 1))"
+        },
+        {
+          "name": "agreement_change_proposals_content_hash_check",
+          "type": "c",
+          "definition": "CHECK ((char_length(content_hash) >= 16))"
+        },
+        {
+          "name": "agreement_change_proposals_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (id)"
+        },
+        {
+          "name": "agreement_change_proposals_proposed_terms_check",
+          "type": "c",
+          "definition": "CHECK ((jsonb_typeof(proposed_terms) = 'object'::text))"
+        },
+        {
+          "name": "agreement_change_proposals_status_check",
+          "type": "c",
+          "definition": "CHECK ((status = ANY (ARRAY['PENDING'::text, 'ACCEPTED'::text, 'REJECTED'::text, 'SUPERSEDED'::text, 'WITHDRAWN'::text])))"
+        }
+      ]
+    },
+    {
+      "name": "public.agreement_execution",
+      "columns": [
+        {
+          "name": "agreement_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "agreement_version",
+          "type": "integer",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "mode",
+          "type": "text",
+          "default": "'PHYSICAL'::text",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "state",
+          "type": "text",
+          "default": "'CONFIRMED'::text",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "worker_marked_done_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "notNull": false,
+          "generated": ""
+        },
+        {
+          "name": "requester_deadline_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "notNull": false,
+          "generated": ""
+        },
+        {
+          "name": "problem_opened_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "notNull": false,
+          "generated": ""
+        },
+        {
+          "name": "completed_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "notNull": false,
+          "generated": ""
+        },
+        {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "default": "statement_timestamp()",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "problem_narrative",
+          "type": "text",
+          "default": null,
+          "notNull": false,
+          "generated": ""
+        },
+        {
+          "name": "problem_opened_by",
+          "type": "uuid",
+          "default": null,
+          "notNull": false,
+          "generated": ""
+        }
+      ],
+      "constraints": [
+        {
+          "name": "agreement_execution_agreement_version_check",
+          "type": "c",
+          "definition": "CHECK ((agreement_version >= 1))"
+        },
+        {
+          "name": "agreement_execution_check",
+          "type": "c",
+          "definition": "CHECK (((state <> 'AWAITING_REQUESTER'::text) OR (requester_deadline_at IS NOT NULL)))"
+        },
+        {
+          "name": "agreement_execution_mode_check",
+          "type": "c",
+          "definition": "CHECK ((mode = ANY (ARRAY['PHYSICAL'::text, 'REMOTE'::text, 'PICKUP_DELIVERY'::text])))"
+        },
+        {
+          "name": "agreement_execution_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (agreement_id)"
+        },
+        {
+          "name": "agreement_execution_state_check",
+          "type": "c",
+          "definition": "CHECK ((state = ANY (ARRAY['CONFIRMED'::text, 'AWAITING_REQUESTER'::text, 'COMPLETED'::text, 'CANCELLED'::text])))"
+        }
+      ]
+    },
+    {
+      "name": "public.agreement_versions",
+      "columns": [
+        {
+          "name": "agreement_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "version",
+          "type": "integer",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "status",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "terms",
+          "type": "jsonb",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "content_hash",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "supersedes_version",
+          "type": "integer",
+          "default": null,
+          "notNull": false,
+          "generated": ""
+        },
+        {
+          "name": "created_by_account_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "statement_timestamp()",
+          "notNull": true,
+          "generated": ""
+        }
+      ],
+      "constraints": [
+        {
+          "name": "agreement_versions_check",
+          "type": "c",
+          "definition": "CHECK (((supersedes_version IS NULL) OR (supersedes_version < version)))"
+        },
+        {
+          "name": "agreement_versions_content_hash_check",
+          "type": "c",
+          "definition": "CHECK ((char_length(content_hash) >= 16))"
+        },
+        {
+          "name": "agreement_versions_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (agreement_id, version)"
+        },
+        {
+          "name": "agreement_versions_status_check",
+          "type": "c",
+          "definition": "CHECK ((status = ANY (ARRAY['CONFIRMED'::text, 'SUPERSEDED'::text, 'CANCELLED'::text])))"
+        },
+        {
+          "name": "agreement_versions_version_check",
+          "type": "c",
+          "definition": "CHECK ((version >= 1))"
+        }
+      ]
+    },
+    {
+      "name": "public.agreements",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "extensions.gen_random_uuid()",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "need_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "selection_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "selected_response_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "requester_account_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "requester_profile_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "worker_account_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "worker_profile_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "current_version",
+          "type": "integer",
+          "default": "1",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "status",
+          "type": "text",
+          "default": "'CONFIRMED'::text",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "statement_timestamp()",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "default": "statement_timestamp()",
+          "notNull": true,
+          "generated": ""
+        }
+      ],
+      "constraints": [
+        {
+          "name": "agreements_current_version_check",
+          "type": "c",
+          "definition": "CHECK ((current_version >= 1))"
+        },
+        {
+          "name": "agreements_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (id)"
+        },
+        {
+          "name": "agreements_selected_response_id_key",
+          "type": "u",
+          "definition": "UNIQUE (selected_response_id)"
+        },
+        {
+          "name": "agreements_selection_id_key",
+          "type": "u",
+          "definition": "UNIQUE (selection_id)"
+        },
+        {
+          "name": "agreements_status_check",
+          "type": "c",
+          "definition": "CHECK ((status = ANY (ARRAY['CONFIRMED'::text, 'SUPERSEDED'::text, 'CANCELLED'::text, 'COMPLETED'::text])))"
+        }
+      ]
+    },
+    {
+      "name": "public.app_profiles",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "gen_random_uuid()",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "account_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "kind",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "display_name",
+          "type": "text",
+          "default": "''::text",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "city",
+          "type": "text",
+          "default": "''::text",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "headline",
+          "type": "text",
+          "default": "''::text",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "bio",
+          "type": "text",
+          "default": "''::text",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "avatar_path",
+          "type": "text",
+          "default": null,
+          "notNull": false,
+          "generated": ""
+        },
+        {
+          "name": "account_type",
+          "type": "text",
+          "default": "'INDIVIDUAL'::text",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "profile_status",
+          "type": "text",
+          "default": "'DRAFT'::text",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "years_experience",
+          "type": "integer",
+          "default": "0",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "portfolio",
+          "type": "jsonb",
+          "default": "'[]'::jsonb",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "skills",
+          "type": "text[]",
+          "default": "ARRAY[]::text[]",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "radius_km",
+          "type": "integer",
+          "default": "15",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "available_now",
+          "type": "boolean",
+          "default": "false",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "team_capacity",
+          "type": "integer",
+          "default": "1",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "tools",
+          "type": "text[]",
+          "default": "ARRAY[]::text[]",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "licenses",
+          "type": "text[]",
+          "default": "ARRAY[]::text[]",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "vehicles",
+          "type": "text[]",
+          "default": "ARRAY[]::text[]",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "exclusions",
+          "type": "text[]",
+          "default": "ARRAY[]::text[]",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "minimum_fee_rsd",
+          "type": "integer",
+          "default": "0",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "rating_requester",
+          "type": "numeric(3,2)",
+          "default": null,
+          "notNull": false,
+          "generated": ""
+        },
+        {
+          "name": "rating_worker",
+          "type": "numeric(3,2)",
+          "default": null,
+          "notNull": false,
+          "generated": ""
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "now()",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "default": "now()",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "available_now_expires_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "notNull": false,
+          "generated": ""
+        },
+        {
+          "name": "operating_country_code",
+          "type": "text",
+          "default": null,
+          "notNull": false,
+          "generated": ""
+        }
+      ],
+      "constraints": [
+        {
+          "name": "app_profiles_account_id_kind_key",
+          "type": "u",
+          "definition": "UNIQUE (account_id, kind)"
+        },
+        {
+          "name": "app_profiles_account_type_check",
+          "type": "c",
+          "definition": "CHECK ((account_type = ANY (ARRAY['INDIVIDUAL'::text, 'TEAM'::text, 'COMPANY'::text])))"
+        },
+        {
+          "name": "app_profiles_capacity_check",
+          "type": "c",
+          "definition": "CHECK (((team_capacity >= 1) AND (team_capacity <= 50)))"
+        },
+        {
+          "name": "app_profiles_kind_check",
+          "type": "c",
+          "definition": "CHECK ((kind = ANY (ARRAY['REQUESTER'::text, 'WORKER'::text])))"
+        },
+        {
+          "name": "app_profiles_minimum_fee_check",
+          "type": "c",
+          "definition": "CHECK (((minimum_fee_rsd >= 0) AND (minimum_fee_rsd <= 10000000)))"
+        },
+        {
+          "name": "app_profiles_operating_country_code_check",
+          "type": "c",
+          "definition": "CHECK (((operating_country_code IS NULL) OR (operating_country_code ~ '^[A-Z]{2}$'::text)))"
+        },
+        {
+          "name": "app_profiles_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (id)"
+        },
+        {
+          "name": "app_profiles_radius_check",
+          "type": "c",
+          "definition": "CHECK (((radius_km >= 1) AND (radius_km <= 200)))"
+        },
+        {
+          "name": "app_profiles_status_check",
+          "type": "c",
+          "definition": "CHECK ((profile_status = ANY (ARRAY['DRAFT'::text, 'ACTIVE'::text, 'SUSPENDED'::text, 'CLOSED'::text])))"
+        },
+        {
+          "name": "app_profiles_years_check",
+          "type": "c",
+          "definition": "CHECK (((years_experience >= 0) AND (years_experience <= 80)))"
+        }
+      ]
+    },
+    {
+      "name": "public.marketplace_response_versions",
+      "columns": [
+        {
+          "name": "response_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "version",
+          "type": "integer",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "need_revision",
+          "type": "integer",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "price_rsd",
+          "type": "integer",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "covered_slots",
+          "type": "integer",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "proposed_start_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "notNull": false,
+          "generated": ""
+        },
+        {
+          "name": "proposed_end_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "notNull": false,
+          "generated": ""
+        },
+        {
+          "name": "scope_note",
+          "type": "text",
+          "default": "''::text",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "content_hash",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "statement_timestamp()",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "price_basis",
+          "type": "text",
+          "default": null,
+          "notNull": false,
+          "generated": ""
+        }
+      ],
+      "constraints": [
+        {
+          "name": "marketplace_response_versions_content_hash_check",
+          "type": "c",
+          "definition": "CHECK ((char_length(content_hash) >= 16))"
+        },
+        {
+          "name": "marketplace_response_versions_covered_slots_check",
+          "type": "c",
+          "definition": "CHECK (((covered_slots >= 1) AND (covered_slots <= 50)))"
+        },
+        {
+          "name": "marketplace_response_versions_need_revision_check",
+          "type": "c",
+          "definition": "CHECK ((need_revision >= 1))"
+        },
+        {
+          "name": "marketplace_response_versions_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (response_id, version)"
+        },
+        {
+          "name": "marketplace_response_versions_price_basis_check",
+          "type": "c",
+          "definition": "CHECK ((price_basis = ANY (ARRAY['TOTAL'::text, 'HOURLY'::text])))"
+        },
+        {
+          "name": "marketplace_response_versions_price_rsd_check",
+          "type": "c",
+          "definition": "CHECK ((price_rsd > 0))"
+        },
+        {
+          "name": "marketplace_response_versions_version_check",
+          "type": "c",
+          "definition": "CHECK ((version >= 1))"
+        }
+      ]
+    },
+    {
+      "name": "public.marketplace_responses",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "extensions.gen_random_uuid()",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "need_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "worker_account_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "worker_profile_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "response_kind",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "status",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "submitted_against_need_revision",
+          "type": "integer",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "current_version",
+          "type": "integer",
+          "default": "1",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "covered_slots",
+          "type": "integer",
+          "default": "1",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "price_rsd",
+          "type": "integer",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "proposed_start_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "notNull": false,
+          "generated": ""
+        },
+        {
+          "name": "proposed_end_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "notNull": false,
+          "generated": ""
+        },
+        {
+          "name": "scope_note",
+          "type": "text",
+          "default": "''::text",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "bounded_message",
+          "type": "text",
+          "default": "''::text",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "submitted_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "notNull": false,
+          "generated": ""
+        },
+        {
+          "name": "viewed_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "notNull": false,
+          "generated": ""
+        },
+        {
+          "name": "selected_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "notNull": false,
+          "generated": ""
+        },
+        {
+          "name": "withdrawn_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "notNull": false,
+          "generated": ""
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "statement_timestamp()",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "default": "statement_timestamp()",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "price_basis",
+          "type": "text",
+          "default": null,
+          "notNull": false,
+          "generated": ""
+        }
+      ],
+      "constraints": [
+        {
+          "name": "marketplace_responses_bounded_message_check",
+          "type": "c",
+          "definition": "CHECK ((char_length(bounded_message) <= 1000))"
+        },
+        {
+          "name": "marketplace_responses_check",
+          "type": "c",
+          "definition": "CHECK ((((proposed_start_at IS NULL) AND (proposed_end_at IS NULL)) OR ((proposed_start_at IS NOT NULL) AND (proposed_end_at IS NOT NULL) AND (proposed_start_at < proposed_end_at))))"
+        },
+        {
+          "name": "marketplace_responses_covered_slots_check",
+          "type": "c",
+          "definition": "CHECK (((covered_slots >= 1) AND (covered_slots <= 50)))"
+        },
+        {
+          "name": "marketplace_responses_current_version_check",
+          "type": "c",
+          "definition": "CHECK ((current_version >= 1))"
+        },
+        {
+          "name": "marketplace_responses_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (id)"
+        },
+        {
+          "name": "marketplace_responses_price_basis_check",
+          "type": "c",
+          "definition": "CHECK ((price_basis = ANY (ARRAY['TOTAL'::text, 'HOURLY'::text])))"
+        },
+        {
+          "name": "marketplace_responses_price_rsd_check",
+          "type": "c",
+          "definition": "CHECK ((price_rsd > 0))"
+        },
+        {
+          "name": "marketplace_responses_response_kind_check",
+          "type": "c",
+          "definition": "CHECK ((response_kind = ANY (ARRAY['APPLICATION'::text, 'OFFER'::text])))"
+        },
+        {
+          "name": "marketplace_responses_status_check",
+          "type": "c",
+          "definition": "CHECK ((status = ANY (ARRAY['DRAFT'::text, 'SUBMITTED'::text, 'DELIVERED'::text, 'VIEWED'::text, 'SHORTLISTED'::text, 'SELECTED'::text, 'NOT_SELECTED'::text, 'WITHDRAWN'::text, 'EXPIRED'::text, 'STALE'::text, 'STALE_REVIEW_REQUIRED'::text])))"
+        },
+        {
+          "name": "marketplace_responses_submitted_against_need_revision_check",
+          "type": "c",
+          "definition": "CHECK ((submitted_against_need_revision >= 1))"
+        }
+      ]
+    },
+    {
+      "name": "public.need_selections",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "extensions.gen_random_uuid()",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "need_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "need_revision",
+          "type": "integer",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "selected_by_account_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "client_request_id",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "covered_slots",
+          "type": "integer",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "statement_timestamp()",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "response_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": false,
+          "generated": ""
+        },
+        {
+          "name": "worker_account_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": false,
+          "generated": ""
+        },
+        {
+          "name": "worker_profile_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": false,
+          "generated": ""
+        },
+        {
+          "name": "selection_mode",
+          "type": "text",
+          "default": null,
+          "notNull": false,
+          "generated": ""
+        },
+        {
+          "name": "status",
+          "type": "text",
+          "default": "'SELECTED'::text",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "default": "statement_timestamp()",
+          "notNull": true,
+          "generated": ""
+        }
+      ],
+      "constraints": [
+        {
+          "name": "need_selections_client_request_id_check",
+          "type": "c",
+          "definition": "CHECK (((char_length(btrim(client_request_id)) >= 8) AND (char_length(btrim(client_request_id)) <= 200)))"
+        },
+        {
+          "name": "need_selections_covered_slots_check",
+          "type": "c",
+          "definition": "CHECK (((covered_slots >= 1) AND (covered_slots <= 50)))"
+        },
+        {
+          "name": "need_selections_need_id_client_request_id_key",
+          "type": "u",
+          "definition": "UNIQUE (need_id, client_request_id)"
+        },
+        {
+          "name": "need_selections_need_revision_check",
+          "type": "c",
+          "definition": "CHECK ((need_revision >= 1))"
+        },
+        {
+          "name": "need_selections_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (id)"
+        },
+        {
+          "name": "need_selections_selection_mode_check",
+          "type": "c",
+          "definition": "CHECK ((selection_mode = ANY (ARRAY['REQUESTER_SELECTS'::text, 'BIDDING'::text])))"
+        },
+        {
+          "name": "need_selections_status_check",
+          "type": "c",
+          "definition": "CHECK ((status = ANY (ARRAY['SELECTED'::text, 'CANCELLED'::text, 'SUPERSEDED'::text])))"
+        }
+      ]
+    },
+    {
+      "name": "public.need_sensitive",
+      "columns": [
+        {
+          "name": "need_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "exact_address",
+          "type": "text",
+          "default": "''::text",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "access_notes",
+          "type": "text",
+          "default": "''::text",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "exact_lat",
+          "type": "numeric(9,6)",
+          "default": null,
+          "notNull": false,
+          "generated": ""
+        },
+        {
+          "name": "exact_lng",
+          "type": "numeric(9,6)",
+          "default": null,
+          "notNull": false,
+          "generated": ""
+        },
+        {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "default": "statement_timestamp()",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "resolved_location",
+          "type": "jsonb",
+          "default": null,
+          "notNull": false,
+          "generated": ""
+        }
+      ],
+      "constraints": [
+        {
+          "name": "need_sensitive_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (need_id)"
+        }
+      ]
+    },
+    {
+      "name": "public.needs",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "extensions.gen_random_uuid()",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "requester_account_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "requester_profile_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "status",
+          "type": "text",
+          "default": "'DRAFT'::text",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "title",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "description",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "category",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "approximate_city",
+          "type": "text",
+          "default": "''::text",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "approximate_area",
+          "type": "text",
+          "default": "''::text",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "approximate_lat",
+          "type": "numeric(6,2)",
+          "default": null,
+          "notNull": false,
+          "generated": ""
+        },
+        {
+          "name": "approximate_lng",
+          "type": "numeric(7,2)",
+          "default": null,
+          "notNull": false,
+          "generated": ""
+        },
+        {
+          "name": "schedule_kind",
+          "type": "text",
+          "default": "'FLEXIBLE'::text",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "starts_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "notNull": false,
+          "generated": ""
+        },
+        {
+          "name": "ends_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "notNull": false,
+          "generated": ""
+        },
+        {
+          "name": "required_slots",
+          "type": "integer",
+          "default": "1",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "mode",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "requester_price_rsd",
+          "type": "integer",
+          "default": null,
+          "notNull": false,
+          "generated": ""
+        },
+        {
+          "name": "required_skills",
+          "type": "text[]",
+          "default": "'{}'::text[]",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "required_tools",
+          "type": "text[]",
+          "default": "'{}'::text[]",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "required_vehicles",
+          "type": "text[]",
+          "default": "'{}'::text[]",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "verified_identity_required",
+          "type": "boolean",
+          "default": "false",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "urgent",
+          "type": "boolean",
+          "default": "false",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "public_photo_paths",
+          "type": "text[]",
+          "default": "'{}'::text[]",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "revision",
+          "type": "integer",
+          "default": "1",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "published_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "notNull": false,
+          "generated": ""
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "statement_timestamp()",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "default": "statement_timestamp()",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "response_deadline",
+          "type": "timestamp with time zone",
+          "default": null,
+          "notNull": false,
+          "generated": ""
+        },
+        {
+          "name": "urgent_activated_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "notNull": false,
+          "generated": ""
+        },
+        {
+          "name": "urgent_expires_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "notNull": false,
+          "generated": ""
+        },
+        {
+          "name": "urgent_policy_version",
+          "type": "text",
+          "default": null,
+          "notNull": false,
+          "generated": ""
+        },
+        {
+          "name": "minimum_experience_years",
+          "type": "integer",
+          "default": null,
+          "notNull": false,
+          "generated": ""
+        },
+        {
+          "name": "execution_location_mode",
+          "type": "text",
+          "default": "'STATIONARY'::text",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "approx_geog",
+          "type": "geography(Point,4326)",
+          "default": "\nCASE\n    WHEN ((approximate_lat IS NOT NULL) AND (approximate_lng IS NOT NULL)) THEN (st_setsrid(st_makepoint((approximate_lng)::double precision, (approximate_lat)::double precision), 4326))::geography\n    ELSE NULL::geography\nEND",
+          "notNull": false,
+          "generated": "s"
+        },
+        {
+          "name": "required_licenses",
+          "type": "text[]",
+          "default": "'{}'::text[]",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "remaining_search_closed_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "notNull": false,
+          "generated": ""
+        },
+        {
+          "name": "remaining_search_closed_by_account_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": false,
+          "generated": ""
+        },
+        {
+          "name": "remaining_search_close_reason",
+          "type": "text",
+          "default": null,
+          "notNull": false,
+          "generated": ""
+        },
+        {
+          "name": "task_country_code",
+          "type": "text",
+          "default": null,
+          "notNull": false,
+          "generated": ""
+        },
+        {
+          "name": "task_timezone",
+          "type": "text",
+          "default": null,
+          "notNull": false,
+          "generated": ""
+        },
+        {
+          "name": "price_basis",
+          "type": "text",
+          "default": null,
+          "notNull": false,
+          "generated": ""
+        },
+        {
+          "name": "category_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": false,
+          "generated": ""
+        }
+      ],
+      "constraints": [
+        {
+          "name": "needs_category_check",
+          "type": "c",
+          "definition": "CHECK (((char_length(btrim(category)) >= 1) AND (char_length(btrim(category)) <= 120)))"
+        },
+        {
+          "name": "needs_check",
+          "type": "c",
+          "definition": "CHECK (((ends_at IS NULL) OR (starts_at IS NULL) OR (ends_at > starts_at)))"
+        },
+        {
+          "name": "needs_description_check",
+          "type": "c",
+          "definition": "CHECK (((char_length(btrim(description)) >= 1) AND (char_length(btrim(description)) <= 6000)))"
+        },
+        {
+          "name": "needs_execution_location_mode_chk",
+          "type": "c",
+          "definition": "CHECK ((execution_location_mode = ANY (ARRAY['STATIONARY'::text, 'POINT_TO_POINT'::text, 'MULTI_STOP'::text, 'AREA_BASED'::text, 'REMOTE'::text])))"
+        },
+        {
+          "name": "needs_minimum_experience_years_check",
+          "type": "c",
+          "definition": "CHECK (((minimum_experience_years IS NULL) OR ((minimum_experience_years >= 0) AND (minimum_experience_years <= 60))))"
+        },
+        {
+          "name": "needs_mode_check",
+          "type": "c",
+          "definition": "CHECK ((mode = ANY (ARRAY['MY_PRICE'::text, 'OFFERS'::text])))"
+        },
+        {
+          "name": "needs_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (id)"
+        },
+        {
+          "name": "needs_price_basis_requires_my_price",
+          "type": "c",
+          "definition": "CHECK (((price_basis IS NULL) OR ((price_basis = ANY (ARRAY['TOTAL'::text, 'PER_PERSON'::text, 'HOURLY'::text])) AND (mode = 'MY_PRICE'::text))))"
+        },
+        {
+          "name": "needs_remaining_search_close_reason_length",
+          "type": "c",
+          "definition": "CHECK (((remaining_search_close_reason IS NULL) OR (char_length(remaining_search_close_reason) <= 500)))"
+        },
+        {
+          "name": "needs_requester_price_rsd_check",
+          "type": "c",
+          "definition": "CHECK (((requester_price_rsd IS NULL) OR (requester_price_rsd > 0)))"
+        },
+        {
+          "name": "needs_required_slots_check",
+          "type": "c",
+          "definition": "CHECK (((required_slots >= 1) AND (required_slots <= 50)))"
+        },
+        {
+          "name": "needs_revision_check",
+          "type": "c",
+          "definition": "CHECK ((revision >= 1))"
+        },
+        {
+          "name": "needs_schedule_kind_check",
+          "type": "c",
+          "definition": "CHECK ((schedule_kind = ANY (ARRAY['FIXED_WINDOW'::text, 'FLEXIBLE'::text, 'REMOTE_ANYTIME'::text, 'TODAY_FLEXIBLE'::text, 'TOMORROW_FLEXIBLE'::text, 'WEEK_FLEXIBLE'::text])))"
+        },
+        {
+          "name": "needs_status_check",
+          "type": "c",
+          "definition": "CHECK ((status = ANY (ARRAY['DRAFT'::text, 'PUBLISHED'::text, 'SELECTION'::text, 'ACTIVE'::text, 'COMPLETED'::text, 'CANCELLED'::text, 'EXPIRED'::text, 'ARCHIVED'::text])))"
+        },
+        {
+          "name": "needs_task_country_code_check",
+          "type": "c",
+          "definition": "CHECK (((task_country_code IS NULL) OR (task_country_code ~ '^[A-Z]{2}$'::text)))"
+        },
+        {
+          "name": "needs_title_check",
+          "type": "c",
+          "definition": "CHECK (((char_length(btrim(title)) >= 1) AND (char_length(btrim(title)) <= 140)))"
+        },
+        {
+          "name": "needs_urgent_window_chk",
+          "type": "c",
+          "definition": "CHECK (((NOT urgent) OR ((urgent_activated_at IS NOT NULL) AND (urgent_expires_at IS NOT NULL) AND (urgent_expires_at > urgent_activated_at))))"
+        }
+      ]
+    },
+    {
+      "name": "public.notification_deliveries",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "extensions.gen_random_uuid()",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "event_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "recipient_user_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "recipient_role",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "channel",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "priority",
+          "type": "text",
+          "default": "'NORMAL'::text",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "state",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "suppression_reason",
+          "type": "text",
+          "default": null,
+          "notNull": false,
+          "generated": ""
+        },
+        {
+          "name": "title",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "body",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "dedupe_key",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "statement_timestamp()",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "queued_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "notNull": false,
+          "generated": ""
+        },
+        {
+          "name": "sent_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "notNull": false,
+          "generated": ""
+        },
+        {
+          "name": "delivered_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "notNull": false,
+          "generated": ""
+        },
+        {
+          "name": "read_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "notNull": false,
+          "generated": ""
+        },
+        {
+          "name": "expires_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "notNull": false,
+          "generated": ""
+        },
+        {
+          "name": "push_started_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "notNull": false,
+          "generated": ""
+        }
+      ],
+      "constraints": [
+        {
+          "name": "notification_deliveries_channel_check",
+          "type": "c",
+          "definition": "CHECK ((channel = ANY (ARRAY['IN_APP'::text, 'PUSH'::text])))"
+        },
+        {
+          "name": "notification_deliveries_check",
+          "type": "c",
+          "definition": "CHECK (((state <> 'SUPPRESSED'::text) OR (suppression_reason IS NOT NULL)))"
+        },
+        {
+          "name": "notification_deliveries_dedupe_key_key",
+          "type": "u",
+          "definition": "UNIQUE (dedupe_key)"
+        },
+        {
+          "name": "notification_deliveries_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (id)"
+        },
+        {
+          "name": "notification_deliveries_priority_check",
+          "type": "c",
+          "definition": "CHECK ((priority = ANY (ARRAY['NORMAL'::text, 'HIGH'::text])))"
+        },
+        {
+          "name": "notification_deliveries_recipient_role_check",
+          "type": "c",
+          "definition": "CHECK ((recipient_role = ANY (ARRAY['REQUESTER'::text, 'WORKER'::text])))"
+        },
+        {
+          "name": "notification_deliveries_state_check",
+          "type": "c",
+          "definition": "CHECK ((state = ANY (ARRAY['CREATED'::text, 'QUEUED'::text, 'SENT'::text, 'DELIVERED'::text, 'FAILED_RETRYABLE'::text, 'FAILED_FINAL'::text, 'EXPIRED'::text, 'READ'::text, 'SUPPRESSED'::text])))"
+        }
+      ]
+    },
+    {
+      "name": "public.opportunity_deliveries",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "gen_random_uuid()",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "worker_account_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "worker_profile_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "need_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "need_revision",
+          "type": "integer",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "dispatch_round_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": false,
+          "generated": ""
+        },
+        {
+          "name": "match_score",
+          "type": "numeric(6,2)",
+          "default": "0",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "score_components",
+          "type": "jsonb",
+          "default": "'{}'::jsonb",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "reason_codes",
+          "type": "text[]",
+          "default": "'{}'::text[]",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "status",
+          "type": "text",
+          "default": "'READY'::text",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "expires_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "notNull": false,
+          "generated": ""
+        },
+        {
+          "name": "seen_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "notNull": false,
+          "generated": ""
+        },
+        {
+          "name": "responded_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "notNull": false,
+          "generated": ""
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "statement_timestamp()",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "default": "statement_timestamp()",
+          "notNull": true,
+          "generated": ""
+        }
+      ],
+      "constraints": [
+        {
+          "name": "opportunity_deliveries_once_per_revision_uq",
+          "type": "u",
+          "definition": "UNIQUE (worker_account_id, need_id, need_revision)"
+        },
+        {
+          "name": "opportunity_deliveries_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (id)"
+        },
+        {
+          "name": "opportunity_deliveries_status_check",
+          "type": "c",
+          "definition": "CHECK ((status = ANY (ARRAY['READY'::text, 'SEEN'::text, 'DECLINED'::text, 'RESPONDED'::text, 'EXPIRED'::text])))"
+        }
+      ]
+    },
+    {
+      "name": "public.user_activity_events",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "extensions.gen_random_uuid()",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "recipient_user_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "recipient_role",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "event_type",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "entity_type",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "entity_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "entity_version",
+          "type": "integer",
+          "default": null,
+          "notNull": false,
+          "generated": ""
+        },
+        {
+          "name": "urgency",
+          "type": "text",
+          "default": "'NORMAL'::text",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "payload",
+          "type": "jsonb",
+          "default": "'{}'::jsonb",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "dedupe_key",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "statement_timestamp()",
+          "notNull": true,
+          "generated": ""
+        },
+        {
+          "name": "read_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "notNull": false,
+          "generated": ""
+        }
+      ],
+      "constraints": [
+        {
+          "name": "user_activity_events_dedupe_key_key",
+          "type": "u",
+          "definition": "UNIQUE (dedupe_key)"
+        },
+        {
+          "name": "user_activity_events_entity_type_check",
+          "type": "c",
+          "definition": "CHECK ((entity_type = ANY (ARRAY['NEED'::text, 'RESPONSE'::text, 'AGREEMENT'::text, 'CLARIFICATION'::text])))"
+        },
+        {
+          "name": "user_activity_events_event_type_check",
+          "type": "c",
+          "definition": "CHECK (((event_type = ANY (ARRAY['OPPORTUNITY_AVAILABLE'::text, 'RESPONSE_RECEIVED'::text, 'RESPONSE_UPDATED'::text, 'RESPONSE_VIEWED'::text, 'RESPONSE_SHORTLISTED'::text, 'RESPONSE_SELECTED'::text, 'RESPONSE_NOT_SELECTED'::text, 'RESPONSE_STALE'::text, 'RESPONSE_WITHDRAWN'::text, 'RESPONSE_EXPIRED'::text, 'NEED_REVISED'::text, 'NEED_CANCELLED'::text, 'AGREEMENT_VERSION_CHANGED'::text, 'AGREEMENT_CHANGE_PROPOSED'::text, 'AGREEMENT_CHANGE_REJECTED'::text, 'EXECUTION_STATE_CHANGED'::text, 'COMPLETION_REQUIRED'::text, 'MESSAGE_RECEIVED'::text, 'PRIVATE_ACCESS_GRANTED'::text, 'RECOVERY_OPENED'::text, 'REVIEW_RECEIVED'::text, 'CLARIFICATION_CREATED'::text, 'CLARIFICATION_ANSWERED'::text])) OR (event_type = 'AGREEMENT_CANCELLED'::text)))"
+        },
+        {
+          "name": "user_activity_events_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (id)"
+        },
+        {
+          "name": "user_activity_events_recipient_role_check",
+          "type": "c",
+          "definition": "CHECK ((recipient_role = ANY (ARRAY['REQUESTER'::text, 'WORKER'::text])))"
+        },
+        {
+          "name": "user_activity_events_urgency_check",
+          "type": "c",
+          "definition": "CHECK ((urgency = ANY (ARRAY['NORMAL'::text, 'HITNO'::text])))"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,284 @@
+{
+  "scope": "Read-only schema/ACL/trigger metadata only; no review rows or comments.",
+  "project": "leqcwgzvjsxugfgzdmth",
+  "tables": [
+    {
+      "name": "private.agreement_review_comments_v1",
+      "relrowsecurity": true,
+      "relforcerowsecurity": true,
+      "acl": "{postgres=arwdDxtm/postgres}",
+      "columns": [
+        {
+          "name": "review_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "author_account_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "target_account_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "comment",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "comment_sha256",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "clock_timestamp()",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "hidden_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "hidden_reason_code",
+          "type": "text",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        }
+      ],
+      "constraints": [
+        {
+          "name": "agreement_review_comments_v1_hidden_check",
+          "type": "c",
+          "definition": "CHECK ((((hidden_at IS NULL) = (hidden_reason_code IS NULL)) AND ((hidden_reason_code IS NULL) OR (hidden_reason_code ~ '^[A-Z][A-Z0-9_]{0,63}$'::text))))"
+        },
+        {
+          "name": "agreement_review_comments_v1_parties_check",
+          "type": "c",
+          "definition": "CHECK ((author_account_id <> target_account_id))"
+        },
+        {
+          "name": "agreement_review_comments_v1_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (review_id)"
+        },
+        {
+          "name": "agreement_review_comments_v1_sha_check",
+          "type": "c",
+          "definition": "CHECK ((comment_sha256 ~ '^[0-9a-f]{64}$'::text))"
+        },
+        {
+          "name": "agreement_review_comments_v1_text_chars_check",
+          "type": "c",
+          "definition": "CHECK ((comment !~ (((((((((((((((((((((((((((((((((((((((((((((((('['::text || chr(1)) || '-'::text) || chr(9)) || chr(11)) || '-'::text) || chr(31)) || chr(127)) || '-'::text) || chr(159)) || chr(1564)) || chr(4447)) || '-'::text) || chr(4448)) || chr(6068)) || '-'::text) || chr(6069)) || chr(6155)) || '-'::text) || chr(6159)) || chr(8203)) || chr(8206)) || '-'::text) || chr(8207)) || chr(8232)) || '-'::text) || chr(8238)) || chr(8288)) || '-'::text) || chr(8303)) || chr(12644)) || chr(65279)) || chr(65440)) || chr(65520)) || '-'::text) || chr(65531)) || chr(78896)) || '-'::text) || chr(78911)) || chr(113824)) || '-'::text) || chr(113827)) || chr(119155)) || '-'::text) || chr(119162)) || chr(917504)) || '-'::text) || chr(921599)) || ']'::text)))"
+        },
+        {
+          "name": "agreement_review_comments_v1_text_length_check",
+          "type": "c",
+          "definition": "CHECK ((((char_length(comment) >= 1) AND (char_length(comment) <= 500)) AND (octet_length(comment) <= 2000)))"
+        },
+        {
+          "name": "agreement_review_comments_v1_text_trim_check",
+          "type": "c",
+          "definition": "CHECK ((comment = btrim(comment, ' \n'::text)))"
+        }
+      ],
+      "foreignkeys": [
+        {
+          "name": "agreement_review_comments_v1_author_fkey",
+          "definition": "FOREIGN KEY (author_account_id) REFERENCES app_accounts(id) ON DELETE RESTRICT"
+        },
+        {
+          "name": "agreement_review_comments_v1_review_fkey",
+          "definition": "FOREIGN KEY (review_id) REFERENCES private.agreement_reviews(id) ON DELETE RESTRICT"
+        },
+        {
+          "name": "agreement_review_comments_v1_target_fkey",
+          "definition": "FOREIGN KEY (target_account_id) REFERENCES app_accounts(id) ON DELETE RESTRICT"
+        }
+      ],
+      "triggers": [
+        {
+          "name": "agreement_review_comment_closure_guard_v1",
+          "enabled": "O",
+          "definition": "CREATE TRIGGER agreement_review_comment_closure_guard_v1 BEFORE INSERT ON private.agreement_review_comments_v1 FOR EACH ROW EXECUTE FUNCTION private.closure_guard_owned_write('ACCOUNT', 'author_account_id')"
+        },
+        {
+          "name": "agreement_review_comment_mutation_guard_v1",
+          "enabled": "O",
+          "definition": "CREATE TRIGGER agreement_review_comment_mutation_guard_v1 BEFORE DELETE OR UPDATE ON private.agreement_review_comments_v1 FOR EACH ROW EXECUTE FUNCTION private.guard_review_comment_mutation()"
+        }
+      ]
+    },
+    {
+      "name": "private.agreement_reviews",
+      "relrowsecurity": true,
+      "relforcerowsecurity": true,
+      "acl": "{postgres=arwdDxtm/postgres}",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "gen_random_uuid()",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "agreement_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "reviewer_account_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "target_account_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "rating",
+          "type": "integer",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "tags",
+          "type": "text[]",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "client_request_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "input_hash",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "clock_timestamp()",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        }
+      ],
+      "constraints": [
+        {
+          "name": "agreement_reviews_agreement_id_reviewer_account_id_key",
+          "type": "u",
+          "definition": "UNIQUE (agreement_id, reviewer_account_id)"
+        },
+        {
+          "name": "agreement_reviews_check",
+          "type": "c",
+          "definition": "CHECK ((reviewer_account_id <> target_account_id))"
+        },
+        {
+          "name": "agreement_reviews_input_hash_check",
+          "type": "c",
+          "definition": "CHECK ((input_hash ~ '^[0-9a-f]{64}$'::text))"
+        },
+        {
+          "name": "agreement_reviews_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (id)"
+        },
+        {
+          "name": "agreement_reviews_rating_check",
+          "type": "c",
+          "definition": "CHECK (((rating >= 1) AND (rating <= 5)))"
+        },
+        {
+          "name": "agreement_reviews_reviewer_account_id_client_request_id_key",
+          "type": "u",
+          "definition": "UNIQUE (reviewer_account_id, client_request_id)"
+        },
+        {
+          "name": "agreement_reviews_tags_check",
+          "type": "c",
+          "definition": "CHECK (private.review_tags_valid(tags))"
+        }
+      ],
+      "foreignkeys": [
+        {
+          "name": "agreement_reviews_agreement_id_fkey",
+          "definition": "FOREIGN KEY (agreement_id) REFERENCES agreements(id) ON DELETE RESTRICT"
+        },
+        {
+          "name": "agreement_reviews_reviewer_account_id_fkey",
+          "definition": "FOREIGN KEY (reviewer_account_id) REFERENCES app_accounts(id) ON DELETE RESTRICT"
+        },
+        {
+          "name": "agreement_reviews_target_account_id_fkey",
+          "definition": "FOREIGN KEY (target_account_id) REFERENCES app_accounts(id) ON DELETE RESTRICT"
+        }
+      ],
+      "triggers": [
+        {
+          "name": "pre_v3_closure_review",
+          "enabled": "O",
+          "definition": "CREATE TRIGGER pre_v3_closure_review BEFORE INSERT ON private.agreement_reviews FOR EACH ROW EXECUTE FUNCTION private.closure_guard_owned_write('ACCOUNT', 'reviewer_account_id')"
+        },
+        {
+          "name": "pre_v3_review_immutable",
+          "enabled": "O",
+          "definition": "CREATE TRIGGER pre_v3_review_immutable BEFORE DELETE OR UPDATE ON private.agreement_reviews FOR EACH ROW EXECUTE FUNCTION private.guard_review_immutable()"
+        }
+      ]
+    }
+  ]
+}

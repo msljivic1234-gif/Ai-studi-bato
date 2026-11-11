@@ -1,0 +1,425 @@
+{
+  "schema": "USKOCI_R01_LEGACY_KEY_READONLY_PROOF_V1",
+  "status": "P0_CONFIRMED_ACTIVE_REVOCATION_BLOCKED_BY_MANAGEMENT_ACCESS",
+  "projectRef": "leqcwgzvjsxugfgzdmth",
+  "capturedAt": "2026-11-07T11:37:06.170117+00:00",
+  "sourceCheckpointBase": "20903892d7f5def28ce33a15027918e5ca19c342",
+  "keyValidityProof": {
+    "projectRef": "leqcwgzvjsxugfgzdmth",
+    "capturedAt": "2026-11-07T11:37:06.170117+00:00",
+    "probeScope": "Read-only GET needs select=id limit=0; no user rows requested, no mutation",
+    "removedSourceCommit": "b0b568eaca3422efda8e9b492ca0ce3ea98ca234",
+    "sourcePreimageCommit": "95b1d539755f260ab90594f7b08b75168d492cfd",
+    "currentPublicApiControl": {
+      "httpStatus": 200,
+      "rowsReturned": null,
+      "emptyArray": false,
+      "errorCode": null
+    },
+    "keys": [
+      {
+        "sha256": "3a130d7a360260e307ae11b95db987b27c1d73d9232a59a7720b3d28c22c9776",
+        "sourcePaths": [
+          "scripts/live_gemini_interview_test.mjs",
+          "scripts/simulate_two_phones_e2e.mjs"
+        ],
+        "claims": {
+          "role": "service_role",
+          "ref": "leqcwgzvjsxugfgzdmth",
+          "iat": 1787654535,
+          "exp": 2103230535
+        },
+        "historicalApiKeyAndBearer": {
+          "httpStatus": 200,
+          "rowsReturned": 0,
+          "emptyArray": true,
+          "errorCode": null
+        },
+        "currentLegacyAnonApiKeyHistoricalBearer": {
+          "httpStatus": 200,
+          "rowsReturned": 0,
+          "emptyArray": true,
+          "errorCode": null
+        },
+        "currentEasPublishableApiKeyHistoricalBearer": {
+          "httpStatus": 200,
+          "rowsReturned": 0,
+          "emptyArray": true,
+          "errorCode": null
+        }
+      }
+    ],
+    "secretValuesIncluded": false,
+    "followupCapturedAt": "2026-11-07T11:50:06.681459+00:00"
+  },
+  "databaseDependencies": {
+    "format_version": 1,
+    "project": "leqcwgzvjsxugfgzdmth",
+    "observed_at_utc": "2026-11-07",
+    "scope": "Read-only canonical DEV dependency inventory for the previously confirmed compromised legacy service-role JWT. Values, SQL commands, queue headers/bodies, decrypted secret contents, request identifiers and private user rows were never returned.",
+    "compromised_token_sha256": "3a130d7a360260e307ae11b95db987b27c1d73d9232a59a7720b3d28c22c9776",
+    "cron": [
+      {
+        "jobname": "uskoci_edge_workers",
+        "active": true,
+        "schedule": "* * * * *",
+        "invokes_http": false,
+        "reads_vault": false,
+        "sets_authorization": false,
+        "uses_bearer": false,
+        "sets_apikey": false,
+        "has_modern_secret_literal": false,
+        "has_jwt_literal": false,
+        "contains_compromised_key": false,
+        "sql_function_calls": [
+          "private.edge_worker_tick_v5"
+        ],
+        "edge_slugs": []
+      },
+      {
+        "jobname": "uskoci_marketplace_tick",
+        "active": true,
+        "schedule": "* * * * *",
+        "invokes_http": false,
+        "reads_vault": false,
+        "sets_authorization": false,
+        "uses_bearer": false,
+        "sets_apikey": false,
+        "has_modern_secret_literal": false,
+        "has_jwt_literal": false,
+        "contains_compromised_key": false,
+        "sql_function_calls": [
+          "private.marketplace_tick"
+        ],
+        "edge_slugs": []
+      },
+      {
+        "jobname": "uskoci_taxonomy_postsave_tick_dev",
+        "active": true,
+        "schedule": "* * * * *",
+        "invokes_http": true,
+        "reads_vault": true,
+        "sets_authorization": false,
+        "uses_bearer": false,
+        "sets_apikey": true,
+        "has_modern_secret_literal": false,
+        "has_jwt_literal": false,
+        "contains_compromised_key": false,
+        "sql_function_calls": [],
+        "edge_slugs": [
+          "uskoci-taxonomy-postsave-worker"
+        ]
+      }
+    ],
+    "vault": [
+      {
+        "name": "uskoci_dev_test101_b_credentials_20261015",
+        "is_jwt": false,
+        "is_modern_secret": false,
+        "matches_compromised_key": false
+      },
+      {
+        "name": "uskoci_edge_base_url",
+        "is_jwt": false,
+        "is_modern_secret": false,
+        "matches_compromised_key": false
+      },
+      {
+        "name": "uskoci_edge_worker_key",
+        "is_jwt": false,
+        "is_modern_secret": true,
+        "matches_compromised_key": false
+      }
+    ],
+    "http_or_secret_referencing_functions": [
+      {
+        "name": "private.edge_worker_tick_v5",
+        "owner": "postgres",
+        "definer": true,
+        "anon_execute": false,
+        "authenticated_execute": false,
+        "service_execute": false,
+        "reads_vault": true,
+        "invokes_http": true,
+        "sets_authorization": false,
+        "sets_apikey": true,
+        "contains_compromised_key": false
+      }
+    ],
+    "pg_net_queue_aggregate": {
+      "queued_requests": 0,
+      "has_apikey_header": 0,
+      "has_authorization_header": 0,
+      "modern_secret_header": 0,
+      "compromised_key_header": 0
+    },
+    "retained_cron_command_aggregate": [
+      {
+        "jobname": "uskoci_edge_workers",
+        "retained_runs": 67489,
+        "retained_commands_with_compromised_key": 0
+      },
+      {
+        "jobname": "uskoci_marketplace_tick",
+        "retained_runs": 100212,
+        "retained_commands_with_compromised_key": 0
+      },
+      {
+        "jobname": "uskoci_taxonomy_postsave_tick_dev",
+        "retained_runs": 34029,
+        "retained_commands_with_compromised_key": 0
+      }
+    ],
+    "webhook_triggers": [],
+    "config_and_targets": {
+      "edge_tick_targets": [
+        "uskoci-account-closure-worker",
+        "uskoci-data-export-worker",
+        "uskoci-push-transport"
+      ],
+      "edge_tick_vault_names": [
+        "uskoci_edge_base_url",
+        "uskoci_edge_worker_key"
+      ],
+      "vault_embedded_key_checks": [
+        {
+          "name": "uskoci_dev_test101_b_credentials_20261015",
+          "contains_compromised_key": false
+        },
+        {
+          "name": "uskoci_edge_base_url",
+          "contains_compromised_key": false
+        },
+        {
+          "name": "uskoci_edge_worker_key",
+          "contains_compromised_key": false
+        }
+      ],
+      "role_database_setting_checks": [
+        {
+          "setting": "app.settings.jwt_exp",
+          "contains_compromised_key": false
+        }
+      ]
+    },
+    "conclusion": {
+      "active_db_http_consumers_already_use_modern_secret_apikey": true,
+      "compromised_fingerprint_found_in_inspected_db_surfaces": false,
+      "diagnostic_sbfenv_probe_seen_as_db_consumer": false,
+      "db_mutation_performed": false,
+      "legacy_key_revoked": false,
+      "edge_environment_or_ci_consumers_verified": false,
+      "other_external_consumers_verified": false,
+      "proof_is_exhaustive_for_all_possible_storage": false
+    },
+    "recent_runtime_status_aggregate": {
+      "window_utc": {
+        "from": "2026-11-07T10:45:00Z",
+        "to": "2026-11-07T11:45:00Z"
+      },
+      "cron": [
+        {
+          "jobname": "uskoci_edge_workers",
+          "runs_last_hour": 60,
+          "succeeded_last_hour": 60,
+          "failed_last_hour": 0,
+          "last_start": "2026-11-07 11:43:00.081197+00",
+          "last_end": "2026-11-07 11:43:00.325375+00"
+        },
+        {
+          "jobname": "uskoci_marketplace_tick",
+          "runs_last_hour": 60,
+          "succeeded_last_hour": 60,
+          "failed_last_hour": 0,
+          "last_start": "2026-11-07 11:43:00.079719+00",
+          "last_end": "2026-11-07 11:43:00.349046+00"
+        },
+        {
+          "jobname": "uskoci_taxonomy_postsave_tick_dev",
+          "runs_last_hour": 60,
+          "succeeded_last_hour": 60,
+          "failed_last_hour": 0,
+          "last_start": "2026-11-07 11:43:00.084512+00",
+          "last_end": "2026-11-07 11:43:00.106158+00"
+        }
+      ],
+      "pg_net_http": [
+        {
+          "age_group": "LAST_15_MINUTES",
+          "status_code": 200,
+          "timed_out": false,
+          "count": 30,
+          "earliest": "2026-11-07 11:30:00.095129+00",
+          "latest": "2026-11-07 11:44:01.05052+00"
+        },
+        {
+          "age_group": "OLDER_WITHIN_HOUR",
+          "status_code": 200,
+          "timed_out": false,
+          "count": 90,
+          "earliest": "2026-11-07 10:45:00.619876+00",
+          "latest": "2026-11-07 11:29:00.713912+00"
+        }
+      ],
+      "edge_function_log_aggregate": [
+        {
+          "compatibility_header_present": 60,
+          "count": 60,
+          "function_path": "/functions/v1/uskoci-push-transport",
+          "legacy_service_jwt_authorization": 0,
+          "modern_secret_requests": 60,
+          "status_code": "200"
+        },
+        {
+          "compatibility_header_present": 60,
+          "count": 60,
+          "function_path": "/functions/v1/uskoci-taxonomy-postsave-worker",
+          "legacy_service_jwt_authorization": 0,
+          "modern_secret_requests": 60,
+          "status_code": "200"
+        }
+      ],
+      "boundary": "Only status/header-class aggregates. No request headers, URLs with queries, body, identifiers or secret values were returned. Active push and taxonomy calls are confirmed HTTP 200 with modern-secret API-key and compatibility-header metadata; export/closure had no invocation in this window.",
+      "compatibility_header_name": "sb-api-key-compatibility",
+      "log_attribute_name": "request.headers.sb_api_key_compatibility"
+    }
+  },
+  "disabledDiagnostics": {
+    "sbfenv": {
+      "version": 10,
+      "returns": 410,
+      "readsEnvironment": false
+    },
+    "uskoci-gemini-schema-smoke": {
+      "version": 11,
+      "returns": 410,
+      "callsProvider": false
+    },
+    "uskoci-gemini-provider-probe-dev": {
+      "version": 12,
+      "returns": 410,
+      "callsProvider": false
+    }
+  },
+  "clientState": {
+    "currentEasPreviewUsesPublishableKey": true,
+    "qa44UsesPublishableKey": true,
+    "twoHistoricalAdminTestScriptsStillReferenceLegacyPublicKey": false,
+    "helperSourceSyntaxChecks": "PASS",
+    "missingKeyNegativeChecks": {
+      "count": 2,
+      "rejectedBeforeAdminClientCreation": true,
+      "realAdminHelpersExecuted": false
+    },
+    "historicalNeedProbePrivilegedDependencyRemoved": true,
+    "adminSimulatorRequiresModernSecretEnvAndApikeyOnly": true,
+    "ordinaryQaCredentialLiteralsRemovedFromBothActiveScripts": true,
+    "qaCredentialsNowReadFromEnvironment": true,
+    "ordinaryQaPasswordsRotated": false,
+    "historicalQaCredentialCopiesRemainInGitHistory": true,
+    "offlineCredentialBoundaryTests": {
+      "passed": 3,
+      "actualInstalledSupabaseSdk": true,
+      "realNetworkCalls": 0
+    }
+  },
+  "blockingManagementAccess": {
+    "apiKeyWriteToolAvailable": false,
+    "connectedBrowserAvailable": false,
+    "authenticatedDashboardSessionObserved": false,
+    "credentialValuesExported": false
+  },
+  "requiredRetirement": {
+    "changeExistingEdgeOutgoingAdminRequestsToModernSecret": true,
+    "preserveUserBearerAuthorization": true,
+    "verifyScheduledSecretApiKeyIngress": true,
+    "auditFullEdgePackageDriftBeforeDeployment": true,
+    "disableLegacyApiKeys": true,
+    "revokeLegacyJwtSigningSecret": true,
+    "repeatBothZeroRowReadProbesAfterRetirement": true
+  },
+  "officialSources": [
+    "https://supabase.com/docs/guides/security/rotate-leaked-api-keys",
+    "https://supabase.com/docs/guides/getting-started/migrating-to-new-api-keys",
+    "https://supabase.com/docs/guides/auth/signing-keys"
+  ],
+  "limits": [
+    "This read-only probe requests zero rows; it does not prove or disprove third-party misuse.",
+    "No credential rotation, RLS bypass workaround or production setting was performed.",
+    "A column SELECT restriction does not restrict a compromised service-role key.",
+    "No actual secrets, session tokens, private conversation text or private location are included."
+  ],
+  "ordinaryCurrentAuthMetadata": {
+    "twoFixtureTokensAlgorithm": "ES256",
+    "bothKidPresent": true,
+    "otherUserTokensNotInventoried": true
+  },
+  "controlledMigrationPreparation": {
+    "status": "INVENTORIED_NOT_IMPLEMENTED_NOT_ROTATED",
+    "readScope": "Full captured Edge packages and current source. No runtime secret values read.",
+    "legacyServiceBearerConsumers": [
+      "uskoci-ai-interview",
+      "uskoci-worker-interview",
+      "uskoci-speech-session",
+      "uskoci-media",
+      "uskoci-publication-evaluate",
+      "uskoci-qa-classify",
+      "uskoci-push-transport",
+      "uskoci-taxonomy-postsave-worker",
+      "uskoci-data-export-worker",
+      "uskoci-data-export-download",
+      "uskoci-account-closure-worker"
+    ],
+    "legacyPublicKeyConsumers": [
+      "uskoci-ai-interview",
+      "uskoci-worker-interview",
+      "uskoci-speech-session",
+      "uskoci-media",
+      "uskoci-publication-evaluate",
+      "uskoci-qa-classify",
+      "uskoci-data-export-worker",
+      "uskoci-data-export-download",
+      "uskoci-account-closure-worker",
+      "uskoci-location-search"
+    ],
+    "sharedConsumerFiles": [
+      "supabase/functions/_shared/aiTestBudget.ts",
+      "supabase/functions/_shared/data-export.ts"
+    ],
+    "directStorageConsumer": "uskoci-media",
+    "cronIngressConsumers": [
+      "uskoci-push-transport",
+      "uskoci-taxonomy-postsave-worker",
+      "uskoci-data-export-worker",
+      "uskoci-account-closure-worker"
+    ],
+    "cronBoundary": "Current modern Vault apikey works through gateway compatibility; incoming comparison to legacy environment variable is not yet migrated. Existing Vault key is not the compromised fingerprint.",
+    "reviewedSourceDriftBeforeKeyMigration": [
+      "uskoci-publication-evaluate@29: aiTestBudget, geminiTaskStream, aiAvailability",
+      "uskoci-qa-classify@27: aiTestBudget and qaSubmission"
+    ],
+    "preserveCurrentPackages": [
+      "Need192",
+      "Worker143",
+      "Speech30",
+      "Media29"
+    ],
+    "nextSteps": [
+      "Connect authenticated Dashboard for canonical project and inspect key names/status without copying values into chat.",
+      "Confirm named modern environment maps SUPABASE_SECRET_KEYS and SUPABASE_PUBLISHABLE_KEYS.",
+      "Migrate all listed consumers and cron ingress; modern keys in apikey only, actual user JWT stays in Authorization.",
+      "Review package drift, deploy exact full packages, verify negative authorization and live cron; retain export/closure readiness blocks.",
+      "Inventory old installed clients and external CI/EAS consumers before retiring legacy compatibility.",
+      "Deactivate compromised legacy API keys and revoke their legacy JWT signing secret after verified migration.",
+      "Repeat the existing zero-row probes; both historical-key-only and modern-apikey plus historical-Bearer combinations must be rejected, while ordinary Auth and cron remain valid."
+    ],
+    "officialReferences": [
+      "https://supabase.com/docs/guides/security/rotate-leaked-api-keys",
+      "https://supabase.com/docs/guides/getting-started/migrating-to-new-api-keys"
+    ],
+    "managementAccessAvailable": false,
+    "keyRetired": false,
+    "secretValuesIncluded": false,
+    "mediaDriftReconciledSeparately": "Media29 full4-file readback confirmed; see scripts/media-dev-20261107.receipt.json. Key migration itself remains pending."
+  }
+}

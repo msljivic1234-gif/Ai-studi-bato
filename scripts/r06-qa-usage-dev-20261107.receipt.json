@@ -1,0 +1,44 @@
+{
+  "kind": "R06_QA_USAGE_DEV_DEPLOYMENT",
+  "project": "leqcwgzvjsxugfgzdmth",
+  "source_head": "94f2801db54bcbd7cb294cda983e048cd5885939",
+  "source_version": 28,
+  "active_version": 29,
+  "status": "ACTIVE",
+  "verify_jwt": true,
+  "updated_at": "2026-11-07T16:53:23.977Z",
+  "candidate_sha256": "7f38e66e080a577417189d9071ac1b0c576fae58cb8a921b24314d354b125ee2",
+  "entry_preimage_sha256": "ba043aca76da7caba7674d77b368341054dd0aadfdd28070a626f526c6ef3e5b",
+  "entry_postimage_sha256": "eb69d270c28356ad059e32157583ece1c012512743c36eedd57a83211b428688",
+  "unchanged_live_dependency_hashes": {
+    "src/contracts/qaSubmission.ts": "decf8744b41f808cb3dd45cda1b6f26809656b1ff46a9f6157071e4caf5bbeb5",
+    "src/lib/qaTextHash.ts": "9c1226bdbbbe9a6a8bbc50f71e30036e86b668c35d540ba3317eae6efd842285",
+    "supabase/functions/_shared/aiTestBudget.ts": "076c7a51dddbe1c1e73ba58a6ac18e8f9ce364dfb0eb710fe8798248efe73804",
+    "supabase/functions/_shared/supabaseKeys.mjs": "d1f903f379d30f0c9c1da684b335013f37b1cd5b62eb6e2b61d4d3a27352ab61"
+  },
+  "readback": {
+    "all_files_byte_exact": true,
+    "file_count": 7,
+    "paths": [
+      "supabase/functions/uskoci-qa-classify/index.ts",
+      "src/contracts/qaSubmission.ts",
+      "src/lib/qaTextHash.ts",
+      "supabase/functions/_shared/aiTestBudget.ts",
+      "supabase/functions/_shared/supabaseKeys.mjs",
+      "supabase/functions/_shared/geminiTaskStream.ts",
+      "src/contracts/aiAvailability.ts"
+    ],
+    "auth_gateway_unchanged": true,
+    "provider_calls": 0
+  },
+  "verification": {
+    "new_handler_tests": 20,
+    "existing_related_tests": 58,
+    "fail": 0,
+    "standalone_strict_typescript": "PASS",
+    "preimage_failure_reproduced": true,
+    "paid_hosted_provider_settlement": "NOT_RUN_CAP_CLOSED"
+  },
+  "accounting_policy": "Complete provider usage is recorded once for the reserved operation even when semantic output is rejected. Missing/invalid usage or failed accounting retains its conservative hold. No provider retry, cap increase, spend reset or allowlist expansion.",
+  "reconciliation_receipt": "scripts/r06-reconciliation-20261107.receipt.json"
+}

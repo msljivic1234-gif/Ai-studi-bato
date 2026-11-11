@@ -1,0 +1,52 @@
+{
+  "unit": "PKG016_APP_ICON",
+  "ownerDecision": "2026-09-17: white background, canonical mark, scaling and centring only; 2026-09-17: monochrome layer approved, derived from the same mark",
+  "sourceMark": "assets/entry-splash-mark.svg",
+  "sourceMarkNote": "exact SPOJ V2 BrandMark paths; original uskoci-lockup.svg sha256 25162f9bc7e7f822e77bd4ff078b8295a50796e9af49ffbdac98dac04d17ae97",
+  "rasterisedAt": 2048,
+  "inkPixels": [
+    1792,
+    1863
+  ],
+  "enclosingRadiusPx": 1196.4,
+  "androidSafeCircle": "66/108",
+  "iosSafeCircle": "0.78",
+  "background": "#FFFFFF",
+  "transformsApplied": [
+    "proportional scale",
+    "centre",
+    "pad",
+    "alpha silhouette of the same mark, no reposition or rescale"
+  ],
+  "transformsNotApplied": [
+    "recolour",
+    "reshape",
+    "reproportion",
+    "crop of the mark"
+  ],
+  "outputs": [
+    {
+      "file": "assets/brand/app-icon/android-icon-foreground.png",
+      "size": 432,
+      "markWidthPercent": 45.8
+    },
+    {
+      "file": "assets/brand/app-icon/icon.png",
+      "size": 1024,
+      "markWidthPercent": 58.4
+    },
+    {
+      "file": "assets/brand/app-icon/favicon.png",
+      "size": 48,
+      "markWidthPercent": 58.3
+    },
+    {
+      "file": "assets/brand/app-icon/android-icon-monochrome.png",
+      "size": 432,
+      "purpose": "Android 13+ themed icons, where the system recolours the silhouette to match the wallpaper",
+      "derivation": "alpha taken from the colour layer as distance from white, normalised to the strongest ink, so the silhouette lands on exactly the same pixels and anti-aliased edges survive as partial alpha",
+      "colour": "black, ignored by Android which uses only the alpha channel",
+      "inkCoverageOfCanvasPercent": 11.2
+    }
+  ]
+}

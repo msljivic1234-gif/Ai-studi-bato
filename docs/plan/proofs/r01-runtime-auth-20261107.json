@@ -1,0 +1,247 @@
+{
+  "format_version": 1,
+  "project": "leqcwgzvjsxugfgzdmth",
+  "observed_at_utc": "2026-11-07T15:53:54.987715+00:00",
+  "status": "DEV_ORDINARY_AUTH_TRANSPORT_READS_CONFIRMED",
+  "world": "TEST",
+  "coordinator_deploy_confirmed_at_utc": "2026-11-07T15:48:36Z",
+  "coordinator_verified_versions": {
+    "uskoci-ai-interview": 193,
+    "uskoci-worker-interview": 145,
+    "uskoci-media": 30,
+    "uskoci-location-search": 32,
+    "uskoci-push-transport": 45,
+    "uskoci-taxonomy-postsave-worker": 14,
+    "uskoci-data-export-worker": 29,
+    "uskoci-account-closure-worker": 19
+  },
+  "source_helper_sha256": "d1f903f379d30f0c9c1da684b335013f37b1cd5b62eb6e2b61d4d3a27352ab61",
+  "source_entry_sha256": {
+    "uskoci-ai-interview": "9a213ed0f2751abbc09e65da23217e6e5422f566cef4f2a5143f190424fbc086",
+    "uskoci-worker-interview": "7c8a7eb5c0c4acc4466d892e41699fe64ea5ad05846ca9acad1dbb7d77ba4a8f",
+    "uskoci-media": "4b3d39c100c5d8a9d48be051ce9893ba8e972fedf043516b914af6e1b3fbf4b0",
+    "uskoci-location-search": "0f8c47c1962899078d3f0f473ae04bb79cb686e0cc00d0586fdeb5dac3149273",
+    "uskoci-push-transport": "8959ec37f329d0a46d5052bc859f9bdf4f49309cc01d114bee2de7167e14eaf0",
+    "uskoci-taxonomy-postsave-worker": "61ae5fcb8417727c3004f50ba50bf0bcd3b9b2f58185e25725e1179705c880e7",
+    "uskoci-data-export-worker": "f7042410dd136f1506d315a94bea8d06cfa55b7add2bbd9210fa67ec1d665edd",
+    "uskoci-account-closure-worker": "0f87d3abbb09ecd29720da54e023b3d327bf13cce4f688fde3731e06013bc36b"
+  },
+  "lineage_receipt_sha256": "1da811f999c2c3899b23b8c27330917e461abfe527795ad0eb7b84258a72fb94",
+  "fixture_state_sha256": "f5180b111942b580e31a709994a625397db38c1b8142fd511b67987623eb9bb3",
+  "auth_harness_sha256": "c8ac61cae8f86cfb385099913146706c209de49adf119a34fab2fb7ace16dd75",
+  "probe_script_sha256": "1a3bcc73a71fc787b1bec22e2a1b804b47fe4a7e7f7b4e0bfa2da43e1b7fb6c8",
+  "account_id_sha256": {
+    "worker": "2c6c7605a3e6a6ed941a6608185b60a8bc96b2bce6ff02bf84453e612008be40",
+    "requester": "0c0907e99f626948eef05c174763117d611cf612802bcd89ede83422859e9875"
+  },
+  "ordinary_auth_roles_verified": 2,
+  "real_session_id_claims_verified": 2,
+  "operations": [
+    {
+      "name": "before_worker_read",
+      "actor": "worker",
+      "http_status": 200,
+      "elapsed_ms": 4823.7
+    },
+    {
+      "name": "before_need_header",
+      "actor": "requester",
+      "http_status": 200,
+      "elapsed_ms": 5019.6
+    },
+    {
+      "name": "before_need_review",
+      "actor": "requester",
+      "http_status": 200,
+      "elapsed_ms": 5291.1
+    },
+    {
+      "name": "owned_need_message_metadata",
+      "actor": "requester",
+      "http_status": 200,
+      "elapsed_ms": 4644.7
+    },
+    {
+      "name": "foreign_need_header_hidden",
+      "actor": "worker",
+      "http_status": 200,
+      "elapsed_ms": 4617.7
+    },
+    {
+      "name": "foreign_need_messages_hidden",
+      "actor": "worker",
+      "http_status": 200,
+      "elapsed_ms": 4645.7
+    },
+    {
+      "name": "need_empty_input",
+      "actor": "requester",
+      "http_status": 400,
+      "elapsed_ms": 4720.3,
+      "safe_code": "CONVERSATION_ID_INVALID"
+    },
+    {
+      "name": "worker_empty_input",
+      "actor": "worker",
+      "http_status": 400,
+      "elapsed_ms": 4967.6,
+      "safe_code": "WORKER_AI_INPUT_INVALID"
+    },
+    {
+      "name": "need_media_list",
+      "actor": "requester",
+      "http_status": 200,
+      "elapsed_ms": 6724.3
+    },
+    {
+      "name": "profile_media_list",
+      "actor": "worker",
+      "http_status": 200,
+      "elapsed_ms": 13347.8
+    },
+    {
+      "name": "location_market_guard",
+      "actor": "requester",
+      "http_status": 200,
+      "elapsed_ms": 5611.2
+    },
+    {
+      "name": "location_unavailable_market",
+      "actor": "requester",
+      "http_status": 403,
+      "elapsed_ms": 5710.3,
+      "safe_code": "COUNTRY_NOT_AVAILABLE"
+    },
+    {
+      "name": "push_transport_ordinary_denied",
+      "actor": "worker",
+      "http_status": 403,
+      "elapsed_ms": 4633.0,
+      "safe_code": "FORBIDDEN"
+    },
+    {
+      "name": "push_transport_spoof_denied",
+      "actor": "requester",
+      "http_status": 403,
+      "elapsed_ms": 5071.9,
+      "safe_code": "FORBIDDEN"
+    },
+    {
+      "name": "taxonomy_postsave_worker_ordinary_denied",
+      "actor": "worker",
+      "http_status": 403,
+      "elapsed_ms": 5224.3,
+      "safe_code": "FORBIDDEN"
+    },
+    {
+      "name": "taxonomy_postsave_worker_spoof_denied",
+      "actor": "requester",
+      "http_status": 403,
+      "elapsed_ms": 4725.6,
+      "safe_code": "FORBIDDEN"
+    },
+    {
+      "name": "data_export_worker_ordinary_denied",
+      "actor": "worker",
+      "http_status": 400,
+      "elapsed_ms": 5308.8,
+      "safe_code": "EXPORT_REQUEST_INVALID"
+    },
+    {
+      "name": "data_export_worker_spoof_denied",
+      "actor": "requester",
+      "http_status": 400,
+      "elapsed_ms": 5154.1,
+      "safe_code": "EXPORT_REQUEST_INVALID"
+    },
+    {
+      "name": "account_closure_worker_ordinary_denied",
+      "actor": "worker",
+      "http_status": 403,
+      "elapsed_ms": 4594.9,
+      "safe_code": "SERVICE_ROLE_REQUIRED"
+    },
+    {
+      "name": "account_closure_worker_spoof_denied",
+      "actor": "requester",
+      "http_status": 403,
+      "elapsed_ms": 4639.2,
+      "safe_code": "SERVICE_ROLE_REQUIRED"
+    },
+    {
+      "name": "after_need_header",
+      "actor": "requester",
+      "http_status": 200,
+      "elapsed_ms": 4829.7
+    },
+    {
+      "name": "after_worker_read",
+      "actor": "worker",
+      "http_status": 200,
+      "elapsed_ms": 4919.0
+    },
+    {
+      "name": "after_need_review",
+      "actor": "requester",
+      "http_status": 200,
+      "elapsed_ms": 4624.9
+    },
+    {
+      "name": "data_export_public_key_spoof_without_bearer_denied",
+      "actor": "public_key_only",
+      "http_status": 401,
+      "safe_code": "AUTH_REQUIRED",
+      "elapsed_ms": 5967.2
+    }
+  ],
+  "read_and_negative_request_count": 24,
+  "ordinary_auth_request_count": 2,
+  "total_http_requests": 26,
+  "need_before_sha256": "75d052b590622589bee24aa98f66586f03219540d6ec89d3369db3f72c797819",
+  "need_after_sha256": "75d052b590622589bee24aa98f66586f03219540d6ec89d3369db3f72c797819",
+  "worker_before_sha256": "0fca87f46aa2122379156bff68ad0b86545232e036dc9a8d4a38cabd4809158f",
+  "worker_after_sha256": "0fca87f46aa2122379156bff68ad0b86545232e036dc9a8d4a38cabd4809158f",
+  "conversation_state_unchanged": true,
+  "need_message_count": 2,
+  "task_media_count": 0,
+  "profile_media_present": false,
+  "business_writer_calls": 0,
+  "provider_calls": 0,
+  "audio_calls": 0,
+  "upload_calls": 0,
+  "privileged_credential_used_by_probe": false,
+  "native_acceptance": false,
+  "legacy_off_activated": false,
+  "legacy_key_revoked": false,
+  "limits": [
+    "Need/Worker canonical reads use ordinary API readers; empty Edge requests do not prove their full provider flow.",
+    "Location was refused at market authorization before provider configuration/fetch.",
+    "Export cron denial validates an invalid action after ordinary Auth, without status/claim/cleanup.",
+    "No service-key positive cron invocation, real model, microphone, upload, push or native test.",
+    "The additional public-apikey/compatibility-header request has no Bearer token: AUTH_REQUIRED proves the spoofed header cannot authorize the export handler."
+  ],
+  "public_header_probe_script_sha256": "65a06a61172288eb7cd50da04370639d941f97c981d2ada49fb6630df60c4f56",
+  "completed_at_utc": "2026-11-07T15:55:21.654112+00:00",
+  "budget_before": {
+    "budget": {
+      "ceiling_microusd": 5000000,
+      "reserved_microusd": 65486681,
+      "reservation_cap_enforced": true
+    },
+    "captured_at_utc": "2026-11-07T15:51:28.073318+00:00",
+    "reservation_count": 2324
+  },
+  "budget_after": {
+    "budget": {
+      "ceiling_microusd": 5000000,
+      "reserved_microusd": 65486681,
+      "reservation_cap_enforced": true
+    },
+    "captured_at_utc": "2026-11-07T15:55:21.654112+00:00",
+    "reservation_count": 2324
+  },
+  "budget_exposure_unchanged": true,
+  "budget_aggregate_queries": 2,
+  "budget_aggregate_source": "Separate read-only Supabase SQL aggregates; no reservation, settlement or provider operation.",
+  "admin_client_used_for_ordinary_api_scenario": false
+}

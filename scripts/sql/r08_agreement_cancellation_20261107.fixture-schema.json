@@ -1,0 +1,3512 @@
+{
+  "scope": "Read-only table column/default/check/PK/unique/FK metadata; no rows. Bounded PostgreSQL fixtures execute the relevant writer, completion, calendar and privacy triggers. This is not a full hosted RLS/Auth/schema replay.",
+  "project": "leqcwgzvjsxugfgzdmth",
+  "tables": [
+    {
+      "name": "private.account_blocks",
+      "columns": [
+        {
+          "name": "blocker_account_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "blocked_account_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "active",
+          "type": "boolean",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "revision",
+          "type": "integer",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "last_blocked_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "default": "clock_timestamp()",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        }
+      ],
+      "constraints": [
+        {
+          "name": "account_blocks_check",
+          "type": "c",
+          "definition": "CHECK ((blocker_account_id <> blocked_account_id))"
+        },
+        {
+          "name": "account_blocks_check1",
+          "type": "c",
+          "definition": "CHECK (((NOT active) OR (last_blocked_at IS NOT NULL)))"
+        },
+        {
+          "name": "account_blocks_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (blocker_account_id, blocked_account_id)"
+        },
+        {
+          "name": "account_blocks_revision_check",
+          "type": "c",
+          "definition": "CHECK ((revision >= 1))"
+        }
+      ],
+      "foreignkeys": [
+        {
+          "name": "account_blocks_blocked_account_id_fkey",
+          "definition": "FOREIGN KEY (blocked_account_id) REFERENCES app_accounts(id)"
+        },
+        {
+          "name": "account_blocks_blocker_account_id_fkey",
+          "definition": "FOREIGN KEY (blocker_account_id) REFERENCES app_accounts(id)"
+        }
+      ]
+    },
+    {
+      "name": "private.account_closure_requests",
+      "columns": [
+        {
+          "name": "account_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "gen_random_uuid()",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "state",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "revision",
+          "type": "integer",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "requested_at",
+          "type": "timestamp with time zone",
+          "default": "clock_timestamp()",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "prepared_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "preparation",
+          "type": "jsonb",
+          "default": "'{}'::jsonb",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "default": "clock_timestamp()",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "closed_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "execution_receipt",
+          "type": "jsonb",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        }
+      ],
+      "constraints": [
+        {
+          "name": "account_closure_requests_check",
+          "type": "c",
+          "definition": "CHECK (((state = 'CLOSED'::text) = (closed_at IS NOT NULL)))"
+        },
+        {
+          "name": "account_closure_requests_check1",
+          "type": "c",
+          "definition": "CHECK (((state <> 'CLOSED'::text) OR ((execution_receipt IS NOT NULL) AND (jsonb_typeof(execution_receipt) = 'object'::text))))"
+        },
+        {
+          "name": "account_closure_requests_id_key",
+          "type": "u",
+          "definition": "UNIQUE (id)"
+        },
+        {
+          "name": "account_closure_requests_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (account_id)"
+        },
+        {
+          "name": "account_closure_requests_preparation_check",
+          "type": "c",
+          "definition": "CHECK ((jsonb_typeof(preparation) = 'object'::text))"
+        },
+        {
+          "name": "account_closure_requests_revision_check",
+          "type": "c",
+          "definition": "CHECK (((revision >= 1) AND (revision <= 2147483647)))"
+        },
+        {
+          "name": "account_closure_requests_state_check",
+          "type": "c",
+          "definition": "CHECK ((state = ANY (ARRAY['REQUESTED'::text, 'BLOCKED'::text, 'NOT_READY'::text, 'READY'::text, 'EXECUTING'::text, 'FAILED'::text, 'CLOSED'::text])))"
+        }
+      ],
+      "foreignkeys": [
+        {
+          "name": "account_closure_requests_account_id_fkey",
+          "definition": "FOREIGN KEY (account_id) REFERENCES app_accounts(id)"
+        }
+      ]
+    },
+    {
+      "name": "private.worker_calendar_events",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "extensions.gen_random_uuid()",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "agreement_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "worker_account_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "worker_profile_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "agreement_version",
+          "type": "integer",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "starts_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "ends_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "state",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "agreement_status",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "statement_timestamp()",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "default": "statement_timestamp()",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        }
+      ],
+      "constraints": [
+        {
+          "name": "worker_calendar_event_range_check",
+          "type": "c",
+          "definition": "CHECK ((ends_at > starts_at))"
+        },
+        {
+          "name": "worker_calendar_events_agreement_id_key",
+          "type": "u",
+          "definition": "UNIQUE (agreement_id)"
+        },
+        {
+          "name": "worker_calendar_events_agreement_version_check",
+          "type": "c",
+          "definition": "CHECK ((agreement_version >= 1))"
+        },
+        {
+          "name": "worker_calendar_events_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (id)"
+        },
+        {
+          "name": "worker_calendar_events_state_check",
+          "type": "c",
+          "definition": "CHECK ((state = ANY (ARRAY['BLOCKING'::text, 'RELEASED'::text])))"
+        },
+        {
+          "name": "worker_calendar_finite_range",
+          "type": "c",
+          "definition": "CHECK ((isfinite(starts_at) AND isfinite(ends_at)))"
+        }
+      ],
+      "foreignkeys": [
+        {
+          "name": "worker_calendar_events_agreement_id_fkey",
+          "definition": "FOREIGN KEY (agreement_id) REFERENCES agreements(id) ON DELETE CASCADE"
+        },
+        {
+          "name": "worker_calendar_events_worker_account_id_fkey",
+          "definition": "FOREIGN KEY (worker_account_id) REFERENCES app_accounts(id) ON DELETE CASCADE"
+        },
+        {
+          "name": "worker_calendar_events_worker_profile_id_fkey",
+          "definition": "FOREIGN KEY (worker_profile_id) REFERENCES app_profiles(id) ON DELETE CASCADE"
+        }
+      ]
+    },
+    {
+      "name": "private.worker_calendar_serialization",
+      "columns": [
+        {
+          "name": "worker_profile_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "touched_at",
+          "type": "timestamp with time zone",
+          "default": "statement_timestamp()",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        }
+      ],
+      "constraints": [
+        {
+          "name": "worker_calendar_serialization_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (worker_profile_id)"
+        }
+      ],
+      "foreignkeys": [
+        {
+          "name": "worker_calendar_serialization_worker_profile_id_fkey",
+          "definition": "FOREIGN KEY (worker_profile_id) REFERENCES app_profiles(id) ON DELETE CASCADE"
+        }
+      ]
+    },
+    {
+      "name": "public.access_grants",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "extensions.gen_random_uuid()",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "agreement_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "channel",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "granted_by_account_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "granted_to_account_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "status",
+          "type": "text",
+          "default": "'GRANTED'::text",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "granted_at",
+          "type": "timestamp with time zone",
+          "default": "statement_timestamp()",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "revoked_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "expires_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        }
+      ],
+      "constraints": [
+        {
+          "name": "access_grants_agreement_id_channel_granted_by_account_id_gr_key",
+          "type": "u",
+          "definition": "UNIQUE (agreement_id, channel, granted_by_account_id, granted_to_account_id)"
+        },
+        {
+          "name": "access_grants_channel_check",
+          "type": "c",
+          "definition": "CHECK ((channel = ANY (ARRAY['PHONE'::text, 'EXACT_LOCATION'::text])))"
+        },
+        {
+          "name": "access_grants_check",
+          "type": "c",
+          "definition": "CHECK ((granted_by_account_id <> granted_to_account_id))"
+        },
+        {
+          "name": "access_grants_check1",
+          "type": "c",
+          "definition": "CHECK (((status <> 'REVOKED'::text) OR (revoked_at IS NOT NULL)))"
+        },
+        {
+          "name": "access_grants_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (id)"
+        },
+        {
+          "name": "access_grants_status_check",
+          "type": "c",
+          "definition": "CHECK ((status = ANY (ARRAY['GRANTED'::text, 'REVOKED'::text])))"
+        }
+      ],
+      "foreignkeys": [
+        {
+          "name": "access_grants_agreement_id_fkey",
+          "definition": "FOREIGN KEY (agreement_id) REFERENCES agreements(id) ON DELETE CASCADE"
+        },
+        {
+          "name": "access_grants_granted_by_account_id_fkey",
+          "definition": "FOREIGN KEY (granted_by_account_id) REFERENCES auth.users(id) ON DELETE RESTRICT"
+        },
+        {
+          "name": "access_grants_granted_to_account_id_fkey",
+          "definition": "FOREIGN KEY (granted_to_account_id) REFERENCES auth.users(id) ON DELETE RESTRICT"
+        }
+      ]
+    },
+    {
+      "name": "public.agreement_change_proposals",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "gen_random_uuid()",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "agreement_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "base_version",
+          "type": "integer",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "proposed_terms",
+          "type": "jsonb",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "content_hash",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "reason",
+          "type": "text",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "client_request_id",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "proposed_by_account_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "status",
+          "type": "text",
+          "default": "'PENDING'::text",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "responded_by_account_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "responded_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "statement_timestamp()",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        }
+      ],
+      "constraints": [
+        {
+          "name": "agreement_change_proposals_agreement_id_proposed_by_account_key",
+          "type": "u",
+          "definition": "UNIQUE (agreement_id, proposed_by_account_id, client_request_id)"
+        },
+        {
+          "name": "agreement_change_proposals_base_version_check",
+          "type": "c",
+          "definition": "CHECK ((base_version >= 1))"
+        },
+        {
+          "name": "agreement_change_proposals_client_request_id_check",
+          "type": "c",
+          "definition": "CHECK ((char_length(btrim(client_request_id)) >= 1))"
+        },
+        {
+          "name": "agreement_change_proposals_content_hash_check",
+          "type": "c",
+          "definition": "CHECK ((char_length(content_hash) >= 16))"
+        },
+        {
+          "name": "agreement_change_proposals_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (id)"
+        },
+        {
+          "name": "agreement_change_proposals_proposed_terms_check",
+          "type": "c",
+          "definition": "CHECK ((jsonb_typeof(proposed_terms) = 'object'::text))"
+        },
+        {
+          "name": "agreement_change_proposals_status_check",
+          "type": "c",
+          "definition": "CHECK ((status = ANY (ARRAY['PENDING'::text, 'ACCEPTED'::text, 'REJECTED'::text, 'SUPERSEDED'::text, 'WITHDRAWN'::text])))"
+        }
+      ],
+      "foreignkeys": [
+        {
+          "name": "agreement_change_proposals_agreement_id_fkey",
+          "definition": "FOREIGN KEY (agreement_id) REFERENCES agreements(id) ON DELETE CASCADE"
+        },
+        {
+          "name": "agreement_change_proposals_proposed_by_account_id_fkey",
+          "definition": "FOREIGN KEY (proposed_by_account_id) REFERENCES auth.users(id) ON DELETE RESTRICT"
+        },
+        {
+          "name": "agreement_change_proposals_responded_by_account_id_fkey",
+          "definition": "FOREIGN KEY (responded_by_account_id) REFERENCES auth.users(id) ON DELETE RESTRICT"
+        }
+      ]
+    },
+    {
+      "name": "public.agreement_execution",
+      "columns": [
+        {
+          "name": "agreement_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "agreement_version",
+          "type": "integer",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "mode",
+          "type": "text",
+          "default": "'PHYSICAL'::text",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "state",
+          "type": "text",
+          "default": "'CONFIRMED'::text",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "worker_marked_done_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "requester_deadline_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "problem_opened_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "completed_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "default": "statement_timestamp()",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "problem_narrative",
+          "type": "text",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "problem_opened_by",
+          "type": "uuid",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        }
+      ],
+      "constraints": [
+        {
+          "name": "agreement_execution_agreement_version_check",
+          "type": "c",
+          "definition": "CHECK ((agreement_version >= 1))"
+        },
+        {
+          "name": "agreement_execution_check",
+          "type": "c",
+          "definition": "CHECK (((state <> 'AWAITING_REQUESTER'::text) OR (requester_deadline_at IS NOT NULL)))"
+        },
+        {
+          "name": "agreement_execution_mode_check",
+          "type": "c",
+          "definition": "CHECK ((mode = ANY (ARRAY['PHYSICAL'::text, 'REMOTE'::text, 'PICKUP_DELIVERY'::text])))"
+        },
+        {
+          "name": "agreement_execution_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (agreement_id)"
+        },
+        {
+          "name": "agreement_execution_state_check",
+          "type": "c",
+          "definition": "CHECK ((state = ANY (ARRAY['CONFIRMED'::text, 'AWAITING_REQUESTER'::text, 'COMPLETED'::text, 'CANCELLED'::text])))"
+        }
+      ],
+      "foreignkeys": [
+        {
+          "name": "agreement_execution_agreement_id_fkey",
+          "definition": "FOREIGN KEY (agreement_id) REFERENCES agreements(id) ON DELETE CASCADE"
+        },
+        {
+          "name": "agreement_execution_problem_opened_by_fkey",
+          "definition": "FOREIGN KEY (problem_opened_by) REFERENCES auth.users(id) ON DELETE SET NULL"
+        }
+      ]
+    },
+    {
+      "name": "public.agreement_invalidations_v1",
+      "columns": [
+        {
+          "name": "agreement_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "revision",
+          "type": "bigint",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        }
+      ],
+      "constraints": [
+        {
+          "name": "agreement_invalidations_v1_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (agreement_id)"
+        },
+        {
+          "name": "agreement_invalidations_v1_revision_check",
+          "type": "c",
+          "definition": "CHECK ((revision > 0))"
+        }
+      ],
+      "foreignkeys": [
+        {
+          "name": "agreement_invalidations_v1_agreement_id_fkey",
+          "definition": "FOREIGN KEY (agreement_id) REFERENCES agreements(id) ON DELETE CASCADE"
+        }
+      ]
+    },
+    {
+      "name": "public.agreement_messages",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "extensions.gen_random_uuid()",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "agreement_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "agreement_version",
+          "type": "integer",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "sender_account_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "body",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "statement_timestamp()",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "read_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "client_message_id",
+          "type": "text",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "photo_asset_ids",
+          "type": "uuid[]",
+          "default": "'{}'::uuid[]",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "voice_asset_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        }
+      ],
+      "constraints": [
+        {
+          "name": "agreement_messages_agreement_version_check",
+          "type": "c",
+          "definition": "CHECK ((agreement_version >= 1))"
+        },
+        {
+          "name": "agreement_messages_body_media_check",
+          "type": "c",
+          "definition": "CHECK (((char_length(btrim(body)) <= 2000) AND ((cardinality(photo_asset_ids) >= 0) AND (cardinality(photo_asset_ids) <= 6)) AND (((voice_asset_id IS NULL) AND ((char_length(btrim(body)) >= 1) OR (cardinality(photo_asset_ids) >= 1))) OR ((voice_asset_id IS NOT NULL) AND (btrim(body) = ''::text) AND (cardinality(photo_asset_ids) = 0)))))"
+        },
+        {
+          "name": "agreement_messages_client_message_id_check",
+          "type": "c",
+          "definition": "CHECK (((client_message_id IS NULL) OR (client_message_id ~ '^[A-Za-z0-9][A-Za-z0-9_.:-]{7,199}$'::text)))"
+        },
+        {
+          "name": "agreement_messages_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (id)"
+        }
+      ],
+      "foreignkeys": [
+        {
+          "name": "agreement_messages_agreement_id_fkey",
+          "definition": "FOREIGN KEY (agreement_id) REFERENCES agreements(id) ON DELETE CASCADE"
+        },
+        {
+          "name": "agreement_messages_sender_account_id_fkey",
+          "definition": "FOREIGN KEY (sender_account_id) REFERENCES auth.users(id) ON DELETE RESTRICT"
+        }
+      ]
+    },
+    {
+      "name": "public.agreement_versions",
+      "columns": [
+        {
+          "name": "agreement_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "version",
+          "type": "integer",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "status",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "terms",
+          "type": "jsonb",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "content_hash",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "supersedes_version",
+          "type": "integer",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "created_by_account_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "statement_timestamp()",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        }
+      ],
+      "constraints": [
+        {
+          "name": "agreement_versions_check",
+          "type": "c",
+          "definition": "CHECK (((supersedes_version IS NULL) OR (supersedes_version < version)))"
+        },
+        {
+          "name": "agreement_versions_content_hash_check",
+          "type": "c",
+          "definition": "CHECK ((char_length(content_hash) >= 16))"
+        },
+        {
+          "name": "agreement_versions_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (agreement_id, version)"
+        },
+        {
+          "name": "agreement_versions_status_check",
+          "type": "c",
+          "definition": "CHECK ((status = ANY (ARRAY['CONFIRMED'::text, 'SUPERSEDED'::text, 'CANCELLED'::text])))"
+        },
+        {
+          "name": "agreement_versions_version_check",
+          "type": "c",
+          "definition": "CHECK ((version >= 1))"
+        }
+      ],
+      "foreignkeys": [
+        {
+          "name": "agreement_versions_agreement_id_fkey",
+          "definition": "FOREIGN KEY (agreement_id) REFERENCES agreements(id) ON DELETE CASCADE"
+        },
+        {
+          "name": "agreement_versions_created_by_account_id_fkey",
+          "definition": "FOREIGN KEY (created_by_account_id) REFERENCES auth.users(id) ON DELETE RESTRICT"
+        }
+      ]
+    },
+    {
+      "name": "public.agreements",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "extensions.gen_random_uuid()",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "need_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "selection_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "selected_response_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "requester_account_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "requester_profile_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "worker_account_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "worker_profile_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "current_version",
+          "type": "integer",
+          "default": "1",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "status",
+          "type": "text",
+          "default": "'CONFIRMED'::text",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "statement_timestamp()",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "default": "statement_timestamp()",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        }
+      ],
+      "constraints": [
+        {
+          "name": "agreements_current_version_check",
+          "type": "c",
+          "definition": "CHECK ((current_version >= 1))"
+        },
+        {
+          "name": "agreements_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (id)"
+        },
+        {
+          "name": "agreements_selected_response_id_key",
+          "type": "u",
+          "definition": "UNIQUE (selected_response_id)"
+        },
+        {
+          "name": "agreements_selection_id_key",
+          "type": "u",
+          "definition": "UNIQUE (selection_id)"
+        },
+        {
+          "name": "agreements_status_check",
+          "type": "c",
+          "definition": "CHECK ((status = ANY (ARRAY['CONFIRMED'::text, 'SUPERSEDED'::text, 'CANCELLED'::text, 'COMPLETED'::text])))"
+        }
+      ],
+      "foreignkeys": [
+        {
+          "name": "agreements_need_id_fkey",
+          "definition": "FOREIGN KEY (need_id) REFERENCES needs(id) ON DELETE RESTRICT"
+        },
+        {
+          "name": "agreements_requester_account_id_fkey",
+          "definition": "FOREIGN KEY (requester_account_id) REFERENCES auth.users(id) ON DELETE RESTRICT"
+        },
+        {
+          "name": "agreements_requester_profile_id_fkey",
+          "definition": "FOREIGN KEY (requester_profile_id) REFERENCES app_profiles(id) ON DELETE RESTRICT"
+        },
+        {
+          "name": "agreements_selected_response_id_fkey",
+          "definition": "FOREIGN KEY (selected_response_id) REFERENCES marketplace_responses(id) ON DELETE RESTRICT"
+        },
+        {
+          "name": "agreements_selection_id_fkey",
+          "definition": "FOREIGN KEY (selection_id) REFERENCES need_selections(id) ON DELETE RESTRICT"
+        },
+        {
+          "name": "agreements_worker_account_id_fkey",
+          "definition": "FOREIGN KEY (worker_account_id) REFERENCES auth.users(id) ON DELETE RESTRICT"
+        },
+        {
+          "name": "agreements_worker_profile_id_fkey",
+          "definition": "FOREIGN KEY (worker_profile_id) REFERENCES app_profiles(id) ON DELETE RESTRICT"
+        }
+      ]
+    },
+    {
+      "name": "public.app_accounts",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "email",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "full_name",
+          "type": "text",
+          "default": "''::text",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "city",
+          "type": "text",
+          "default": "''::text",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "phone",
+          "type": "text",
+          "default": "''::text",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "active_mode",
+          "type": "text",
+          "default": "'requester'::text",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "onboarding_complete",
+          "type": "boolean",
+          "default": "false",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "now()",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "default": "now()",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        }
+      ],
+      "constraints": [
+        {
+          "name": "app_accounts_mode_check",
+          "type": "c",
+          "definition": "CHECK ((active_mode = ANY (ARRAY['requester'::text, 'worker'::text])))"
+        },
+        {
+          "name": "app_accounts_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (id)"
+        }
+      ],
+      "foreignkeys": [
+        {
+          "name": "app_accounts_id_fkey",
+          "definition": "FOREIGN KEY (id) REFERENCES auth.users(id) ON DELETE CASCADE"
+        }
+      ]
+    },
+    {
+      "name": "public.app_profiles",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "gen_random_uuid()",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "account_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "kind",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "display_name",
+          "type": "text",
+          "default": "''::text",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "city",
+          "type": "text",
+          "default": "''::text",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "headline",
+          "type": "text",
+          "default": "''::text",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "bio",
+          "type": "text",
+          "default": "''::text",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "avatar_path",
+          "type": "text",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "account_type",
+          "type": "text",
+          "default": "'INDIVIDUAL'::text",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "profile_status",
+          "type": "text",
+          "default": "'DRAFT'::text",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "years_experience",
+          "type": "integer",
+          "default": "0",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "portfolio",
+          "type": "jsonb",
+          "default": "'[]'::jsonb",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "skills",
+          "type": "text[]",
+          "default": "ARRAY[]::text[]",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "radius_km",
+          "type": "integer",
+          "default": "15",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "available_now",
+          "type": "boolean",
+          "default": "false",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "team_capacity",
+          "type": "integer",
+          "default": "1",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "tools",
+          "type": "text[]",
+          "default": "ARRAY[]::text[]",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "licenses",
+          "type": "text[]",
+          "default": "ARRAY[]::text[]",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "vehicles",
+          "type": "text[]",
+          "default": "ARRAY[]::text[]",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "exclusions",
+          "type": "text[]",
+          "default": "ARRAY[]::text[]",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "minimum_fee_rsd",
+          "type": "integer",
+          "default": "0",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "rating_requester",
+          "type": "numeric(3,2)",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "rating_worker",
+          "type": "numeric(3,2)",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "now()",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "default": "now()",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "available_now_expires_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "operating_country_code",
+          "type": "text",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        }
+      ],
+      "constraints": [
+        {
+          "name": "app_profiles_account_id_kind_key",
+          "type": "u",
+          "definition": "UNIQUE (account_id, kind)"
+        },
+        {
+          "name": "app_profiles_account_type_check",
+          "type": "c",
+          "definition": "CHECK ((account_type = ANY (ARRAY['INDIVIDUAL'::text, 'TEAM'::text, 'COMPANY'::text])))"
+        },
+        {
+          "name": "app_profiles_capacity_check",
+          "type": "c",
+          "definition": "CHECK (((team_capacity >= 1) AND (team_capacity <= 50)))"
+        },
+        {
+          "name": "app_profiles_kind_check",
+          "type": "c",
+          "definition": "CHECK ((kind = ANY (ARRAY['REQUESTER'::text, 'WORKER'::text])))"
+        },
+        {
+          "name": "app_profiles_minimum_fee_check",
+          "type": "c",
+          "definition": "CHECK (((minimum_fee_rsd >= 0) AND (minimum_fee_rsd <= 10000000)))"
+        },
+        {
+          "name": "app_profiles_operating_country_code_check",
+          "type": "c",
+          "definition": "CHECK (((operating_country_code IS NULL) OR (operating_country_code ~ '^[A-Z]{2}$'::text)))"
+        },
+        {
+          "name": "app_profiles_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (id)"
+        },
+        {
+          "name": "app_profiles_radius_check",
+          "type": "c",
+          "definition": "CHECK (((radius_km >= 1) AND (radius_km <= 200)))"
+        },
+        {
+          "name": "app_profiles_status_check",
+          "type": "c",
+          "definition": "CHECK ((profile_status = ANY (ARRAY['DRAFT'::text, 'ACTIVE'::text, 'SUSPENDED'::text, 'CLOSED'::text])))"
+        },
+        {
+          "name": "app_profiles_years_check",
+          "type": "c",
+          "definition": "CHECK (((years_experience >= 0) AND (years_experience <= 80)))"
+        }
+      ],
+      "foreignkeys": [
+        {
+          "name": "app_profiles_account_id_fkey",
+          "definition": "FOREIGN KEY (account_id) REFERENCES app_accounts(id) ON DELETE CASCADE"
+        }
+      ]
+    },
+    {
+      "name": "public.marketplace_responses",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "extensions.gen_random_uuid()",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "need_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "worker_account_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "worker_profile_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "response_kind",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "status",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "submitted_against_need_revision",
+          "type": "integer",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "current_version",
+          "type": "integer",
+          "default": "1",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "covered_slots",
+          "type": "integer",
+          "default": "1",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "price_rsd",
+          "type": "integer",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "proposed_start_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "proposed_end_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "scope_note",
+          "type": "text",
+          "default": "''::text",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "bounded_message",
+          "type": "text",
+          "default": "''::text",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "submitted_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "viewed_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "selected_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "withdrawn_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "statement_timestamp()",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "default": "statement_timestamp()",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "price_basis",
+          "type": "text",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        }
+      ],
+      "constraints": [
+        {
+          "name": "marketplace_responses_bounded_message_check",
+          "type": "c",
+          "definition": "CHECK ((char_length(bounded_message) <= 1000))"
+        },
+        {
+          "name": "marketplace_responses_check",
+          "type": "c",
+          "definition": "CHECK ((((proposed_start_at IS NULL) AND (proposed_end_at IS NULL)) OR ((proposed_start_at IS NOT NULL) AND (proposed_end_at IS NOT NULL) AND (proposed_start_at < proposed_end_at))))"
+        },
+        {
+          "name": "marketplace_responses_covered_slots_check",
+          "type": "c",
+          "definition": "CHECK (((covered_slots >= 1) AND (covered_slots <= 50)))"
+        },
+        {
+          "name": "marketplace_responses_current_version_check",
+          "type": "c",
+          "definition": "CHECK ((current_version >= 1))"
+        },
+        {
+          "name": "marketplace_responses_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (id)"
+        },
+        {
+          "name": "marketplace_responses_price_basis_check",
+          "type": "c",
+          "definition": "CHECK ((price_basis = ANY (ARRAY['TOTAL'::text, 'HOURLY'::text])))"
+        },
+        {
+          "name": "marketplace_responses_price_rsd_check",
+          "type": "c",
+          "definition": "CHECK ((price_rsd > 0))"
+        },
+        {
+          "name": "marketplace_responses_response_kind_check",
+          "type": "c",
+          "definition": "CHECK ((response_kind = ANY (ARRAY['APPLICATION'::text, 'OFFER'::text])))"
+        },
+        {
+          "name": "marketplace_responses_status_check",
+          "type": "c",
+          "definition": "CHECK ((status = ANY (ARRAY['DRAFT'::text, 'SUBMITTED'::text, 'DELIVERED'::text, 'VIEWED'::text, 'SHORTLISTED'::text, 'SELECTED'::text, 'NOT_SELECTED'::text, 'WITHDRAWN'::text, 'EXPIRED'::text, 'STALE'::text, 'STALE_REVIEW_REQUIRED'::text])))"
+        },
+        {
+          "name": "marketplace_responses_submitted_against_need_revision_check",
+          "type": "c",
+          "definition": "CHECK ((submitted_against_need_revision >= 1))"
+        }
+      ],
+      "foreignkeys": [
+        {
+          "name": "marketplace_responses_need_id_fkey",
+          "definition": "FOREIGN KEY (need_id) REFERENCES needs(id) ON DELETE CASCADE"
+        },
+        {
+          "name": "marketplace_responses_worker_account_id_fkey",
+          "definition": "FOREIGN KEY (worker_account_id) REFERENCES auth.users(id) ON DELETE RESTRICT"
+        },
+        {
+          "name": "marketplace_responses_worker_profile_id_fkey",
+          "definition": "FOREIGN KEY (worker_profile_id) REFERENCES app_profiles(id) ON DELETE RESTRICT"
+        }
+      ]
+    },
+    {
+      "name": "public.need_selections",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "extensions.gen_random_uuid()",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "need_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "need_revision",
+          "type": "integer",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "selected_by_account_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "client_request_id",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "covered_slots",
+          "type": "integer",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "statement_timestamp()",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "response_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "worker_account_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "worker_profile_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "selection_mode",
+          "type": "text",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "status",
+          "type": "text",
+          "default": "'SELECTED'::text",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "default": "statement_timestamp()",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        }
+      ],
+      "constraints": [
+        {
+          "name": "need_selections_client_request_id_check",
+          "type": "c",
+          "definition": "CHECK (((char_length(btrim(client_request_id)) >= 8) AND (char_length(btrim(client_request_id)) <= 200)))"
+        },
+        {
+          "name": "need_selections_covered_slots_check",
+          "type": "c",
+          "definition": "CHECK (((covered_slots >= 1) AND (covered_slots <= 50)))"
+        },
+        {
+          "name": "need_selections_need_id_client_request_id_key",
+          "type": "u",
+          "definition": "UNIQUE (need_id, client_request_id)"
+        },
+        {
+          "name": "need_selections_need_revision_check",
+          "type": "c",
+          "definition": "CHECK ((need_revision >= 1))"
+        },
+        {
+          "name": "need_selections_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (id)"
+        },
+        {
+          "name": "need_selections_selection_mode_check",
+          "type": "c",
+          "definition": "CHECK ((selection_mode = ANY (ARRAY['REQUESTER_SELECTS'::text, 'BIDDING'::text])))"
+        },
+        {
+          "name": "need_selections_status_check",
+          "type": "c",
+          "definition": "CHECK ((status = ANY (ARRAY['SELECTED'::text, 'CANCELLED'::text, 'SUPERSEDED'::text])))"
+        }
+      ],
+      "foreignkeys": [
+        {
+          "name": "need_selections_need_id_fkey",
+          "definition": "FOREIGN KEY (need_id) REFERENCES needs(id) ON DELETE CASCADE"
+        },
+        {
+          "name": "need_selections_response_id_fkey",
+          "definition": "FOREIGN KEY (response_id) REFERENCES marketplace_responses(id) ON DELETE RESTRICT"
+        },
+        {
+          "name": "need_selections_selected_by_account_id_fkey",
+          "definition": "FOREIGN KEY (selected_by_account_id) REFERENCES auth.users(id) ON DELETE RESTRICT"
+        },
+        {
+          "name": "need_selections_worker_account_id_fkey",
+          "definition": "FOREIGN KEY (worker_account_id) REFERENCES auth.users(id) ON DELETE RESTRICT"
+        },
+        {
+          "name": "need_selections_worker_profile_id_fkey",
+          "definition": "FOREIGN KEY (worker_profile_id) REFERENCES app_profiles(id) ON DELETE RESTRICT"
+        }
+      ]
+    },
+    {
+      "name": "public.needs",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "extensions.gen_random_uuid()",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "requester_account_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "requester_profile_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "status",
+          "type": "text",
+          "default": "'DRAFT'::text",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "title",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "description",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "category",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "approximate_city",
+          "type": "text",
+          "default": "''::text",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "approximate_area",
+          "type": "text",
+          "default": "''::text",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "approximate_lat",
+          "type": "numeric(6,2)",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "approximate_lng",
+          "type": "numeric(7,2)",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "schedule_kind",
+          "type": "text",
+          "default": "'FLEXIBLE'::text",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "starts_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "ends_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "required_slots",
+          "type": "integer",
+          "default": "1",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "mode",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "requester_price_rsd",
+          "type": "integer",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "required_skills",
+          "type": "text[]",
+          "default": "'{}'::text[]",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "required_tools",
+          "type": "text[]",
+          "default": "'{}'::text[]",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "required_vehicles",
+          "type": "text[]",
+          "default": "'{}'::text[]",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "verified_identity_required",
+          "type": "boolean",
+          "default": "false",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "urgent",
+          "type": "boolean",
+          "default": "false",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "public_photo_paths",
+          "type": "text[]",
+          "default": "'{}'::text[]",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "revision",
+          "type": "integer",
+          "default": "1",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "published_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "statement_timestamp()",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "default": "statement_timestamp()",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "response_deadline",
+          "type": "timestamp with time zone",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "urgent_activated_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "urgent_expires_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "urgent_policy_version",
+          "type": "text",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "minimum_experience_years",
+          "type": "integer",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "execution_location_mode",
+          "type": "text",
+          "default": "'STATIONARY'::text",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "approx_geog",
+          "type": "geography(Point,4326)",
+          "default": "\nCASE\n    WHEN ((approximate_lat IS NOT NULL) AND (approximate_lng IS NOT NULL)) THEN (st_setsrid(st_makepoint((approximate_lng)::double precision, (approximate_lat)::double precision), 4326))::geography\n    ELSE NULL::geography\nEND",
+          "notNull": false,
+          "identity": "",
+          "generated": "s"
+        },
+        {
+          "name": "required_licenses",
+          "type": "text[]",
+          "default": "'{}'::text[]",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "remaining_search_closed_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "remaining_search_closed_by_account_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "remaining_search_close_reason",
+          "type": "text",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "task_country_code",
+          "type": "text",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "task_timezone",
+          "type": "text",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "price_basis",
+          "type": "text",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "category_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        }
+      ],
+      "constraints": [
+        {
+          "name": "needs_category_check",
+          "type": "c",
+          "definition": "CHECK (((char_length(btrim(category)) >= 1) AND (char_length(btrim(category)) <= 120)))"
+        },
+        {
+          "name": "needs_check",
+          "type": "c",
+          "definition": "CHECK (((ends_at IS NULL) OR (starts_at IS NULL) OR (ends_at > starts_at)))"
+        },
+        {
+          "name": "needs_description_check",
+          "type": "c",
+          "definition": "CHECK (((char_length(btrim(description)) >= 1) AND (char_length(btrim(description)) <= 6000)))"
+        },
+        {
+          "name": "needs_execution_location_mode_chk",
+          "type": "c",
+          "definition": "CHECK ((execution_location_mode = ANY (ARRAY['STATIONARY'::text, 'POINT_TO_POINT'::text, 'MULTI_STOP'::text, 'AREA_BASED'::text, 'REMOTE'::text])))"
+        },
+        {
+          "name": "needs_minimum_experience_years_check",
+          "type": "c",
+          "definition": "CHECK (((minimum_experience_years IS NULL) OR ((minimum_experience_years >= 0) AND (minimum_experience_years <= 60))))"
+        },
+        {
+          "name": "needs_mode_check",
+          "type": "c",
+          "definition": "CHECK ((mode = ANY (ARRAY['MY_PRICE'::text, 'OFFERS'::text])))"
+        },
+        {
+          "name": "needs_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (id)"
+        },
+        {
+          "name": "needs_price_basis_requires_my_price",
+          "type": "c",
+          "definition": "CHECK (((price_basis IS NULL) OR ((price_basis = ANY (ARRAY['TOTAL'::text, 'PER_PERSON'::text, 'HOURLY'::text])) AND (mode = 'MY_PRICE'::text))))"
+        },
+        {
+          "name": "needs_remaining_search_close_reason_length",
+          "type": "c",
+          "definition": "CHECK (((remaining_search_close_reason IS NULL) OR (char_length(remaining_search_close_reason) <= 500)))"
+        },
+        {
+          "name": "needs_requester_price_rsd_check",
+          "type": "c",
+          "definition": "CHECK (((requester_price_rsd IS NULL) OR (requester_price_rsd > 0)))"
+        },
+        {
+          "name": "needs_required_slots_check",
+          "type": "c",
+          "definition": "CHECK (((required_slots >= 1) AND (required_slots <= 50)))"
+        },
+        {
+          "name": "needs_revision_check",
+          "type": "c",
+          "definition": "CHECK ((revision >= 1))"
+        },
+        {
+          "name": "needs_schedule_kind_check",
+          "type": "c",
+          "definition": "CHECK ((schedule_kind = ANY (ARRAY['FIXED_WINDOW'::text, 'FLEXIBLE'::text, 'REMOTE_ANYTIME'::text, 'TODAY_FLEXIBLE'::text, 'TOMORROW_FLEXIBLE'::text, 'WEEK_FLEXIBLE'::text])))"
+        },
+        {
+          "name": "needs_status_check",
+          "type": "c",
+          "definition": "CHECK ((status = ANY (ARRAY['DRAFT'::text, 'PUBLISHED'::text, 'SELECTION'::text, 'ACTIVE'::text, 'COMPLETED'::text, 'CANCELLED'::text, 'EXPIRED'::text, 'ARCHIVED'::text])))"
+        },
+        {
+          "name": "needs_task_country_code_check",
+          "type": "c",
+          "definition": "CHECK (((task_country_code IS NULL) OR (task_country_code ~ '^[A-Z]{2}$'::text)))"
+        },
+        {
+          "name": "needs_title_check",
+          "type": "c",
+          "definition": "CHECK (((char_length(btrim(title)) >= 1) AND (char_length(btrim(title)) <= 140)))"
+        },
+        {
+          "name": "needs_urgent_window_chk",
+          "type": "c",
+          "definition": "CHECK (((NOT urgent) OR ((urgent_activated_at IS NOT NULL) AND (urgent_expires_at IS NOT NULL) AND (urgent_expires_at > urgent_activated_at))))"
+        }
+      ],
+      "foreignkeys": [
+        {
+          "name": "needs_category_id_fkey",
+          "definition": "FOREIGN KEY (category_id) REFERENCES private.work_taxonomy_categories(id)"
+        },
+        {
+          "name": "needs_remaining_search_closed_by_account_id_fkey",
+          "definition": "FOREIGN KEY (remaining_search_closed_by_account_id) REFERENCES auth.users(id) ON DELETE SET NULL"
+        },
+        {
+          "name": "needs_requester_account_id_fkey",
+          "definition": "FOREIGN KEY (requester_account_id) REFERENCES auth.users(id) ON DELETE RESTRICT"
+        },
+        {
+          "name": "needs_requester_profile_id_fkey",
+          "definition": "FOREIGN KEY (requester_profile_id) REFERENCES app_profiles(id) ON DELETE RESTRICT"
+        }
+      ]
+    },
+    {
+      "name": "public.notification_deliveries",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "extensions.gen_random_uuid()",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "event_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "recipient_user_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "recipient_role",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "channel",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "priority",
+          "type": "text",
+          "default": "'NORMAL'::text",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "state",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "suppression_reason",
+          "type": "text",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "title",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "body",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "dedupe_key",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "statement_timestamp()",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "queued_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "sent_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "delivered_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "read_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "expires_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "push_started_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        }
+      ],
+      "constraints": [
+        {
+          "name": "notification_deliveries_channel_check",
+          "type": "c",
+          "definition": "CHECK ((channel = ANY (ARRAY['IN_APP'::text, 'PUSH'::text])))"
+        },
+        {
+          "name": "notification_deliveries_check",
+          "type": "c",
+          "definition": "CHECK (((state <> 'SUPPRESSED'::text) OR (suppression_reason IS NOT NULL)))"
+        },
+        {
+          "name": "notification_deliveries_dedupe_key_key",
+          "type": "u",
+          "definition": "UNIQUE (dedupe_key)"
+        },
+        {
+          "name": "notification_deliveries_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (id)"
+        },
+        {
+          "name": "notification_deliveries_priority_check",
+          "type": "c",
+          "definition": "CHECK ((priority = ANY (ARRAY['NORMAL'::text, 'HIGH'::text])))"
+        },
+        {
+          "name": "notification_deliveries_recipient_role_check",
+          "type": "c",
+          "definition": "CHECK ((recipient_role = ANY (ARRAY['REQUESTER'::text, 'WORKER'::text])))"
+        },
+        {
+          "name": "notification_deliveries_state_check",
+          "type": "c",
+          "definition": "CHECK ((state = ANY (ARRAY['CREATED'::text, 'QUEUED'::text, 'SENT'::text, 'DELIVERED'::text, 'FAILED_RETRYABLE'::text, 'FAILED_FINAL'::text, 'EXPIRED'::text, 'READ'::text, 'SUPPRESSED'::text])))"
+        }
+      ],
+      "foreignkeys": [
+        {
+          "name": "notification_deliveries_event_id_fkey",
+          "definition": "FOREIGN KEY (event_id) REFERENCES user_activity_events(id) ON DELETE CASCADE"
+        },
+        {
+          "name": "notification_deliveries_recipient_user_id_fkey",
+          "definition": "FOREIGN KEY (recipient_user_id) REFERENCES auth.users(id) ON DELETE CASCADE"
+        }
+      ]
+    },
+    {
+      "name": "public.notification_preferences",
+      "columns": [
+        {
+          "name": "user_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "role_context",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "in_app_enabled",
+          "type": "boolean",
+          "default": "true",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "push_enabled",
+          "type": "boolean",
+          "default": "false",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "opportunities_enabled",
+          "type": "boolean",
+          "default": "true",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "responses_enabled",
+          "type": "boolean",
+          "default": "true",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "dogovor_enabled",
+          "type": "boolean",
+          "default": "true",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "execution_enabled",
+          "type": "boolean",
+          "default": "true",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "recovery_enabled",
+          "type": "boolean",
+          "default": "true",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "account_enabled",
+          "type": "boolean",
+          "default": "true",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "quiet_hours_enabled",
+          "type": "boolean",
+          "default": "false",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "quiet_start",
+          "type": "time without time zone",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "quiet_end",
+          "type": "time without time zone",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "quiet_timezone",
+          "type": "text",
+          "default": "'Europe/Belgrade'::text",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "urgent_overrides_quiet_hours",
+          "type": "boolean",
+          "default": "false",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "default": "statement_timestamp()",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "revision",
+          "type": "bigint",
+          "default": "0",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        }
+      ],
+      "constraints": [
+        {
+          "name": "notification_preferences_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (user_id, role_context)"
+        },
+        {
+          "name": "notification_preferences_revision_check",
+          "type": "c",
+          "definition": "CHECK ((revision >= 0))"
+        },
+        {
+          "name": "notification_preferences_role_context_check",
+          "type": "c",
+          "definition": "CHECK ((role_context = ANY (ARRAY['REQUESTER'::text, 'WORKER'::text])))"
+        },
+        {
+          "name": "notification_quiet_times_bounds",
+          "type": "c",
+          "definition": "CHECK ((((quiet_start IS NULL) OR (quiet_start < '24:00:00'::time without time zone)) AND ((quiet_end IS NULL) OR (quiet_end < '24:00:00'::time without time zone))))"
+        },
+        {
+          "name": "notification_quiet_times_complete",
+          "type": "c",
+          "definition": "CHECK (((NOT quiet_hours_enabled) OR ((quiet_start IS NOT NULL) AND (quiet_end IS NOT NULL))))"
+        }
+      ],
+      "foreignkeys": [
+        {
+          "name": "notification_preferences_user_id_fkey",
+          "definition": "FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE"
+        }
+      ]
+    },
+    {
+      "name": "public.user_activity_events",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "extensions.gen_random_uuid()",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "recipient_user_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "recipient_role",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "event_type",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "entity_type",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "entity_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "entity_version",
+          "type": "integer",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "urgency",
+          "type": "text",
+          "default": "'NORMAL'::text",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "payload",
+          "type": "jsonb",
+          "default": "'{}'::jsonb",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "dedupe_key",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "statement_timestamp()",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "read_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        }
+      ],
+      "constraints": [
+        {
+          "name": "user_activity_events_dedupe_key_key",
+          "type": "u",
+          "definition": "UNIQUE (dedupe_key)"
+        },
+        {
+          "name": "user_activity_events_entity_type_check",
+          "type": "c",
+          "definition": "CHECK ((entity_type = ANY (ARRAY['NEED'::text, 'RESPONSE'::text, 'AGREEMENT'::text, 'CLARIFICATION'::text])))"
+        },
+        {
+          "name": "user_activity_events_event_type_check",
+          "type": "c",
+          "definition": "CHECK (((event_type = ANY (ARRAY['OPPORTUNITY_AVAILABLE'::text, 'RESPONSE_RECEIVED'::text, 'RESPONSE_UPDATED'::text, 'RESPONSE_VIEWED'::text, 'RESPONSE_SHORTLISTED'::text, 'RESPONSE_SELECTED'::text, 'RESPONSE_NOT_SELECTED'::text, 'RESPONSE_STALE'::text, 'RESPONSE_WITHDRAWN'::text, 'RESPONSE_EXPIRED'::text, 'NEED_REVISED'::text, 'NEED_CANCELLED'::text, 'AGREEMENT_VERSION_CHANGED'::text, 'AGREEMENT_CHANGE_PROPOSED'::text, 'AGREEMENT_CHANGE_REJECTED'::text, 'EXECUTION_STATE_CHANGED'::text, 'COMPLETION_REQUIRED'::text, 'MESSAGE_RECEIVED'::text, 'PRIVATE_ACCESS_GRANTED'::text, 'RECOVERY_OPENED'::text, 'REVIEW_RECEIVED'::text, 'CLARIFICATION_CREATED'::text, 'CLARIFICATION_ANSWERED'::text])) OR (event_type = 'AGREEMENT_CANCELLED'::text)))"
+        },
+        {
+          "name": "user_activity_events_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (id)"
+        },
+        {
+          "name": "user_activity_events_recipient_role_check",
+          "type": "c",
+          "definition": "CHECK ((recipient_role = ANY (ARRAY['REQUESTER'::text, 'WORKER'::text])))"
+        },
+        {
+          "name": "user_activity_events_urgency_check",
+          "type": "c",
+          "definition": "CHECK ((urgency = ANY (ARRAY['NORMAL'::text, 'HITNO'::text])))"
+        }
+      ],
+      "foreignkeys": [
+        {
+          "name": "user_activity_events_recipient_user_id_fkey",
+          "definition": "FOREIGN KEY (recipient_user_id) REFERENCES auth.users(id) ON DELETE CASCADE"
+        }
+      ]
+    },
+    {
+      "name": "private.agreement_photo_uploads_v5",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "gen_random_uuid()",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "account_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "agreement_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "agreement_version",
+          "type": "integer",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "client_request_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "attempt_id",
+          "type": "uuid",
+          "default": "gen_random_uuid()",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "state",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "input_sha256",
+          "type": "text",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "input_bytes",
+          "type": "integer",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "input_type",
+          "type": "text",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "admitted_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "clock_timestamp()",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "cancelled_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "sanitized_sha256",
+          "type": "text",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "storage_path",
+          "type": "text",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "width",
+          "type": "integer",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "height",
+          "type": "integer",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "byte_size",
+          "type": "integer",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "dispatch_state",
+          "type": "text",
+          "default": "'NOT_DISPATCHED'::text",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "dispatch_outcome",
+          "type": "text",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "attached_message_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        }
+      ],
+      "constraints": [
+        {
+          "name": "agreement_photo_uploads_v5_account_id_client_request_id_key",
+          "type": "u",
+          "definition": "UNIQUE (account_id, client_request_id)"
+        },
+        {
+          "name": "agreement_photo_uploads_v5_agreement_version_check",
+          "type": "c",
+          "definition": "CHECK ((agreement_version > 0))"
+        },
+        {
+          "name": "agreement_photo_uploads_v5_byte_size_check",
+          "type": "c",
+          "definition": "CHECK (((byte_size >= 1) AND (byte_size <= 5242880)))"
+        },
+        {
+          "name": "agreement_photo_uploads_v5_check",
+          "type": "c",
+          "definition": "CHECK ((((input_sha256 IS NULL) AND (input_bytes IS NULL) AND (input_type IS NULL) AND (admitted_at IS NULL) AND (state = 'CANCELLED'::text)) OR ((input_sha256 IS NOT NULL) AND (input_bytes IS NOT NULL) AND (input_type IS NOT NULL) AND (admitted_at IS NOT NULL))))"
+        },
+        {
+          "name": "agreement_photo_uploads_v5_check1",
+          "type": "c",
+          "definition": "CHECK ((((storage_path IS NULL) AND (sanitized_sha256 IS NULL) AND (width IS NULL) AND (height IS NULL) AND (byte_size IS NULL)) OR ((storage_path IS NOT NULL) AND (storage_path = ((((((account_id)::text || '/agreement-v5/'::text) || (id)::text) || '/'::text) || sanitized_sha256) || '.jpg'::text)) AND (sanitized_sha256 IS NOT NULL) AND (width IS NOT NULL) AND (height IS NOT NULL) AND (byte_size IS NOT NULL))))"
+        },
+        {
+          "name": "agreement_photo_uploads_v5_check2",
+          "type": "c",
+          "definition": "CHECK (((dispatch_state = 'SETTLED'::text) = (dispatch_outcome IS NOT NULL)))"
+        },
+        {
+          "name": "agreement_photo_uploads_v5_check3",
+          "type": "c",
+          "definition": "CHECK (((dispatch_state = 'NOT_DISPATCHED'::text) OR (storage_path IS NOT NULL)))"
+        },
+        {
+          "name": "agreement_photo_uploads_v5_check4",
+          "type": "c",
+          "definition": "CHECK (((state <> ALL (ARRAY['STAGED'::text, 'READY'::text])) OR (storage_path IS NOT NULL)))"
+        },
+        {
+          "name": "agreement_photo_uploads_v5_check5",
+          "type": "c",
+          "definition": "CHECK (((state <> 'READY'::text) OR ((dispatch_state = 'SETTLED'::text) AND (dispatch_outcome = 'STORED'::text))))"
+        },
+        {
+          "name": "agreement_photo_uploads_v5_check6",
+          "type": "c",
+          "definition": "CHECK (((state = 'CANCELLED'::text) = (cancelled_at IS NOT NULL)))"
+        },
+        {
+          "name": "agreement_photo_uploads_v5_check7",
+          "type": "c",
+          "definition": "CHECK (((attached_message_id IS NULL) OR (state = 'READY'::text)))"
+        },
+        {
+          "name": "agreement_photo_uploads_v5_dispatch_outcome_check",
+          "type": "c",
+          "definition": "CHECK ((dispatch_outcome = ANY (ARRAY['STORED'::text, 'REJECTED'::text])))"
+        },
+        {
+          "name": "agreement_photo_uploads_v5_dispatch_state_check",
+          "type": "c",
+          "definition": "CHECK ((dispatch_state = ANY (ARRAY['NOT_DISPATCHED'::text, 'DISPATCHING'::text, 'SETTLED'::text])))"
+        },
+        {
+          "name": "agreement_photo_uploads_v5_height_check",
+          "type": "c",
+          "definition": "CHECK (((height >= 1) AND (height <= 1600)))"
+        },
+        {
+          "name": "agreement_photo_uploads_v5_input_bytes_check",
+          "type": "c",
+          "definition": "CHECK (((input_bytes >= 1) AND (input_bytes <= 10485760)))"
+        },
+        {
+          "name": "agreement_photo_uploads_v5_input_sha256_check",
+          "type": "c",
+          "definition": "CHECK ((input_sha256 ~ '^[a-f0-9]{64}$'::text))"
+        },
+        {
+          "name": "agreement_photo_uploads_v5_input_type_check",
+          "type": "c",
+          "definition": "CHECK ((input_type = ANY (ARRAY['image/jpeg'::text, 'image/png'::text, 'image/webp'::text])))"
+        },
+        {
+          "name": "agreement_photo_uploads_v5_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (id)"
+        },
+        {
+          "name": "agreement_photo_uploads_v5_sanitized_sha256_check",
+          "type": "c",
+          "definition": "CHECK ((sanitized_sha256 ~ '^[a-f0-9]{64}$'::text))"
+        },
+        {
+          "name": "agreement_photo_uploads_v5_state_check",
+          "type": "c",
+          "definition": "CHECK ((state = ANY (ARRAY['PROCESSING'::text, 'STAGED'::text, 'READY'::text, 'FAILED'::text, 'CANCELLED'::text])))"
+        },
+        {
+          "name": "agreement_photo_uploads_v5_storage_path_key",
+          "type": "u",
+          "definition": "UNIQUE (storage_path)"
+        },
+        {
+          "name": "agreement_photo_uploads_v5_width_check",
+          "type": "c",
+          "definition": "CHECK (((width >= 1) AND (width <= 1600)))"
+        }
+      ],
+      "foreignkeys": []
+    },
+    {
+      "name": "private.agreement_voice_uploads_v1",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "default": "gen_random_uuid()",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "account_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "agreement_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "agreement_version",
+          "type": "integer",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "client_request_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "attempt_id",
+          "type": "uuid",
+          "default": "gen_random_uuid()",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "state",
+          "type": "text",
+          "default": null,
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "input_sha256",
+          "type": "text",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "input_bytes",
+          "type": "integer",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "input_type",
+          "type": "text",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "admitted_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "default": "clock_timestamp()",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "cancelled_at",
+          "type": "timestamp with time zone",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "validated_sha256",
+          "type": "text",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "storage_path",
+          "type": "text",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "byte_size",
+          "type": "integer",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "duration_ms",
+          "type": "integer",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "dispatch_state",
+          "type": "text",
+          "default": "'NOT_DISPATCHED'::text",
+          "notNull": true,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "dispatch_outcome",
+          "type": "text",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        },
+        {
+          "name": "attached_message_id",
+          "type": "uuid",
+          "default": null,
+          "notNull": false,
+          "identity": "",
+          "generated": ""
+        }
+      ],
+      "constraints": [
+        {
+          "name": "agreement_voice_uploads_v1_account_id_client_request_id_key",
+          "type": "u",
+          "definition": "UNIQUE (account_id, client_request_id)"
+        },
+        {
+          "name": "agreement_voice_uploads_v1_agreement_version_check",
+          "type": "c",
+          "definition": "CHECK ((agreement_version > 0))"
+        },
+        {
+          "name": "agreement_voice_uploads_v1_byte_size_check",
+          "type": "c",
+          "definition": "CHECK (((byte_size >= 1) AND (byte_size <= 4194304)))"
+        },
+        {
+          "name": "agreement_voice_uploads_v1_check",
+          "type": "c",
+          "definition": "CHECK ((((input_sha256 IS NULL) AND (input_bytes IS NULL) AND (input_type IS NULL) AND (admitted_at IS NULL) AND (state = 'CANCELLED'::text)) OR ((input_sha256 IS NOT NULL) AND (input_bytes IS NOT NULL) AND (input_type IS NOT NULL) AND (admitted_at IS NOT NULL))))"
+        },
+        {
+          "name": "agreement_voice_uploads_v1_check1",
+          "type": "c",
+          "definition": "CHECK ((((storage_path IS NULL) AND (validated_sha256 IS NULL) AND (byte_size IS NULL) AND (duration_ms IS NULL)) OR ((storage_path IS NOT NULL) AND (storage_path = ((((((account_id)::text || '/agreement-voice-v1/'::text) || (id)::text) || '/'::text) || validated_sha256) || '.m4a'::text)) AND (validated_sha256 IS NOT NULL) AND (byte_size IS NOT NULL) AND (duration_ms IS NOT NULL))))"
+        },
+        {
+          "name": "agreement_voice_uploads_v1_check2",
+          "type": "c",
+          "definition": "CHECK (((dispatch_state = 'SETTLED'::text) = (dispatch_outcome IS NOT NULL)))"
+        },
+        {
+          "name": "agreement_voice_uploads_v1_check3",
+          "type": "c",
+          "definition": "CHECK (((dispatch_state = 'NOT_DISPATCHED'::text) OR (storage_path IS NOT NULL)))"
+        },
+        {
+          "name": "agreement_voice_uploads_v1_check4",
+          "type": "c",
+          "definition": "CHECK (((state <> ALL (ARRAY['STAGED'::text, 'READY'::text])) OR (storage_path IS NOT NULL)))"
+        },
+        {
+          "name": "agreement_voice_uploads_v1_check5",
+          "type": "c",
+          "definition": "CHECK (((state <> 'READY'::text) OR ((dispatch_state = 'SETTLED'::text) AND (dispatch_outcome = 'STORED'::text))))"
+        },
+        {
+          "name": "agreement_voice_uploads_v1_check6",
+          "type": "c",
+          "definition": "CHECK (((state = 'CANCELLED'::text) = (cancelled_at IS NOT NULL)))"
+        },
+        {
+          "name": "agreement_voice_uploads_v1_check7",
+          "type": "c",
+          "definition": "CHECK (((attached_message_id IS NULL) OR (state = 'READY'::text)))"
+        },
+        {
+          "name": "agreement_voice_uploads_v1_dispatch_outcome_check",
+          "type": "c",
+          "definition": "CHECK ((dispatch_outcome = ANY (ARRAY['STORED'::text, 'REJECTED'::text])))"
+        },
+        {
+          "name": "agreement_voice_uploads_v1_dispatch_state_check",
+          "type": "c",
+          "definition": "CHECK ((dispatch_state = ANY (ARRAY['NOT_DISPATCHED'::text, 'DISPATCHING'::text, 'SETTLED'::text])))"
+        },
+        {
+          "name": "agreement_voice_uploads_v1_duration_ms_check",
+          "type": "c",
+          "definition": "CHECK (((duration_ms >= 300) AND (duration_ms <= 300000)))"
+        },
+        {
+          "name": "agreement_voice_uploads_v1_input_bytes_check",
+          "type": "c",
+          "definition": "CHECK (((input_bytes >= 1) AND (input_bytes <= 4194304)))"
+        },
+        {
+          "name": "agreement_voice_uploads_v1_input_sha256_check",
+          "type": "c",
+          "definition": "CHECK ((input_sha256 ~ '^[a-f0-9]{64}$'::text))"
+        },
+        {
+          "name": "agreement_voice_uploads_v1_input_type_check",
+          "type": "c",
+          "definition": "CHECK ((input_type = 'audio/mp4'::text))"
+        },
+        {
+          "name": "agreement_voice_uploads_v1_pkey",
+          "type": "p",
+          "definition": "PRIMARY KEY (id)"
+        },
+        {
+          "name": "agreement_voice_uploads_v1_state_check",
+          "type": "c",
+          "definition": "CHECK ((state = ANY (ARRAY['PROCESSING'::text, 'STAGED'::text, 'READY'::text, 'FAILED'::text, 'CANCELLED'::text])))"
+        },
+        {
+          "name": "agreement_voice_uploads_v1_storage_path_key",
+          "type": "u",
+          "definition": "UNIQUE (storage_path)"
+        },
+        {
+          "name": "agreement_voice_uploads_v1_validated_sha256_check",
+          "type": "c",
+          "definition": "CHECK ((validated_sha256 ~ '^[a-f0-9]{64}$'::text))"
+        }
+      ],
+      "foreignkeys": []
+    }
+  ]
+}

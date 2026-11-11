@@ -1,0 +1,59 @@
+{
+  "name": "private.ru4b_public_floor_reason",
+  "oid": 21581,
+  "signature": "private.ru4b_public_floor_reason(text)",
+  "args": "p_text text",
+  "result": "text",
+  "owner": "postgres",
+  "acl": "{postgres=X/postgres}",
+  "proconfig": [
+    "search_path=pg_catalog"
+  ],
+  "prosecdef": false,
+  "provolatile": "i",
+  "proisstrict": false,
+  "proleakproof": false,
+  "proparallel": "u",
+  "body_md5": "3462ec034f1f9df9760e4729aa0d2c18",
+  "definition": "CREATE OR REPLACE FUNCTION private.ru4b_public_floor_reason(p_text text)\n RETURNS text\n LANGUAGE plpgsql\n IMMUTABLE\n SET search_path TO 'pg_catalog'\nAS $function$\ndeclare\n  v text := btrim(coalesce(p_text,''));\nbegin\n  if v = '' then return 'EMPTY_CONTENT'; end if;\n  if v ~* '[A-Z0-9._%+\\-]+@[A-Z0-9.\\-]+\\.[A-Z]{2,}' then return 'EMAIL_NOT_PUBLIC'; end if;\n  if v ~* '(https?://|www\\.)' then return 'OFF_PLATFORM_LINK_NOT_PUBLIC'; end if;\n  if v ~* '(^|[[:space:]])@[A-Z0-9_.]{2,}' then return 'SOCIAL_HANDLE_NOT_PUBLIC'; end if;\n  -- PKG-029c (deep read 12.5): a phone number starts like one (0, 00, + or 381) and holds 8 to 13 digits; a date\n  -- (\"01.10.2026\") and a price range (\"15000 - 20000\") are not phone numbers.\n  if exists (select 1 from regexp_matches(v, '(\\+?[0-9][0-9 ()/.\\-]{6,}[0-9])', 'g') m\n              where regexp_replace(m[1], '[^0-9+]', '', 'g') ~ '^(\\+|00|0|381)'\n                and length(regexp_replace(m[1], '[^0-9]', '', 'g')) between 8 and 13\n                and m[1] !~ '^[0-9]{1,2}[./][0-9]{1,2}[./][0-9]{2,4}') then return 'PHONE_NOT_PUBLIC'; end if;\n  return null;\nend;\n$function$\n",
+  "attributes": {
+    "oid": "21581",
+    "proacl": [
+      "postgres=X/postgres"
+    ],
+    "probin": null,
+    "procost": 100,
+    "prokind": "f",
+    "prolang": "13619",
+    "proname": "ru4b_public_floor_reason",
+    "prorows": 0,
+    "pronargs": 1,
+    "proowner": "16388",
+    "proconfig": [
+      "search_path=pg_catalog"
+    ],
+    "proretset": false,
+    "prosecdef": false,
+    "prorettype": "25",
+    "prosqlbody": null,
+    "prosupport": "-",
+    "proargmodes": null,
+    "proargnames": [
+      "p_text"
+    ],
+    "proargtypes": [
+      "25"
+    ],
+    "proisstrict": false,
+    "proparallel": "u",
+    "protrftypes": null,
+    "provariadic": "0",
+    "provolatile": "i",
+    "proleakproof": false,
+    "pronamespace": "18078",
+    "proallargtypes": null,
+    "proargdefaults": null,
+    "pronargdefaults": 0
+  }
+}
+

@@ -1,0 +1,55 @@
+{
+  "projectRef": "leqcwgzvjsxugfgzdmth",
+  "baseSourceCommit": "20903892d7f5def28ce33a15027918e5ca19c342",
+  "status": "DEV_READBACK_CONFIRMED",
+  "localProof": {
+    "workerAvailabilityTests": 24,
+    "speechAccountingTests": 16,
+    "integrationTests": 39,
+    "allPass": true,
+    "noPaidSpeechCalls": true
+  },
+  "functions": [
+    {
+      "name": "uskoci-worker-interview",
+      "previousVersion": 141,
+      "version": 142,
+      "status": "ACTIVE",
+      "verify_jwt": false,
+      "packageSha256": "efbdd810c6c055be1c613033a073554e784e9d93493d01c3e1a12567fde11d5b",
+      "files": 21,
+      "allFilesByteIdentical": true,
+      "changedSourceFiles": [
+        {
+          "name": "supabase/functions/uskoci-worker-interview/index.ts",
+          "sha256": "84496c119e7808811a741f1c1a82e47cb3edbeae554612dab595ae514a216026"
+        }
+      ]
+    },
+    {
+      "name": "uskoci-speech-session",
+      "previousVersion": 29,
+      "version": 30,
+      "status": "ACTIVE",
+      "verify_jwt": true,
+      "packageSha256": "a9ecfeb845ebe815f08a5d44720a4b130ae2c9f4b3af4a36243340d53b60fc89",
+      "files": 4,
+      "allFilesByteIdentical": true,
+      "changedSourceFiles": [
+        {
+          "name": "supabase/functions/uskoci-speech-session/index.ts",
+          "sha256": "5b7daee19020835dcc52f7807201eaed14e2d4ba6cf19b878134b78cfe06a3fb"
+        },
+        {
+          "name": "supabase/functions/uskoci-speech-session/proxy.ts",
+          "sha256": "3819ef579a6fc8370ee289aa3e53386bbeeb96add16552c78a6cd4d4c68f02f4"
+        },
+        {
+          "name": "supabase/functions/_shared/aiTestBudget.ts",
+          "sha256": "d93bb7a9a4f2e3cdab5ea4b1d0afb60f81e927f2c067695309f7ed6f5ac3778c"
+        }
+      ]
+    }
+  ],
+  "sourceIdentity": "Base commit and exact per-file SHA-256; final Git checkpoint is recorded in CODEX_PLAN_RADA.md."
+}

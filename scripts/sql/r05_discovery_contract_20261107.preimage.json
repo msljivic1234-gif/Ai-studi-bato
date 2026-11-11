@@ -1,0 +1,558 @@
+{
+  "project": "leqcwgzvjsxugfgzdmth",
+  "needsState": {
+    "columns": [
+      {
+        "acl": "{authenticated=r/postgres}",
+        "name": "id",
+        "type": "uuid",
+        "position": 1,
+        "readAuthenticated": true
+      },
+      {
+        "acl": "{authenticated=r/postgres}",
+        "name": "requester_account_id",
+        "type": "uuid",
+        "position": 2,
+        "readAuthenticated": true
+      },
+      {
+        "acl": "{authenticated=r/postgres}",
+        "name": "requester_profile_id",
+        "type": "uuid",
+        "position": 3,
+        "readAuthenticated": true
+      },
+      {
+        "acl": "{authenticated=r/postgres}",
+        "name": "status",
+        "type": "text",
+        "position": 4,
+        "readAuthenticated": true
+      },
+      {
+        "acl": "{authenticated=r/postgres}",
+        "name": "title",
+        "type": "text",
+        "position": 5,
+        "readAuthenticated": true
+      },
+      {
+        "acl": "{authenticated=r/postgres}",
+        "name": "description",
+        "type": "text",
+        "position": 6,
+        "readAuthenticated": true
+      },
+      {
+        "acl": "{authenticated=r/postgres}",
+        "name": "category",
+        "type": "text",
+        "position": 7,
+        "readAuthenticated": true
+      },
+      {
+        "acl": "{authenticated=r/postgres}",
+        "name": "approximate_city",
+        "type": "text",
+        "position": 8,
+        "readAuthenticated": true
+      },
+      {
+        "acl": "{authenticated=r/postgres}",
+        "name": "approximate_area",
+        "type": "text",
+        "position": 9,
+        "readAuthenticated": true
+      },
+      {
+        "acl": "{authenticated=r/postgres}",
+        "name": "approximate_lat",
+        "type": "numeric(6,2)",
+        "position": 10,
+        "readAuthenticated": true
+      },
+      {
+        "acl": "{authenticated=r/postgres}",
+        "name": "approximate_lng",
+        "type": "numeric(7,2)",
+        "position": 11,
+        "readAuthenticated": true
+      },
+      {
+        "acl": "{authenticated=r/postgres}",
+        "name": "schedule_kind",
+        "type": "text",
+        "position": 12,
+        "readAuthenticated": true
+      },
+      {
+        "acl": "{authenticated=r/postgres}",
+        "name": "starts_at",
+        "type": "timestamp with time zone",
+        "position": 13,
+        "readAuthenticated": true
+      },
+      {
+        "acl": "{authenticated=r/postgres}",
+        "name": "ends_at",
+        "type": "timestamp with time zone",
+        "position": 14,
+        "readAuthenticated": true
+      },
+      {
+        "acl": "{authenticated=r/postgres}",
+        "name": "required_slots",
+        "type": "integer",
+        "position": 15,
+        "readAuthenticated": true
+      },
+      {
+        "acl": "{authenticated=r/postgres}",
+        "name": "mode",
+        "type": "text",
+        "position": 16,
+        "readAuthenticated": true
+      },
+      {
+        "acl": "{authenticated=r/postgres}",
+        "name": "requester_price_rsd",
+        "type": "integer",
+        "position": 17,
+        "readAuthenticated": true
+      },
+      {
+        "acl": "{authenticated=r/postgres}",
+        "name": "required_skills",
+        "type": "text[]",
+        "position": 18,
+        "readAuthenticated": true
+      },
+      {
+        "acl": "{authenticated=r/postgres}",
+        "name": "required_tools",
+        "type": "text[]",
+        "position": 19,
+        "readAuthenticated": true
+      },
+      {
+        "acl": "{authenticated=r/postgres}",
+        "name": "required_vehicles",
+        "type": "text[]",
+        "position": 20,
+        "readAuthenticated": true
+      },
+      {
+        "acl": "{authenticated=r/postgres}",
+        "name": "verified_identity_required",
+        "type": "boolean",
+        "position": 21,
+        "readAuthenticated": true
+      },
+      {
+        "acl": "{authenticated=r/postgres}",
+        "name": "urgent",
+        "type": "boolean",
+        "position": 22,
+        "readAuthenticated": true
+      },
+      {
+        "acl": "{authenticated=r/postgres}",
+        "name": "public_photo_paths",
+        "type": "text[]",
+        "position": 23,
+        "readAuthenticated": true
+      },
+      {
+        "acl": "{authenticated=r/postgres}",
+        "name": "revision",
+        "type": "integer",
+        "position": 24,
+        "readAuthenticated": true
+      },
+      {
+        "acl": "{authenticated=r/postgres}",
+        "name": "published_at",
+        "type": "timestamp with time zone",
+        "position": 25,
+        "readAuthenticated": true
+      },
+      {
+        "acl": "{authenticated=r/postgres}",
+        "name": "created_at",
+        "type": "timestamp with time zone",
+        "position": 26,
+        "readAuthenticated": true
+      },
+      {
+        "acl": "{authenticated=r/postgres}",
+        "name": "updated_at",
+        "type": "timestamp with time zone",
+        "position": 27,
+        "readAuthenticated": true
+      },
+      {
+        "acl": "{authenticated=r/postgres}",
+        "name": "response_deadline",
+        "type": "timestamp with time zone",
+        "position": 28,
+        "readAuthenticated": true
+      },
+      {
+        "acl": "{authenticated=r/postgres}",
+        "name": "urgent_activated_at",
+        "type": "timestamp with time zone",
+        "position": 29,
+        "readAuthenticated": true
+      },
+      {
+        "acl": "{authenticated=r/postgres}",
+        "name": "urgent_expires_at",
+        "type": "timestamp with time zone",
+        "position": 30,
+        "readAuthenticated": true
+      },
+      {
+        "acl": "{authenticated=r/postgres}",
+        "name": "urgent_policy_version",
+        "type": "text",
+        "position": 31,
+        "readAuthenticated": true
+      },
+      {
+        "acl": "{authenticated=r/postgres}",
+        "name": "minimum_experience_years",
+        "type": "integer",
+        "position": 32,
+        "readAuthenticated": true
+      },
+      {
+        "acl": "{authenticated=r/postgres}",
+        "name": "execution_location_mode",
+        "type": "text",
+        "position": 33,
+        "readAuthenticated": true
+      },
+      {
+        "acl": "{authenticated=r/postgres}",
+        "name": "approx_geog",
+        "type": "geography",
+        "position": 35,
+        "readAuthenticated": true
+      },
+      {
+        "acl": "{authenticated=r/postgres}",
+        "name": "required_licenses",
+        "type": "text[]",
+        "position": 36,
+        "readAuthenticated": true
+      },
+      {
+        "acl": "{authenticated=r/postgres}",
+        "name": "remaining_search_closed_at",
+        "type": "timestamp with time zone",
+        "position": 37,
+        "readAuthenticated": true
+      },
+      {
+        "acl": null,
+        "name": "remaining_search_closed_by_account_id",
+        "type": "uuid",
+        "position": 38,
+        "readAuthenticated": false
+      },
+      {
+        "acl": null,
+        "name": "remaining_search_close_reason",
+        "type": "text",
+        "position": 39,
+        "readAuthenticated": false
+      },
+      {
+        "acl": "{authenticated=r/postgres}",
+        "name": "task_country_code",
+        "type": "text",
+        "position": 40,
+        "readAuthenticated": true
+      },
+      {
+        "acl": "{authenticated=r/postgres}",
+        "name": "task_timezone",
+        "type": "text",
+        "position": 41,
+        "readAuthenticated": true
+      },
+      {
+        "acl": "{authenticated=r/postgres}",
+        "name": "price_basis",
+        "type": "text",
+        "position": 42,
+        "readAuthenticated": true
+      },
+      {
+        "acl": "{authenticated=r/postgres}",
+        "name": "category_id",
+        "type": "uuid",
+        "position": 43,
+        "readAuthenticated": true
+      }
+    ],
+    "policies": [
+      {
+        "cmd": "INSERT",
+        "name": "needs_owner_insert",
+        "qual": null,
+        "check": "((requester_account_id = ( SELECT auth.uid() AS uid)) AND (status = 'DRAFT'::text))",
+        "roles": [
+          "authenticated"
+        ],
+        "permissive": "PERMISSIVE"
+      },
+      {
+        "cmd": "SELECT",
+        "name": "needs_owner_select",
+        "qual": "(requester_account_id = ( SELECT auth.uid() AS uid))",
+        "check": null,
+        "roles": [
+          "authenticated"
+        ],
+        "permissive": "PERMISSIVE"
+      },
+      {
+        "cmd": "UPDATE",
+        "name": "needs_owner_update",
+        "qual": "((requester_account_id = ( SELECT auth.uid() AS uid)) AND (status = 'DRAFT'::text))",
+        "check": "((requester_account_id = ( SELECT auth.uid() AS uid)) AND (status = 'DRAFT'::text))",
+        "roles": [
+          "authenticated"
+        ],
+        "permissive": "PERMISSIVE"
+      },
+      {
+        "cmd": "SELECT",
+        "name": "needs_participant_read",
+        "qual": "rls_private.need_participant_can_read(id)",
+        "check": null,
+        "roles": [
+          "authenticated"
+        ],
+        "permissive": "PERMISSIVE"
+      },
+      {
+        "cmd": "SELECT",
+        "name": "needs_public_discovery",
+        "qual": "((status = ANY (ARRAY['PUBLISHED'::text, 'SELECTION'::text])) AND (( SELECT auth.uid() AS uid) IS NOT NULL) AND ((requester_account_id = ANY (COALESCE(( SELECT rls_private.p6_discovery_test_world_accounts() AS p6_discovery_test_world_accounts), ARRAY[]::uuid[]))) = (( SELECT auth.uid() AS uid) = ANY (COALESCE(( SELECT rls_private.p6_discovery_test_world_accounts() AS p6_discovery_test_world_accounts), ARRAY[]::uuid[])))))",
+        "check": null,
+        "roles": [
+          "authenticated"
+        ],
+        "permissive": "PERMISSIVE"
+      },
+      {
+        "cmd": "SELECT",
+        "name": "v5_closed_account_visibility",
+        "qual": "( SELECT rpc_storage_account_open() AS rpc_storage_account_open)",
+        "check": null,
+        "roles": [
+          "authenticated"
+        ],
+        "permissive": "RESTRICTIVE"
+      }
+    ],
+    "relation": {
+      "acl": "{postgres=arwdDxtm/postgres,anon=Dxtm/postgres,authenticated=awDxtm/postgres,service_role=arwdDxtm/postgres}",
+      "rls": true,
+      "owner": "postgres",
+      "forceRls": false
+    }
+  },
+  "captured_at": "2026-11-07",
+  "functions": [
+    {
+      "signature": "private.effective_radius_km(integer)",
+      "definition": "CREATE OR REPLACE FUNCTION private.effective_radius_km(base_radius integer)\n RETURNS numeric\n LANGUAGE sql\n IMMUTABLE\n SET search_path TO 'pg_catalog'\nAS $function$ select greatest(1, least(1000, coalesce(base_radius, 15)))::numeric; $function$\n",
+      "body_md5": "ed003276f5aa5d3cfd9c655330a3415f",
+      "definer": false,
+      "volatility": "i",
+      "owner": "postgres",
+      "acl": "{postgres=X/postgres}",
+      "config": [
+        "search_path=pg_catalog"
+      ]
+    },
+    {
+      "signature": "private.worker_need_fit_v1(uuid,uuid,boolean)",
+      "definition": "CREATE OR REPLACE FUNCTION private.worker_need_fit_v1(nid uuid, pid uuid, p_first_refusal boolean)\n RETURNS jsonb\n LANGUAGE plpgsql\n STABLE SECURITY DEFINER\n SET search_path TO 'pg_catalog'\nAS $function$\ndeclare\n  n public.needs; p public.app_profiles; pref public.worker_match_preferences;\n  hard text[]:='{}'; svc boolean := false; area boolean; dist numeric; radius numeric; tier integer;\n  effective_skills text[]; required_skill text;\n  v_tax_tier text;\nbegin\n  select * into n from public.needs where id=nid;\n  if not found then\n    return jsonb_build_object('matches',false,'service',false,'area',false,'timeTier',null,\n      'distanceKm',null,'effectiveRadiusKm',null,'hard',jsonb_build_array('NEED_NOT_FOUND'));\n  end if;\n  select * into p from public.app_profiles where id=pid and kind='WORKER';\n  if not found then\n    return jsonb_build_object('matches',false,'service',false,'area',false,'timeTier',null,\n      'distanceKm',null,'effectiveRadiusKm',null,'hard',jsonb_build_array('WORKER_PROFILE_NOT_FOUND'));\n  end if;\n  if p.profile_status<>'ACTIVE' then hard:=array_append(hard,'ACCOUNT_OR_PROFILE_RESTRICTED'); end if;\n  if n.requester_account_id=p.account_id then hard:=array_append(hard,'OWN_NEED'); end if;\n  if p_first_refusal and cardinality(hard)>0 then return jsonb_build_object('matches',false,'hard',to_jsonb(hard)); end if;\n\n  IF char_length(btrim(coalesce(p.city,'')))<2 OR EXISTS(SELECT 1 FROM private.taxonomy_match_scope_control_v1 ctl\n      WHERE ctl.singleton AND ctl.enabled) THEN\n    IF NOT private.taxonomy_scope_eligible_v1(n.id,p.account_id) THEN\n      RETURN jsonb_build_object('matches',false,'service',false,'area',false,\n        'timeTier',null,'distanceKm',null,'effectiveRadiusKm',null,\n        'hard',jsonb_build_array('SIGNED_SERVICE_SCOPE_REQUIRED'),\n        'taxonomyScope','UNCONFIRMED');\n    END IF;\n  END IF;\n\n  -- 1. Area filter (radijus / mesto / workAreas)\n  radius:=private.effective_radius_km(p.radius_km);\n  if n.execution_location_mode='REMOTE' then\n    dist:=null; area:=private.taxonomy_handoff_fit_v1(n.id,p.account_id);\n  elsif jsonb_array_length(private.worker_saved_areas_v1(p.account_id))>0 then\n    radius:=null; dist:=null;\n    area:=private.worker_area_fit_v1(private.worker_saved_areas_v1(p.account_id),n.execution_location_mode,n.task_country_code,n.approximate_city,n.approximate_lat,n.approximate_lng);\n  else\n    select * into pref from public.worker_match_preferences where worker_profile_id=pid;\n    dist:=private.haversine_km(n.approximate_lat,n.approximate_lng,pref.approximate_lat,pref.approximate_lng);\n    area:=coalesce(case when dist is not null then dist<=radius\n      else n.task_country_code is not null\n        and n.task_country_code=p.operating_country_code\n        and btrim(coalesce(n.approximate_city,''))<>'' and lower(coalesce(n.approximate_city,''))=lower(coalesce(p.city,'')) end,false);\n  end if;\n  if p_first_refusal and not area then return jsonb_build_object('matches',false,'area',false); end if;\n\n  -- 2. Service competency matching\n  if n.category_id is not null then\n    begin\n      v_tax_tier := private.taxonomy_requirement_tier_inherited_v1(n.category_id, p.account_id);\n      if v_tax_tier in ('EXACT', 'EQUIVALENT', 'RELATED_CONFIRMED', 'INHERITED_STANDARD') then\n        svc := true;\n      end if;\n    exception when others then\n      svc := false;\n    end;\n  end if;\n\n  if not svc and n.category_id is null then\n    effective_skills := array_remove(array[n.category]::text[],null);\n    svc:=coalesce(private.lower_arr(p.skills) && private.lower_arr(effective_skills),false);\n  end if;\n\n  if not private.accounts_same_world(n.requester_account_id,p.account_id) then hard:=array_append(hard,'OTHER_WORLD'); end if;\n  if n.verified_identity_required and not private.identity_admitted(p.account_id)\n    then hard:=array_append(hard,'IDENTITY_VERIFICATION_NOT_ADMITTED'); end if;\n  if p_first_refusal and cardinality(hard)>0 then return jsonb_build_object('matches',false,'hard',to_jsonb(hard)); end if;\n\n  if not svc and n.category_id is null then\n    svc:=exists(\n      select 1\n      from unnest(private.work_kinds_v5(p.skills)) AS worker_kind(kind)\n      join unnest(private.work_kinds_v5(effective_skills)) AS need_kind(kind)\n        on worker_kind.kind=need_kind.kind\n      where worker_kind.kind <> 'SITNE_POPRAVKE'\n    );\n  end if;\n\n  if svc and coalesce(cardinality(n.required_skills),0)>0 then\n    foreach required_skill in array n.required_skills loop\n      if not (\n        coalesce(private.lower_arr(p.skills) && private.lower_arr(array[required_skill]),false)\n        or coalesce(private.work_kinds_v5(p.skills) && private.work_kinds_v5(array[required_skill]),false)\n      ) then\n        svc:=false;\n        exit;\n      end if;\n    end loop;\n  end if;\n\n  if p_first_refusal and not svc then return jsonb_build_object('matches',false,'service',false); end if;\n\n  -- 3. Exclusions filter\n  if coalesce(cardinality(p.exclusions),0)>0\n     and (private.lower_arr(p.exclusions) && private.lower_arr(array_prepend(n.category,n.required_skills))\n          or private.work_kinds_v5(p.exclusions) && private.work_kinds_v5(array_prepend(n.category,n.required_skills)))\n    then hard:=array_append(hard,'PROFILE_EXCLUSION'); end if;\n  if p_first_refusal and cardinality(hard)>0 then return jsonb_build_object('matches',false,'hard',to_jsonb(hard)); end if;\n\n  -- 4. Time filter\n  tier:=private.worker_need_time_tier_v1(nid,pid);\n  return jsonb_build_object('matches',cardinality(hard)=0 and svc and area and tier is not null,\n    'service',svc,'area',area,'timeTier',tier,'distanceKm',dist,'effectiveRadiusKm',radius,'hard',to_jsonb(hard),\n    'taxonomyTier',v_tax_tier);\nend;\n$function$\n",
+      "body_md5": "fd81bdd1a86946a43399e136d5534e99",
+      "definer": true,
+      "volatility": "s",
+      "owner": "postgres",
+      "acl": "{postgres=X/postgres}",
+      "config": [
+        "search_path=pg_catalog"
+      ]
+    },
+    {
+      "signature": "private.worker_need_match_v1(uuid,uuid)",
+      "definition": "CREATE OR REPLACE FUNCTION private.worker_need_match_v1(nid uuid, pid uuid)\n RETURNS boolean\n LANGUAGE sql\n STABLE SECURITY DEFINER\n SET search_path TO 'pg_catalog'\nAS $function$\n  -- MATCH-V1 (owner 2026-10-07): \"Odgovara mi\" as one boolean. Notifications (dispatch) and \"Za mene\" read exactly this.\n  select coalesce((private.worker_need_fit_v1(nid,pid,true)->>'matches')::boolean,false);\n$function$\n",
+      "body_md5": "ef94ef7de07a347824ace68789f08c41",
+      "definer": true,
+      "volatility": "s",
+      "owner": "postgres",
+      "acl": "{postgres=X/postgres}",
+      "config": [
+        "search_path=pg_catalog"
+      ]
+    },
+    {
+      "signature": "private.worker_need_time_tier_v1(uuid,uuid)",
+      "definition": "CREATE OR REPLACE FUNCTION private.worker_need_time_tier_v1(nid uuid, pid uuid)\n RETURNS integer\n LANGUAGE plpgsql\n STABLE SECURITY DEFINER\n SET search_path TO 'pg_catalog'\nAS $function$\ndeclare\n  n public.needs; p public.app_profiles; tz text; wtz text; at_now timestamptz:=statement_timestamp();\n  periods tstzmultirange; ws timestamptz; we timestamptz; anchor_day date; live boolean;\n  has_rules boolean;\nbegin\n  select * into n from public.needs where id=nid;\n  if not found then return null; end if;\n  select * into p from public.app_profiles where id=pid and kind='WORKER' and profile_status='ACTIVE';\n  if not found then return null; end if;\n  if n.ends_at is not null and n.ends_at<=at_now then return null; end if;\n\n  if n.schedule_kind in ('FLEXIBLE','REMOTE_ANYTIME')\n     and n.starts_at is null and n.ends_at is null then\n    return 1;\n  end if;\n  select timezone into tz from public.worker_match_preferences where worker_profile_id=pid;\n  tz:=coalesce(tz,'Europe/Belgrade');\n  if not private.availability_timezone_valid(tz) then return null; end if;\n\n  has_rules := exists(select 1 from public.profile_availability_rules r where r.profile_id=pid and r.active);\n\n  if n.schedule_kind in ('FLEXIBLE','REMOTE_ANYTIME') and n.starts_at is not null then\n    if not isfinite(n.starts_at) or\n       (n.ends_at is not null and (not isfinite(n.ends_at) or n.ends_at<=n.starts_at)) then\n      return null;\n    end if;\n    if n.starts_at<=at_now then\n      live:=coalesce(p.available_now,false)\n        and not exists(select 1 from public.profile_availability_windows w where w.profile_id=pid\n          and w.availability_state='UNAVAILABLE' and w.starts_at<=at_now and w.ends_at>at_now)\n        and not exists(select 1 from private.worker_calendar_events c where c.worker_profile_id=pid\n          and c.state='BLOCKING' and c.starts_at<=at_now and c.ends_at>at_now);\n      if live then return 1; end if;\n    end if;\n    ws:=greatest(n.starts_at,at_now);\n    we:=coalesce(n.ends_at,ws+interval '30 days');\n    if we<=ws then return null; end if;\n    if private.worker_available_periods(pid,ws,we,tz)<>'{}'::tstzmultirange then return 2; end if;\n    if not has_rules and coalesce(p.available_now,false)\n       and not exists(select 1 from public.profile_availability_windows w where w.profile_id=pid\n         and w.availability_state='UNAVAILABLE' and w.starts_at<we and w.ends_at>ws)\n       and not exists(select 1 from private.worker_calendar_events c where c.worker_profile_id=pid\n         and c.state='BLOCKING' and c.starts_at<we and c.ends_at>ws)\n    then\n      return 2;\n    end if;\n    return null;\n  end if;\n\n  if n.schedule_kind='FIXED_WINDOW' and n.starts_at is not null and n.ends_at is null then\n    if not isfinite(n.starts_at) or n.starts_at<=at_now then return null; end if;\n    periods:=private.worker_available_periods(pid,n.starts_at,n.starts_at+interval '1 second',tz);\n    if periods @> n.starts_at then return 2; end if;\n    return null;\n  end if;\n\n  if n.starts_at is null and n.ends_at is not null\n     and n.schedule_kind in ('FLEXIBLE','REMOTE_ANYTIME','WEEK_FLEXIBLE') then\n    if not isfinite(n.ends_at) or n.ends_at<=at_now then return null; end if;\n    live:=coalesce(p.available_now,false)\n      and not exists(select 1 from public.profile_availability_windows w where w.profile_id=pid\n        and w.availability_state='UNAVAILABLE' and w.starts_at<=at_now and w.ends_at>at_now)\n      and not exists(select 1 from private.worker_calendar_events c where c.worker_profile_id=pid\n        and c.state='BLOCKING' and c.starts_at<=at_now and c.ends_at>at_now);\n    if live then return 1; end if;\n    if private.worker_available_periods(pid,at_now,n.ends_at,tz)<>'{}'::tstzmultirange then return 2; end if;\n    if not has_rules and coalesce(p.available_now,false)\n       and not exists(select 1 from public.profile_availability_windows w where w.profile_id=pid\n         and w.availability_state='UNAVAILABLE' and w.starts_at<n.ends_at and w.ends_at>at_now)\n       and not exists(select 1 from private.worker_calendar_events c where c.worker_profile_id=pid\n         and c.state='BLOCKING' and c.starts_at<n.ends_at and c.ends_at>at_now)\n    then\n      return 2;\n    end if;\n    return null;\n  end if;\n\n  if n.schedule_kind='TOMORROW_FLEXIBLE'\n     and n.starts_at is null and n.ends_at is not null then\n    if n.published_at is null or not isfinite(n.published_at)\n       or not isfinite(n.ends_at) then return null; end if;\n    wtz:=case when n.task_timezone is not null and private.availability_timezone_valid(n.task_timezone)\n      then n.task_timezone else 'Europe/Belgrade' end;\n    anchor_day:=(n.published_at at time zone wtz)::date;\n    ws:=(anchor_day+1)::timestamp at time zone wtz;\n    we:=(anchor_day+2)::timestamp at time zone wtz;\n    if n.ends_at<=ws or n.ends_at>we or n.ends_at<=at_now then return null; end if;\n    if private.worker_available_periods(pid,greatest(ws,at_now),n.ends_at,tz)<>'{}'::tstzmultirange then\n      return 2;\n    end if;\n    if not has_rules and coalesce(p.available_now,false)\n       and not exists(select 1 from public.profile_availability_windows w where w.profile_id=pid\n         and w.availability_state='UNAVAILABLE' and w.starts_at<n.ends_at and w.ends_at>greatest(ws,at_now))\n       and not exists(select 1 from private.worker_calendar_events c where c.worker_profile_id=pid\n         and c.state='BLOCKING' and c.starts_at<n.ends_at and c.ends_at>greatest(ws,at_now))\n    then\n      return 2;\n    end if;\n    return null;\n  end if;\n\n  if n.schedule_kind in ('TOMORROW_FLEXIBLE','WEEK_FLEXIBLE')\n     and n.starts_at is not null and n.ends_at is null then\n    if n.published_at is null or not isfinite(n.published_at)\n       or not isfinite(n.starts_at) then return null; end if;\n    wtz:=case when n.task_timezone is not null and private.availability_timezone_valid(n.task_timezone)\n      then n.task_timezone else 'Europe/Belgrade' end;\n    anchor_day:=(n.published_at at time zone wtz)::date;\n    if n.schedule_kind='TOMORROW_FLEXIBLE' then\n      ws:=(anchor_day+1)::timestamp at time zone wtz;\n      we:=(anchor_day+2)::timestamp at time zone wtz;\n    else\n      ws:=anchor_day::timestamp at time zone wtz;\n      we:=(anchor_day+(8-extract(isodow from anchor_day)::integer))::timestamp at time zone wtz;\n    end if;\n    if n.starts_at<ws or n.starts_at>=we or we<=at_now then return null; end if;\n    if private.worker_available_periods(pid,greatest(n.starts_at,at_now),we,tz)<>'{}'::tstzmultirange then\n      return 2;\n    end if;\n    if not has_rules and coalesce(p.available_now,false)\n       and not exists(select 1 from public.profile_availability_windows w where w.profile_id=pid\n         and w.availability_state='UNAVAILABLE' and w.starts_at<we and w.ends_at>greatest(n.starts_at,at_now))\n       and not exists(select 1 from private.worker_calendar_events c where c.worker_profile_id=pid\n         and c.state='BLOCKING' and c.starts_at<we and c.ends_at>greatest(n.starts_at,at_now))\n    then\n      return 2;\n    end if;\n    return null;\n  end if;\n\n  ws:=n.starts_at; we:=n.ends_at;\n  if n.starts_at is null and n.ends_at is null and n.schedule_kind in ('TOMORROW_FLEXIBLE','WEEK_FLEXIBLE') then\n    if n.published_at is null then return null; end if;\n    wtz:=case when n.task_timezone is not null and private.availability_timezone_valid(n.task_timezone)\n      then n.task_timezone else 'Europe/Belgrade' end;\n    anchor_day:=(n.published_at at time zone wtz)::date;\n    if n.schedule_kind='TOMORROW_FLEXIBLE' then\n      ws:=(anchor_day+1)::timestamp at time zone wtz; we:=(anchor_day+2)::timestamp at time zone wtz;\n    else\n      ws:=anchor_day::timestamp at time zone wtz; we:=(anchor_day+(8-extract(isodow from anchor_day)::integer))::timestamp at time zone wtz;\n    end if;\n  end if;\n  if private.availability_is_future(n.schedule_kind,ws,we,at_now) then\n    periods:=private.worker_available_periods(pid,greatest(ws,at_now),we,tz);\n    if n.schedule_kind='FIXED_WINDOW' then\n      if periods @> tstzrange(ws,we,'[)') then return 2; end if;\n      return null;\n    end if;\n    if periods<>'{}'::tstzmultirange then return 2; end if;\n    if not has_rules and coalesce(p.available_now,false)\n       and not exists(select 1 from public.profile_availability_windows w where w.profile_id=pid\n         and w.availability_state='UNAVAILABLE' and w.starts_at<we and w.ends_at>greatest(ws,at_now))\n       and not exists(select 1 from private.worker_calendar_events c where c.worker_profile_id=pid\n         and c.state='BLOCKING' and c.starts_at<we and c.ends_at>greatest(ws,at_now))\n    then\n      return 2;\n    end if;\n    return null;\n  end if;\n  if n.schedule_kind in ('TOMORROW_FLEXIBLE','WEEK_FLEXIBLE') then return null; end if;\n\n  live:=coalesce(p.available_now,false)\n    and not exists(select 1 from public.profile_availability_windows w where w.profile_id=pid\n      and w.availability_state='UNAVAILABLE' and w.starts_at<=at_now and w.ends_at>at_now)\n    and not exists(select 1 from private.worker_calendar_events c where c.worker_profile_id=pid\n      and c.state='BLOCKING' and c.starts_at<=at_now and c.ends_at>at_now);\n  if live then\n    if n.schedule_kind='FIXED_WINDOW' and not private.schedule_fit(pid,n.starts_at,n.ends_at,tz) then return null; end if;\n    return 1;\n  end if;\n  if n.schedule_kind='FIXED_WINDOW' and n.starts_at is not null and n.ends_at is not null and n.starts_at<=at_now\n     and private.worker_available_periods(pid,at_now,n.ends_at,tz) @> tstzrange(at_now,n.ends_at,'[)') then\n    return 2;\n  end if;\n  return null;\nend;\n$function$\n",
+      "body_md5": "a845d98b624ae4ac8ec33159beb8bb17",
+      "definer": true,
+      "volatility": "s",
+      "owner": "postgres",
+      "acl": "{postgres=X/postgres}",
+      "config": [
+        "search_path=pg_catalog"
+      ]
+    },
+    {
+      "signature": "discovery_fold_v1(text)",
+      "definition": "CREATE OR REPLACE FUNCTION public.discovery_fold_v1(value text)\n RETURNS text\n LANGUAGE plpgsql\n IMMUTABLE\n SET search_path TO 'pg_catalog'\nAS $function$\nbegin\n  -- DISCOVERY-GRAD (owner 2026-10-07): the one fold that FINDING words and places uses, never what is shown or stored.\n  -- Lower case (Serbian ICU), then Serbian Latin and Serbian Cyrillic letters to plain Latin, letter by letter: c with caron\n  -- and c with acute -> c, s with caron -> s, z with caron -> z, d with stroke -> dj (so the dj spelling and the d-with-stroke\n  -- spelling are one word), Cyrillic dje -> dj, lje -> lj, nje -> nj, dzhe -> dz, tshe -> c and every other Serbian Cyrillic\n  -- letter to its Latin letter. Every other character stays as it is: the fold maps letters and never removes one, so a\n  -- text that contained a word before still contains it afterwards.\n  return translate(replace(replace(replace(replace(replace(lower(value collate pg_catalog.\"sr-Latn-RS-x-icu\"),chr(273),'dj'),chr(1106),'dj'),chr(1113),'lj'),chr(1114),'nj'),chr(1119),'dz'),\n    chr(269)||chr(263)||chr(353)||chr(382)||chr(1072)||chr(1073)||chr(1074)||chr(1075)||chr(1076)||chr(1077)||chr(1078)||chr(1079)||chr(1080)||chr(1112)||chr(1082)||chr(1083)||chr(1084)||chr(1085)||chr(1086)||chr(1087)||chr(1088)||chr(1089)||chr(1090)||chr(1115)||chr(1091)||chr(1092)||chr(1093)||chr(1094)||chr(1095)||chr(1096),\n    'ccszabvgdezzijklmnoprstcufhccs');\nend\n$function$\n",
+      "body_md5": "41353abe05d434d513495ae5974b9802",
+      "definer": false,
+      "volatility": "i",
+      "owner": "postgres",
+      "acl": "{postgres=X/postgres,authenticated=X/postgres,service_role=X/postgres}",
+      "config": [
+        "search_path=pg_catalog"
+      ]
+    },
+    {
+      "signature": "discovery_for_me_state_v1()",
+      "definition": "CREATE OR REPLACE FUNCTION public.discovery_for_me_state_v1()\n RETURNS jsonb\n LANGUAGE sql\n STABLE SECURITY DEFINER\n SET search_path TO 'pg_catalog'\nAS $function$\n  -- DISCOVERY-ZAMENE (owner 2026-10-07): may \"Za mene\" run for the caller, and where is the caller's circle? One jsonb document:\n  -- state ACTIVE, NOT_ACTIVE, MISSING or AUTH_REQUIRED, and (when the worker has an approximate point) lat, lng and radiusKm.\n  select case when auth.uid() is null then jsonb_build_object('state','AUTH_REQUIRED')\n    else coalesce((select jsonb_build_object('state',case when p.profile_status='ACTIVE' then 'ACTIVE' else 'NOT_ACTIVE' end,\n        'lat',pref.approximate_lat,'lng',pref.approximate_lng,'radiusKm',private.effective_radius_km(p.radius_km))\n      from public.app_profiles p left join public.worker_match_preferences pref on pref.worker_profile_id=p.id\n      where p.account_id=auth.uid() and p.kind='WORKER'),jsonb_build_object('state','MISSING')) end;\n$function$\n",
+      "body_md5": "bd4dcf16863e7564a5d82ac22aca1418",
+      "definer": true,
+      "volatility": "s",
+      "owner": "postgres",
+      "acl": "{postgres=X/postgres,authenticated=X/postgres,service_role=X/postgres}",
+      "config": [
+        "search_path=pg_catalog"
+      ]
+    },
+    {
+      "signature": "discovery_for_me_v1(uuid)",
+      "definition": "CREATE OR REPLACE FUNCTION public.discovery_for_me_v1(p_need_id uuid)\n RETURNS boolean\n LANGUAGE sql\n STABLE SECURITY DEFINER\n SET search_path TO 'pg_catalog'\nAS $function$\n  -- DISCOVERY-ZAMENE (owner 2026-10-07): does this OPEN public task match the CALLER's own worker profile? The profile is\n  -- always the caller's (auth.uid()); a task that is not open and published answers false, so nothing beyond Discovery leaks.\n  select coalesce((select private.worker_need_match_v1(n.id,p.id)\n    from public.needs n\n    join public.app_profiles p on p.account_id=auth.uid() and p.kind='WORKER' and p.profile_status='ACTIVE'\n   where n.id=p_need_id and n.status in ('PUBLISHED','SELECTION') and n.published_at is not null\n     and n.remaining_search_closed_at is null),false);\n$function$\n",
+      "body_md5": "60c104139cebbccfa16a570fc3386c0c",
+      "definer": true,
+      "volatility": "s",
+      "owner": "postgres",
+      "acl": "{postgres=X/postgres,authenticated=X/postgres,service_role=X/postgres}",
+      "config": [
+        "search_path=pg_catalog"
+      ]
+    },
+    {
+      "signature": "p6_discovery_area(text,text,boolean)",
+      "definition": "CREATE OR REPLACE FUNCTION public.p6_discovery_area(area text, city text, remote boolean)\n RETURNS text\n LANGUAGE plpgsql\n IMMUTABLE\n SET search_path TO 'pg_catalog'\nAS $function$\ndeclare a text:=public.p6_discovery_unquote(area); c text:=public.p6_discovery_unquote(city);\nbegin\n if remote then return 'Na daljinu'; end if;\n if a is null then return coalesce(c,'Lokacija nije navedena'); end if;\n if c is null or exists(select 1 from unnest(string_to_array(a,',')) s\n   where lower(public.p6_discovery_trim(s) collate pg_catalog.\"sr-Latn-RS-x-icu\")=lower(c collate pg_catalog.\"sr-Latn-RS-x-icu\")) then return a; end if;\n return a||', '||c;\nend $function$\n",
+      "body_md5": "65f41c2ec10d1bb926f34ecf04b36ec4",
+      "definer": false,
+      "volatility": "i",
+      "owner": "postgres",
+      "acl": "{postgres=X/postgres,authenticated=X/postgres,service_role=X/postgres}",
+      "config": [
+        "search_path=pg_catalog"
+      ]
+    },
+    {
+      "signature": "p6_discovery_civil(text)",
+      "definition": "CREATE OR REPLACE FUNCTION public.p6_discovery_civil(value text)\n RETURNS boolean\n LANGUAGE plpgsql\n IMMUTABLE\n SET search_path TO 'pg_catalog'\nAS $function$\ndeclare y integer; m integer; d integer; last_day integer;\nbegin\n if value is null or value !~ '^[0-9]{4}-[0-9]{2}-[0-9]{2}$' then return false; end if;\n y:=left(value,4)::integer; m:=substr(value,6,2)::integer; d:=right(value,2)::integer;\n if m<1 or m>12 then return false; end if;\n last_day:=(array[31,case when y%4=0 and (y%100<>0 or y%400=0) then 29 else 28 end,31,30,31,30,31,31,30,31,30,31])[m];\n return d between 1 and last_day;\nend $function$\n",
+      "body_md5": "cee687f43419dfb2fa9cc9233e8bea34",
+      "definer": false,
+      "volatility": "i",
+      "owner": "postgres",
+      "acl": "{postgres=X/postgres,authenticated=X/postgres,service_role=X/postgres}",
+      "config": [
+        "search_path=pg_catalog"
+      ]
+    },
+    {
+      "signature": "p6_discovery_days(text,timestamp with time zone,timestamp with time zone,text,timestamp with time zone)",
+      "definition": "CREATE OR REPLACE FUNCTION public.p6_discovery_days(kind text, starts timestamp with time zone, ends timestamp with time zone, zone text, anchor_at timestamp with time zone)\n RETURNS text[]\n LANGUAGE plpgsql\n STABLE\n SET search_path TO 'pg_catalog'\nAS $function$\ndeclare first_day text; last_day text; today date; instant timestamptz; local_time timestamp; z text:=coalesce(zone,'UTC');\nbegin\n if starts is not null and isfinite(starts) then\n  first_day:=to_char(date_trunc('milliseconds',starts) at time zone z,'YYYY-MM-DD');\n end if;\n if ends is not null and isfinite(ends) then\n  instant:=date_trunc('milliseconds',ends); local_time:=instant at time zone z;\n  if to_char(local_time,'HH24:MI:SS')='00:00:00' then instant:=instant-interval '1 millisecond'; end if;\n  last_day:=to_char(instant at time zone z,'YYYY-MM-DD');\n end if;\n if first_day is not null then return array[first_day,case when last_day>=first_day then last_day when kind='FIXED_WINDOW' then first_day else '9999-12-31' end]; end if;\n if last_day is not null then return case when kind='FIXED_WINDOW' then null else array['0000-01-01',last_day] end; end if;\n today:=(anchor_at at time zone z)::date;\n return case kind\n  when 'TODAY_FLEXIBLE' then array[today::text,today::text]\n  when 'TOMORROW_FLEXIBLE' then array[(today+1)::text,(today+1)::text]\n  when 'WEEK_FLEXIBLE' then array[today::text,(today+(7-extract(isodow from today)::integer))::text]\n  when 'FLEXIBLE' then array['0000-01-01','9999-12-31']\n  when 'REMOTE_ANYTIME' then array['0000-01-01','9999-12-31'] else null end;\nexception when invalid_parameter_value or datetime_field_overflow then return null;\nend $function$\n",
+      "body_md5": "e1c81ce573875504d60e025c07573ee6",
+      "definer": false,
+      "volatility": "s",
+      "owner": "postgres",
+      "acl": "{postgres=X/postgres,authenticated=X/postgres,service_role=X/postgres}",
+      "config": [
+        "search_path=pg_catalog"
+      ]
+    },
+    {
+      "signature": "p6_discovery_key(text)",
+      "definition": "CREATE OR REPLACE FUNCTION public.p6_discovery_key(value text)\n RETURNS text\n LANGUAGE sql\n IMMUTABLE\n SET search_path TO 'pg_catalog'\nAS $function$\n select lower(regexp_replace(public.p6_discovery_trim(value),U&'[\\0009\\000A\\000B\\000C\\000D\\0020\\00A0\\1680\\2000\\2001\\2002\\2003\\2004\\2005\\2006\\2007\\2008\\2009\\200A\\2028\\2029\\202F\\205F\\3000\\FEFF]+',' ','g') collate pg_catalog.\"sr-Latn-RS-x-icu\")\n$function$\n",
+      "body_md5": "ebfe1252f1798d89bbffb35b6eef6167",
+      "definer": false,
+      "volatility": "i",
+      "owner": "postgres",
+      "acl": "{postgres=X/postgres,authenticated=X/postgres,service_role=X/postgres}",
+      "config": [
+        "search_path=pg_catalog"
+      ]
+    },
+    {
+      "signature": "p6_discovery_trim(text)",
+      "definition": "CREATE OR REPLACE FUNCTION public.p6_discovery_trim(value text)\n RETURNS text\n LANGUAGE sql\n IMMUTABLE\n SET search_path TO 'pg_catalog'\nAS $function$\n select btrim(value, U&'\\0009\\000A\\000B\\000C\\000D\\0020\\00A0\\1680\\2000\\2001\\2002\\2003\\2004\\2005\\2006\\2007\\2008\\2009\\200A\\2028\\2029\\202F\\205F\\3000\\FEFF')\n$function$\n",
+      "body_md5": "40109e93b620146aa8d536907d28c91b",
+      "definer": false,
+      "volatility": "i",
+      "owner": "postgres",
+      "acl": "{postgres=X/postgres,authenticated=X/postgres,service_role=X/postgres}",
+      "config": [
+        "search_path=pg_catalog"
+      ]
+    },
+    {
+      "signature": "p6_discovery_unquote(text)",
+      "definition": "CREATE OR REPLACE FUNCTION public.p6_discovery_unquote(value text)\n RETURNS text\n LANGUAGE plpgsql\n IMMUTABLE\n SET search_path TO 'pg_catalog'\nAS $function$\ndeclare t text:=public.p6_discovery_trim(value); inner_text text; a text; b text;\nbegin\n if length(t)>1 then\n  a:=left(t,1); b:=right(t,1);\n  if (a,b) in (('\"','\"'),('„','“'),('“','”'),('''','''')) then\n   inner_text:=substr(t,2,length(t)-2);\n   if inner_text !~ '[\"„“”]' and (a<>'''' or strpos(inner_text,'''')=0) then\n    return nullif(public.p6_discovery_trim(inner_text),'');\n   end if;\n  end if;\n end if;\n return nullif(t,'');\nend $function$\n",
+      "body_md5": "d9ab01e57fb2f667ee865f69aa246741",
+      "definer": false,
+      "volatility": "i",
+      "owner": "postgres",
+      "acl": "{postgres=X/postgres,authenticated=X/postgres,service_role=X/postgres}",
+      "config": [
+        "search_path=pg_catalog"
+      ]
+    },
+    {
+      "signature": "rpc_discovery_v1(jsonb)",
+      "definition": "CREATE OR REPLACE FUNCTION public.rpc_discovery_v1(p_request jsonb)\n RETURNS jsonb\n LANGUAGE plpgsql\n STABLE\n SET search_path TO 'pg_catalog'\nAS $function$\ndeclare\n r jsonb:=p_request; f jsonb; a jsonb; scope jsonb; cursor_doc jsonb; result jsonb;\n query_text text; locality text; price text; location_mode text; when_mode text; scope_mode text; request_mode text;\n filter_key text; scope_key text; need_id uuid; people integer; page_limit integer;\n now_at timestamptz:=statement_timestamp(); time_at timestamptz; through_at timestamptz; expires_at timestamptz;\n before_at timestamptz; before_id uuid; before_section integer;\n west numeric; south numeric; east numeric; north numeric; point_lat numeric; point_lng numeric;\n range_from text; range_to text; iso_pattern text:='^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]{1,6})?(Z|[+-][0-9]{2}:[0-9]{2})$';\nbegin\n if auth.uid() is null then raise exception 'AUTH_REQUIRED' using errcode='28000'; end if;\n if jsonb_typeof(r) is distinct from 'object' then raise exception 'P6_INVALID_REQUEST' using errcode='22023'; end if;\n request_mode:=r->>'mode';\n if request_mode='EXACT_PUBLIC' then\n  if r-array['mode','needId']<>'{}' or not(r?&array['mode','needId']) or jsonb_typeof(r->'needId')<>'string'\n    or r->>'needId' !~* '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$' then raise exception 'P6_INVALID_REQUEST' using errcode='22023'; end if;\n  need_id:=(r->>'needId')::uuid; time_at:=now_at; through_at:=now_at; page_limit:=1;\n  f:='{\"text\":\"\",\"price\":\"all\",\"where\":\"any\",\"places\":1,\"when\":\"any\",\"dates\":null,\"place\":null}';\n  scope:='{\"kind\":\"ALL\"}';\n elsif request_mode='PAGE' then\n  if r-array['mode','filter','anchor','scope','limit','after']<>'{}' or not(r?&array['mode','filter','anchor','scope','limit','after'])\n    or jsonb_typeof(r->'limit')<>'number' or (r->>'limit')::numeric<>trunc((r->>'limit')::numeric)\n    or (r->>'limit')::numeric not between 1 and 100 then raise exception 'P6_INVALID_REQUEST' using errcode='22023'; end if;\n  page_limit:=(r->>'limit')::integer; f:=r->'filter'; scope:=r->'scope';\n else raise exception 'P6_MODE_NOT_IMPLEMENTED' using errcode='22023'; end if;\n if jsonb_typeof(f) is distinct from 'object' or f-array['text','price','where','places','when','dates','place']<>'{}'\n   or not(f?&array['text','price','where','places','when','dates','place'])\n   or jsonb_typeof(f->'text')<>'string' or octet_length(f->>'text')>16000\n   or coalesce(f->>'price','') not in ('all','MY_PRICE','OFFERS') or coalesce(f->>'where','') not in ('any','onsite','remote')\n   or coalesce(f->>'when','') not in ('any','today','tomorrow','week','weekend','next7')\n   or jsonb_typeof(f->'places')<>'number' or (f->>'places')::numeric<>trunc((f->>'places')::numeric)\n   or (f->>'places')::numeric not between 1 and 10 then raise exception 'P6_INVALID_FILTER' using errcode='22023'; end if;\n query_text:=lower(public.p6_discovery_trim(f->>'text') collate pg_catalog.\"sr-Latn-RS-x-icu\");\n price:=f->>'price'; location_mode:=f->>'where'; people:=(f->>'places')::integer; when_mode:=f->>'when';\n if f->'dates'<>'null'::jsonb then\n  if jsonb_typeof(f->'dates')<>'object' or (f->'dates')-array['from','to']<>'{}'\n    or not public.p6_discovery_civil(f#>>'{dates,from}') or not public.p6_discovery_civil(f#>>'{dates,to}')\n    or f#>>'{dates,from}'>f#>>'{dates,to}' then raise exception 'P6_INVALID_FILTER' using errcode='22023'; end if;\n  range_from:=f#>>'{dates,from}'; range_to:=f#>>'{dates,to}'; when_mode:='any';\n end if;\n if f->'place'<>'null'::jsonb then\n  if jsonb_typeof(f->'place')<>'string' or octet_length(f->>'place')>16000 then raise exception 'P6_INVALID_FILTER' using errcode='22023'; end if;\n  locality:=nullif(public.p6_discovery_key(f->>'place'),'');\n end if;\n if location_mode='remote' then locality:=null; scope:='{\"kind\":\"ALL\"}'; end if;\n f:=jsonb_build_object('text',query_text,'price',price,'where',location_mode,'places',people,'when',when_mode,\n   'dates',case when range_from is null then null else jsonb_build_object('from',range_from,'to',range_to) end,'place',locality);\n filter_key:=md5(f::text);\n if request_mode='PAGE' then\n  if r->'anchor'='null'::jsonb then\n   if r->'after'<>'null'::jsonb then raise exception 'P6_INVALID_CURSOR' using errcode='22023'; end if;\n   time_at:=now_at; through_at:=now_at; expires_at:=now_at+interval '30 minutes';\n  else\n   a:=r->'anchor';\n   if jsonb_typeof(a)<>'object' or a-array['version','filterKey','timeAt','publishedThrough','expiresAt']<>'{}'\n     or not(a?&array['version','filterKey','timeAt','publishedThrough','expiresAt'])\n     or a->>'version' is distinct from 'DISCOVERY_V1' or a->>'filterKey' is distinct from filter_key\n     or coalesce(a->>'timeAt','')!~iso_pattern or coalesce(a->>'publishedThrough','')!~iso_pattern or coalesce(a->>'expiresAt','')!~iso_pattern\n     then raise exception 'P6_INVALID_ANCHOR' using errcode='22023'; end if;\n   time_at:=(a->>'timeAt')::timestamptz; through_at:=(a->>'publishedThrough')::timestamptz; expires_at:=(a->>'expiresAt')::timestamptz;\n   if not isfinite(time_at) or time_at>now_at or through_at<>time_at or expires_at<>time_at+interval '30 minutes' then raise exception 'P6_INVALID_ANCHOR' using errcode='22023'; end if;\n   if expires_at<=now_at then raise exception 'P6_ANCHOR_EXPIRED' using errcode='22023'; end if;\n  end if;\n end if;\n if jsonb_typeof(scope) is distinct from 'object' then raise exception 'P6_INVALID_SCOPE' using errcode='22023'; end if;\n scope_mode:=scope->>'kind';\n if scope_mode='ALL' then\n  if scope-array['kind']<>'{}' then raise exception 'P6_INVALID_SCOPE' using errcode='22023'; end if;\n elsif scope_mode='AREA' then\n  if scope-array['kind','bounds']<>'{}' or jsonb_typeof(scope->'bounds') is distinct from 'array' or jsonb_array_length(scope->'bounds')<>4\n    or exists(select 1 from jsonb_array_elements(scope->'bounds') x where jsonb_typeof(x)<>'number') then raise exception 'P6_INVALID_SCOPE' using errcode='22023'; end if;\n  west:=(scope#>>'{bounds,0}')::numeric; south:=(scope#>>'{bounds,1}')::numeric; east:=(scope#>>'{bounds,2}')::numeric; north:=(scope#>>'{bounds,3}')::numeric;\n  if abs(west)>180 or abs(east)>180 or south< -90 or north>90 or south>north then raise exception 'P6_INVALID_SCOPE' using errcode='22023'; end if;\n  scope:=jsonb_build_object('kind',scope_mode,'bounds',jsonb_build_array(west::double precision,south::double precision,east::double precision,north::double precision));\n elsif scope_mode in ('POINT_LIST','POINT_MEMBERS') then\n  if scope-array['kind','point']<>'{}' or jsonb_typeof(scope->'point') is distinct from 'object' or (scope->'point')-array['lat','lng']<>'{}'\n    or jsonb_typeof(scope#>'{point,lat}') is distinct from 'number' or jsonb_typeof(scope#>'{point,lng}') is distinct from 'number' then raise exception 'P6_INVALID_SCOPE' using errcode='22023'; end if;\n  point_lat:=(scope#>>'{point,lat}')::numeric; point_lng:=(scope#>>'{point,lng}')::numeric;\n  if abs(point_lat)>90 or abs(point_lng)>180 or round(point_lat,2)<>point_lat or round(point_lng,2)<>point_lng then raise exception 'P6_INVALID_SCOPE' using errcode='22023'; end if;\n  scope:=jsonb_build_object('kind',scope_mode,'point',jsonb_build_object('lat',point_lat::double precision,'lng',point_lng::double precision));\n else raise exception 'P6_INVALID_SCOPE' using errcode='22023'; end if;\n scope_key:=md5(jsonb_build_object('filterKey',filter_key,'scope',scope,'timeAt',to_char(time_at at time zone 'UTC','YYYY-MM-DD\"T\"HH24:MI:SS.US\"Z\"'))::text);\n cursor_doc:=r->'after';\n if request_mode='PAGE' and cursor_doc<>'null'::jsonb then\n  if jsonb_typeof(cursor_doc)<>'object' or cursor_doc-array['scopeKey','section','sortAt','id']<>'{}'\n    or not(cursor_doc?&array['scopeKey','section','sortAt','id']) or cursor_doc->>'scopeKey' is distinct from scope_key\n    or cursor_doc->'section' not in ('0'::jsonb,'1'::jsonb) or coalesce(cursor_doc->>'sortAt','')!~iso_pattern\n    or coalesce(cursor_doc->>'id','') !~* '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'\n    then raise exception 'P6_INVALID_CURSOR' using errcode='22023'; end if;\n  before_at:=(cursor_doc->>'sortAt')::timestamptz; before_id:=(cursor_doc->>'id')::uuid; before_section:=(cursor_doc->>'section')::integer;\n  if before_at>through_at or (scope_mode in ('ALL','POINT_MEMBERS') and before_section<>0) then raise exception 'P6_INVALID_CURSOR' using errcode='22023'; end if;\n end if;\n with base as materialized (\n  select n.id,n.revision,n.published_at,n.title,n.category,n.status,n.urgent,n.schedule_kind,n.starts_at,n.ends_at,n.execution_location_mode,\n   n.task_country_code,n.task_timezone,n.verified_identity_required,n.approximate_city,n.approximate_area,n.approximate_lat,n.approximate_lng,\n   n.required_slots,n.required_skills,n.required_tools,n.required_vehicles,n.required_licenses,n.minimum_experience_years,n.mode,\n   n.requester_price_rsd,n.price_basis,n.requester_profile_id,n.response_deadline,\n   public.covered_slots(jsonb_populate_record(null::public.needs,jsonb_build_object('id',n.id))) as covered_now,\n   public.p6_discovery_days(n.schedule_kind,n.starts_at,n.ends_at,n.task_timezone,time_at) as days,\n   public.p6_discovery_area(n.approximate_area,n.approximate_city,n.execution_location_mode='REMOTE') as area_text,\n   case when n.execution_location_mode='REMOTE' or n.approximate_lat is null or n.approximate_lng is null then false else true end as has_point,\n   (time_at at time zone coalesce(n.task_timezone,'UTC'))::date as today\n  from public.needs n where n.status in ('PUBLISHED','SELECTION') and n.published_at is not null and n.remaining_search_closed_at is null\n   and (request_mode='EXACT_PUBLIC' and n.id=need_id or request_mode='PAGE' and n.published_at<=through_at)\n ), shared as materialized (\n  select b.*,case when range_from is not null then array[range_from,range_to] else case when_mode\n   when 'today' then array[today::text,today::text] when 'tomorrow' then array[(today+1)::text,(today+1)::text]\n   when 'week' then array[today::text,(today+7-extract(isodow from today)::integer)::text]\n   when 'next7' then array[today::text,(today+6)::text]\n   when 'weekend' then array[(today+greatest(0,6-extract(isodow from today)::integer))::text,(today+7-extract(isodow from today)::integer)::text] else null end end as wanted\n  from base b where (price='all' or b.mode=price)\n   and (location_mode='any' or location_mode='remote' and b.execution_location_mode='REMOTE'\n     or location_mode='onsite' and b.execution_location_mode is not null and b.execution_location_mode<>'REMOTE')\n   and (people=1 or greatest(0,coalesce(nullif(b.required_slots,0),1)-coalesce(b.covered_now,0))>=people)\n   and (locality is null or b.execution_location_mode is distinct from 'REMOTE' and public.p6_discovery_key(b.area_text)=locality\n     and public.p6_discovery_key(b.area_text) not in ('na daljinu','lokacija nije navedena'))\n   and (query_text='' or strpos(lower((coalesce(b.title,'')||' '||b.area_text||' '||array_to_string(coalesce(b.required_skills,'{}')||coalesce(b.required_tools,'{}')||coalesce(b.required_vehicles,'{}'),' ')) collate pg_catalog.\"sr-Latn-RS-x-icu\"),query_text)>0)\n ), qualified as materialized (\n  select s.*,(wanted is null or days[1]<=wanted[2] and days[2]>=wanted[1]) is true as time_ok,\n   case when scope_mode='ALL' then true when not has_point then false when scope_mode='AREA' then\n    approximate_lat between south and north and (west<=east and approximate_lng between west and east or west>east and (approximate_lng>=west or approximate_lng<=east))\n    else approximate_lat=point_lat and approximate_lng=point_lng end as in_area\n  from shared s\n ), scoped as materialized (\n  select q.*,case when scope_mode in ('AREA','POINT_LIST') and not has_point then 1 else 0 end as section\n  from qualified q where in_area or not has_point and scope_mode in ('AREA','POINT_LIST')\n ), page as materialized (\n  select * from scoped where time_ok and (before_id is null or section>before_section or section=before_section and (published_at,id)<(before_at,before_id))\n  order by section,published_at desc,id desc limit page_limit+1\n ), shown as materialized (select * from page order by section,published_at desc,id desc limit page_limit), projected as (\n  select s.section,s.published_at,s.id,jsonb_build_object(\n   'id',s.id,'revision',s.revision,'sortAt',to_char(s.published_at at time zone 'UTC','YYYY-MM-DD\"T\"HH24:MI:SS.US\"Z\"'),\n   'publishedAt',s.published_at,'title',s.title,'category',s.category,'status',s.status,'urgent',s.urgent,\n   'scheduleKind',s.schedule_kind,'startsAt',s.starts_at,'endsAt',s.ends_at,'executionLocationMode',s.execution_location_mode,\n   'taskCountryCode',s.task_country_code,'taskTimezone',s.task_timezone,'verifiedIdentityRequired',s.verified_identity_required,\n   'approximateCity',nullif(btrim(s.approximate_city),''),'approximateArea',nullif(btrim(s.approximate_area),''),\n   'pin',case when not s.has_point then null else jsonb_build_object('lat',s.approximate_lat,'lng',s.approximate_lng,'precision','COARSE_1KM') end,\n   'requiredSlots',s.required_slots,'coveredSlots',s.covered_now,'requiredSkills',to_jsonb(s.required_skills),'requiredTools',to_jsonb(s.required_tools),\n   'requiredVehicles',to_jsonb(s.required_vehicles),'requiredLicenses',to_jsonb(s.required_licenses),'minimumExperienceYears',s.minimum_experience_years,\n   'priceMode',s.mode,'requesterPriceRsd',s.requester_price_rsd,'priceBasis',s.price_basis,'requesterProfileId',s.requester_profile_id,\n   'responseDeadline',s.response_deadline,'acceptsApplications',s.required_slots>s.covered_now and (s.response_deadline is null or s.response_deadline>now_at),\n   'publicTopology',(select g.public_topology from public.need_geography g where g.need_id=s.id),\n   'criticalConditions',(select to_jsonb(d.critical_conditions) from public.need_requirement_details d where d.need_id=s.id)) as item from shown s\n ) select jsonb_build_object('version','DISCOVERY_V1','mode',request_mode,'asOf',now_at,'filterKey',filter_key,\n  'anchor',jsonb_build_object('version','DISCOVERY_V1','filterKey',filter_key,'timeAt',to_char(time_at at time zone 'UTC','YYYY-MM-DD\"T\"HH24:MI:SS.US\"Z\"'),\n   'publishedThrough',to_char(through_at at time zone 'UTC','YYYY-MM-DD\"T\"HH24:MI:SS.US\"Z\"'),'expiresAt',to_char(expires_at at time zone 'UTC','YYYY-MM-DD\"T\"HH24:MI:SS.US\"Z\"')),\n  'items',coalesce((select jsonb_agg(item order by section,published_at desc,id desc) from projected),'[]'::jsonb),\n  'hasMore',(select count(*)>page_limit from page),\n  'nextCursor',case when (select count(*)>page_limit from page) then (select jsonb_build_object('scopeKey',scope_key,'section',section,\n   'sortAt',to_char(published_at at time zone 'UTC','YYYY-MM-DD\"T\"HH24:MI:SS.US\"Z\"'),'id',id) from shown order by section desc,published_at,id limit 1) else null end,\n  'counts',jsonb_build_object('kind','exact_live','observedAt',now_at,\n   'mapped',case when scope_mode='POINT_MEMBERS' then (select count(*) from scoped where time_ok) else (select count(*) from qualified where time_ok) end,\n   'listed',(select count(*) from scoped where time_ok),'inArea',(select count(*) from scoped where time_ok and in_area),\n   'withoutPoint',(select count(*) from scoped where time_ok and section=1),\n   'undated',(select count(*) from scoped where wanted is not null and days is null)),\n  'availability',jsonb_build_object('hasKnownWorkMode',exists(select 1 from base where execution_location_mode is not null),\n   'hasKnownSchedule',exists(select 1 from base where days is not null),'priceModes',(select coalesce(jsonb_agg(mode order by mode),'[]') from (select distinct mode from base) modes))) into result;\n if request_mode='EXACT_PUBLIC' then return result-array['anchor','filterKey','counts','availability']; end if;\n return result;\nexception when invalid_text_representation or datetime_field_overflow or invalid_datetime_format or numeric_value_out_of_range then\n raise exception 'P6_INVALID_REQUEST' using errcode='22023';\nend $function$\n",
+      "body_md5": "a5ce63c8874fbd3550730dd46d4044d7",
+      "definer": false,
+      "volatility": "s",
+      "owner": "postgres",
+      "acl": "{postgres=X/postgres,authenticated=X/postgres,service_role=X/postgres}",
+      "config": [
+        "search_path=pg_catalog"
+      ]
+    }
+  ],
+  "historySource": {
+    "gitCommit": "a3623973450130fcf0e770f9ed28f315f366d5b2",
+    "path": "supabase/candidates/discovery-min-price-20261020/before.sql",
+    "bodyMd5": "a9b0985991f4ebfe4e95143e5cf57222",
+    "sha256": "c6f71a7265975776abed88f6757d837350387a57fcad192e119b7f921a287381",
+    "legacyLedgerVersions": [
+      "20261007204555",
+      "20261008000839"
+    ],
+    "legacyLedgerState": "Versions exist; current name/statements are NULL/empty. Historic receipts are supporting evidence, not current exact-ledger equivalence.",
+    "adaptations": [
+      "Reuse current invoker metadata/public projection and helpers, not historic ACLs.",
+      "Drop both legacy radius prefilters; current matcher alone owns work-area eligibility.",
+      "Add optional stated minBudgetRsd with unchanged amount/basis and separate anchor identity.",
+      "Bind forMe anchor to the current account; absent/false keeps original filter hash."
+    ]
+  },
+  "candidateBodyMd5": "1cb5ece85a18972ca3ef827981733858"
+}

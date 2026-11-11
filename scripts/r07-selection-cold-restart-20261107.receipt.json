@@ -1,0 +1,299 @@
+{
+  "schema": "USKOCI_R07_COLD_RESTART_PROOF_V1",
+  "task": "R07 - durable selection request, bounded device persistence and read-only cold restart recovery",
+  "observedAtUtc": "2026-11-07T17:04:57.833071+00:00",
+  "baseCommit": "94f2801db54bcbd7cb294cda983e048cd5885939",
+  "statuses": [
+    "SOURCE IMPLEMENTIRANO",
+    "TESTIRANO"
+  ],
+  "sourceCommit": null,
+  "productAuthority": {
+    "file": "docs/product/USKOCI_PRODUCT_UX_MASTER.md",
+    "section": "S07",
+    "rule": "Pending Selection intent is retained and checked; another person cannot be selected while its outcome is unknown. Whole application identity and accepted terms remain immutable."
+  },
+  "previousProblem": {
+    "source": "Candidates session useMemo initialized pending=null and no durable selection journal existed.",
+    "reproduction": "Execute the actual pre-change choose callback with a lost HTTP response seam, then a fresh route session. The new route read the task and candidates but made zero receipt RPC calls and returned receipt=null.",
+    "evidenceLayer": "local production callback execution with synthetic RPC transport; not a hosted write or Android process-kill test"
+  },
+  "implemented": [
+    "One account/Need AsyncStorage record contains only version, accountId, needId and the seven original selection command fields.",
+    "New command is serialized, saved and read back before rpc_select_response. An identical existing durable record is read without another device write.",
+    "Failed, silent or unreadable storage cannot dispatch the business writer. Original request key is retained for recovery.",
+    "Fresh route/module restores command identity before current task or candidate reads. Recovery calls only rpc_read_selection_result.",
+    "NOT_FOUND retains the original command. A separate explicit resend reuses its original key, revision, application version/hash and people count.",
+    "A changed/unavailable offer uses the existing design primitives for a minimal recovery view without inventing old private offer/profile fields.",
+    "Every storage await checks the original account/focus/read generation. Logout, account change and A-to-B-to-A cannot authorize an old callback.",
+    "Only exact receipt or SQLSTATE-proven refusal permits identity retirement. Retirement is serialized and reads back actual absence; a late clear cannot erase a newer command.",
+    "A real receipt remains confirmed when local removal fails. The journal stays unresolved locally and blocks a different selection until removal succeeds.",
+    "Every journal operation has a five-second caller deadline starting at enqueue, so native get/set/remove and waiting behind another operation cannot leave the screen indefinitely loading.",
+    "The actual native promise remains in the per-account/Need serial chain after the caller deadline. A late remove must finish before a newer intent can be written; the timed race never releases that lock.",
+    "An operation-local authority predicate combines its active deadline with the original account/focus/read predicate. It is checked before native work and after every await; expired queued operations never start and late completions cannot continue readback or dispatch.",
+    "Elapsed wall-clock deadline is also checked in the predicate, so a delayed JS timer cannot authorize a native continuation after expiry.",
+    "Existing Candidates recovery and explicit-write callbacks return a proven server receipt with NOT_RETIRED_ON_DEVICE when local clear times out. Open Agreement remains available; no writer is invoked by a check, read timeout or storage timeout."
+  ],
+  "files": [
+    {
+      "path": "src/data/selectionCommandJournal.ts",
+      "sha256": "885efea9c12bf6118752dedba241245c116cfb1820a154787d91fc1fbca9230c",
+      "bytes": 7123
+    },
+    {
+      "path": "src/app/(app)/potrebe/[id]/kandidati.tsx",
+      "sha256": "06e2aef051a8cb91d2f03ee4eb5b67f2362c97329ded120d0db5dc134504fc60",
+      "bytes": 33270
+    },
+    {
+      "path": "src/ui/v2/ApplicationSelectionPresentation.tsx",
+      "sha256": "aa30a9de39f74bd764b76d0e1a7fc8429e2813065db21dba1a25a572aee1edaf",
+      "bytes": 47564
+    },
+    {
+      "path": "scripts/r07-selection-recovery-harness.cjs",
+      "sha256": "e954c0c7d7ac642be1ef8c0213705241506adaa10dec16cb4e7272470cd41dee",
+      "bytes": 11517
+    },
+    {
+      "path": "scripts/r07-selection-recovery.test.cjs",
+      "sha256": "adb1e32982da55fcb046f320018d488d2c1b5f0b63d63cf410a02e04e5be91c5",
+      "bytes": 12187
+    },
+    {
+      "path": "scripts/r07-selection-cold-restart.test.cjs",
+      "sha256": "4ac0d7e2260ce2ab3d015501efc28274104112f70a5ecaf7bc57aec9e3255ca1",
+      "bytes": 32835
+    }
+  ],
+  "verification": {
+    "command": "node --test --test-reporter=tap scripts/r07-selection-cold-restart.test.cjs scripts/r07-selection-recovery.test.cjs scripts/r07-application-recovery.test.cjs scripts/r07-application-receipt.test.cjs",
+    "tests": 81,
+    "passed": 81,
+    "failed": 0,
+    "skipped": 0,
+    "todo": 0,
+    "newColdRestartTests": 29,
+    "existingSelectionTests": 16,
+    "relatedApplicationTests": 36,
+    "typescript": {
+      "command": "node node_modules/typescript/bin/tsc --noEmit",
+      "exitCode": 0,
+      "diagnostics": 0
+    },
+    "diffCheck": {
+      "command": "git diff --check -- src/data/selectionCommandJournal.ts scripts/r07-selection-recovery-harness.cjs scripts/r07-selection-cold-restart.test.cjs scripts/r07-selection-cold-restart-20261107.receipt.json",
+      "exitCode": 0
+    },
+    "logs": [
+      {
+        "path": "/workspace/scratch/01f9acde8f88/evidence/r07-storage-timeout-before.tap",
+        "sha256": "439028307ddb453e3f60d6f9d3b3381f4795eef700d148ccb7e7757d0a9c23c1",
+        "bytes": 14165
+      },
+      {
+        "path": "/workspace/scratch/01f9acde8f88/evidence/r07-storage-timeout-after.tap",
+        "sha256": "0ea136e52588b01ff9ce687dbe05f613f490cfdd4577c9b88618c931c7698ad1",
+        "bytes": 7578
+      },
+      {
+        "path": "/workspace/scratch/01f9acde8f88/evidence/r07-storage-timeout-regression.tap",
+        "sha256": "44bc42baa466fac2a8427e0f6375bb5bd4fbb7ed5c6128556fb864fb4f61df12",
+        "bytes": 19554
+      },
+      {
+        "path": "/workspace/scratch/01f9acde8f88/evidence/r07-storage-timeout-typescript.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    ],
+    "positiveScenarios": [
+      "durable-before-dispatch ordering",
+      "fresh module after lost response",
+      "crash after save before dispatch",
+      "same-key explicit replay",
+      "exact offer readback",
+      "receipt with unavailable list",
+      "terminal Agreement recovery",
+      "serialized exact retirement",
+      "confirmed receipt and Open Agreement after hung local remove",
+      "successful explicit selection receipt after hung local cleanup",
+      "new intent waits for actual old native remove, then survives its late completion",
+      "queue recovers after expired native predecessor eventually finishes"
+    ],
+    "negativeScenarios": [
+      "storage throw/silent-write/readback failure",
+      "corrupt/oversized/foreign/extra-field record",
+      "different-account isolation",
+      "logout at every persistence await",
+      "A-to-B-to-A and stale focus/read callback",
+      "late restore/retirement after logout",
+      "changed price/version/people not adopted",
+      "transport-unknown cannot authorize resend",
+      "another retained screen intent cannot be overwritten",
+      "same-key payload mutation",
+      "failed/silent removal cannot enable a new choice",
+      "hung load get cannot restore a late command",
+      "hung save pre-read cannot reach set or writer",
+      "hung native set and saved-command readback cannot later dispatch",
+      "queued load/save/clear each expire from their own enqueue time without starting native work",
+      "expired operation and queued cleanup cannot regain authority after A-to-B-to-A",
+      "elapsed deadline before delayed timer callback cannot authorize continuation",
+      "receipt read timeout cannot resend an already checked command or adopt a late receipt"
+    ],
+    "harnessBoundary": "Production TypeScript journal, reader, route callbacks and recovery presentation execute unchanged. AsyncStorage/RPC/account seams remain synthetic; timeout cases inject a controllable clock and scheduler only into the actual module loader. No Android bridge, real force-stop, native timing or hosted write is claimed.",
+    "timeoutCorrectionTests": 11
+  },
+  "server": {
+    "changed": false,
+    "newMigrations": 0,
+    "newHostedCalls": 0,
+    "newPaidAiCalls": 0,
+    "contract": "Existing rpc_read_selection_result and rpc_select_response are unchanged. Prior DEV/ordinary-Auth proof remains scripts/r07-selection-recovery-dev-20261107.receipt.json; it is not a new native persistence proof."
+  },
+  "ci": {
+    "status": "NOT RUN FOR THIS PATCH",
+    "integrationOwner": "root",
+    "requiredActiveTestAddition": "scripts/r07-selection-cold-restart.test.cjs"
+  },
+  "native": {
+    "status": "NOT CONFIRMED",
+    "required": "Install integrated QA APK, force-stop during and after selection, restart as original user, check read-only recovery, explicit replay, logout/account change and small-screen/large-text recovery."
+  },
+  "limits": [
+    "Does not reconstruct a previously lost memory-only pending selection from an older application version.",
+    "Cold restart assumes application storage remains intact; uninstall, clear-data and permanently corrupt device storage are not claimed recoverable.",
+    "A corrupt journal is retained and blocks new selection; it is not automatically discarded as proof that no server write happened.",
+    "No new source commit, GitHub CI, APK, DEV deployment or native acceptance is claimed by this local proof.",
+    "Three-actor last-place concurrency and all pricing variants remain separate verification scopes.",
+    "AsyncStorage cannot cancel a mutation already issued to native code. It may finish after caller timeout; the original immutable identity and serial chain prevent that completion from dispatching or overtaking a newer stored intent.",
+    "If the native promise never settles, operations for that same account/Need remain serialized and individually fail within their own five-second deadline. This patch does not claim repair of a permanently stalled device bridge; an application restart may be needed.",
+    "Five seconds bounds active-JS waiting. A suspended process cannot render or run timers; deadline and account/focus checks fence the next continuation on resume."
+  ],
+  "priorColdRestartProof": {
+    "observedAtUtc": "2026-11-07T16:52:37.764311+00:00",
+    "receiptSha256BeforeTimeoutCorrection": "19e6b4321e0f7b29a686edfc455da9dd9c4b4777c6fe88ef82dccbf52b34c174",
+    "files": [
+      {
+        "path": "src/data/selectionCommandJournal.ts",
+        "sha256": "e5143181fb0e57ae2bb7c8b6252bec172a80da96dbef9d652219a3b9cb8c7d82",
+        "bytes": 6103
+      },
+      {
+        "path": "src/app/(app)/potrebe/[id]/kandidati.tsx",
+        "sha256": "06e2aef051a8cb91d2f03ee4eb5b67f2362c97329ded120d0db5dc134504fc60",
+        "bytes": 33270
+      },
+      {
+        "path": "src/ui/v2/ApplicationSelectionPresentation.tsx",
+        "sha256": "aa30a9de39f74bd764b76d0e1a7fc8429e2813065db21dba1a25a572aee1edaf",
+        "bytes": 47564
+      },
+      {
+        "path": "scripts/r07-selection-recovery-harness.cjs",
+        "sha256": "557772dd0d2d7aea8cbd3c41fb3322bc12ea6f28274b11e907fb0438c7ee1b0f",
+        "bytes": 11155
+      },
+      {
+        "path": "scripts/r07-selection-recovery.test.cjs",
+        "sha256": "adb1e32982da55fcb046f320018d488d2c1b5f0b63d63cf410a02e04e5be91c5",
+        "bytes": 12187
+      },
+      {
+        "path": "scripts/r07-selection-cold-restart.test.cjs",
+        "sha256": "5f26563f434432b9609948fdc5116a22791a3aa3b57b751011b1d866fa0aa5ce",
+        "bytes": 17858
+      }
+    ],
+    "verification": {
+      "command": "node --test --test-reporter=tap scripts/r07-selection-cold-restart.test.cjs scripts/r07-selection-recovery.test.cjs scripts/r07-application-recovery.test.cjs scripts/r07-application-receipt.test.cjs",
+      "tests": 70,
+      "passed": 70,
+      "failed": 0,
+      "skipped": 0,
+      "todo": 0,
+      "newColdRestartTests": 18,
+      "existingSelectionTests": 16,
+      "relatedApplicationTests": 36,
+      "typescript": {
+        "command": "node node_modules/typescript/bin/tsc --noEmit",
+        "exitCode": 0,
+        "diagnostics": 0
+      },
+      "diffCheck": {
+        "command": "git diff --check -- <six owned files>",
+        "exitCode": 0
+      },
+      "logs": [
+        {
+          "path": "/workspace/scratch/01f9acde8f88/evidence/r07-cold-restart-tests.tap",
+          "sha256": "5b1e14b2ddec60c1307140aa338b79660b182051781c12dafcb39f61c9802513",
+          "bytes": 16794
+        },
+        {
+          "path": "/workspace/scratch/01f9acde8f88/evidence/r07-cold-restart-typescript.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      ],
+      "positiveScenarios": [
+        "durable-before-dispatch ordering",
+        "fresh module after lost response",
+        "crash after save before dispatch",
+        "same-key explicit replay",
+        "exact offer readback",
+        "receipt with unavailable list",
+        "terminal Agreement recovery",
+        "serialized exact retirement"
+      ],
+      "negativeScenarios": [
+        "storage throw/silent-write/readback failure",
+        "corrupt/oversized/foreign/extra-field record",
+        "different-account isolation",
+        "logout at every persistence await",
+        "A-to-B-to-A and stale focus/read callback",
+        "late restore/retirement after logout",
+        "changed price/version/people not adopted",
+        "transport-unknown cannot authorize resend",
+        "another retained screen intent cannot be overwritten",
+        "same-key payload mutation",
+        "failed/silent removal cannot enable a new choice"
+      ],
+      "harnessBoundary": "Production TypeScript journal, reader, route callbacks and recovery presentation are executed. AsyncStorage, RPC transport, account store, native rendering and editor hook boundaries are controlled seams. Each restart harness has a fresh module cache and only the storage map is shared."
+    },
+    "status": "Initial 70-test source proof; superseded for current files by the bounded-storage verification below."
+  },
+  "timeoutCorrection": {
+    "finding": "A never-settling AsyncStorage promise kept journal and Candidates callbacks pending indefinitely; a confirmed server receipt was hidden while local removeItem hung.",
+    "beforeSource": {
+      "path": "src/data/selectionCommandJournal.ts",
+      "sha256": "e5143181fb0e57ae2bb7c8b6252bec172a80da96dbef9d652219a3b9cb8c7d82",
+      "bytes": 6103
+    },
+    "preimageCapturedAt": "../evidence/r07-storage-timeout-before/",
+    "reproduction": {
+      "suite": "scripts/r07-selection-cold-restart.test.cjs",
+      "tests": 29,
+      "passed": 19,
+      "failed": 10,
+      "cancelled": 0,
+      "interpretation": "The 18 prior cases plus the existing read-timeout invariant passed. Ten added storage-deadline/late-continuation cases failed against the exact pre-correction journal."
+    },
+    "after": {
+      "suite": "scripts/r07-selection-cold-restart.test.cjs",
+      "tests": 29,
+      "passed": 29,
+      "failed": 0,
+      "cancelled": 0
+    },
+    "productionChange": "src/data/selectionCommandJournal.ts only; existing route/UI handling, reader/writer contracts and storage record shape are unchanged by this correction.",
+    "deadlineMs": 5000,
+    "includesQueueWait": true,
+    "actualNativeMutationCancelled": false,
+    "timedOutPromiseUsedAsSerialLock": false,
+    "nextNativeStepAfterExpiryAllowed": false,
+    "newBusinessWriterAfterStorageOrReadTimeoutAllowed": false,
+    "additionalPaidCalls": 0,
+    "additionalHostedCalls": 0
+  }
+}

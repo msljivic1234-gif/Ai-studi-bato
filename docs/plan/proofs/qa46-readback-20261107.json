@@ -1,0 +1,148 @@
+{
+  "observedAt": "2026-11-07T15:49:51.607474+00:00",
+  "repository": "uskocibusiness-boop/USKOCI-EAN",
+  "branch": "work/uskoci-cist-proizvod-20261104",
+  "head": "b56f0e52db99256cdfb6988567edc0e7d597849c",
+  "status": "CI_AND_APK_BYTES_CONFIRMED_NOT_NATIVE_E2E",
+  "run": {
+    "id": 42386138550,
+    "number": 46,
+    "url": "https://github.com/uskocibusiness-boop/USKOCI-EAN/actions/runs/42386138550",
+    "status": "completed",
+    "conclusion": "success",
+    "createdAt": "2026-11-07T15:23:17Z",
+    "finishedAt": "2026-11-07T15:43:17Z",
+    "finishedAtSource": "GitHub completed run updated_at; final job log timestamp 2026-11-07T15:43:14.6554096Z",
+    "jobId": 128443812559,
+    "attempt": 1,
+    "tests": {
+      "total": 476,
+      "passed": 476,
+      "failed": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "typescript": "PASS",
+    "typescriptEvidence": "Exact workflow uses set -euo pipefail, npx tsc --noEmit, and tee; checks step and job succeeded, output file is empty.",
+    "migrationIntegrity": {
+      "files": 207,
+      "checks": 31,
+      "status": "PASS",
+      "evidenceLine": "PASS migration_integrity files=207 live_snapshot=87 pending=60 physical_suffix=43 oct26_suffix=3 nov7_suffix=7 nov7_forward=3 r08_forward=1 r01_forward=1 r08_reviews_forward=1 r05_forward=1 191500=RECORDED_STATEMENT_RECONSTRUCTION exact_byte_mirror=false participant_contract=PASS"
+    },
+    "androidNativeGeneration": "PASS",
+    "androidBuild": "PASS",
+    "buildLog": "BUILD SUCCESSFUL in 18m 8s",
+    "allReportedStepsSucceeded": true
+  },
+  "checksArtifact": {
+    "id": 13579955796,
+    "name": "uskoci-checks-b56f0e52db99256cdfb6988567edc0e7d597849c",
+    "bytes": 17434,
+    "expiresAt": "2026-11-10T15:24:54Z",
+    "zipSha256": "3204a0e31de7a1e8a60a19089f2a360a23b46aa7a7bad41a8056d9b83b90902c",
+    "zipDigestIndependentlyVerified": true,
+    "fileSha256": {
+      "tests.tap": "596fee9c2e53fd275cd03da1d975147b94a4880bffa40e52dd194f03c6b702e1",
+      "typescript.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "migration-integrity.txt": "204f0762065eae5759ac59276cdd28aebba9e3698ef52508882211bd33b961bd"
+    }
+  },
+  "artifact": {
+    "id": 13580385852,
+    "name": "uskoci-isolated-qa-apk-46",
+    "url": "https://github.com/uskocibusiness-boop/USKOCI-EAN/actions/runs/42386138550/artifacts/13580385852",
+    "bytes": 48778668,
+    "expiresAt": "2026-11-14T15:43:10Z",
+    "zipSha256": "c182d264b736974b19ba1d0228c5d622ec833df599cdbad00dd3b7846d55ba84",
+    "zipDigestIndependentlyVerified": true
+  },
+  "apk": {
+    "filename": "USKOCI-QA-b56f0e52d.apk",
+    "bytes": 83345039,
+    "sha256": "4da23f1b48f955696b718b227adaef904d4d969355bfe13364ffd56e87c324f1",
+    "digestIndependentlyVerified": true,
+    "package": "rs.uskoci.preview.qa",
+    "versionCode": 36,
+    "versionName": "1.0.0",
+    "minSdk": 24,
+    "targetSdk": 36,
+    "abi": "arm64-v8a",
+    "dexFiles": 7,
+    "signing": "EXPO_TEMPLATE_ANDROID_DEBUG_KEY",
+    "signature": {
+      "scope": "CI apksigner verify receipt on independently hash-verified downloaded APK bytes; no separate local apksigner executable was available.",
+      "verified": true,
+      "schemeV2": true,
+      "signers": 1,
+      "certificateSha256": "fac61745dc0903786fb9ede62a962b399f7348f0bb6f899b8332667591033b9c",
+      "publicKeyType": "RSA",
+      "publicKeyBits": 2048,
+      "sameCertificateAsQa44": true
+    },
+    "backend": "DEV",
+    "backendProject": "leqcwgzvjsxugfgzdmth",
+    "runtimeVersion": "uskoci-v1-preview-r1",
+    "embeddedBundle": true,
+    "bundleBytes": 13928660,
+    "bundleSha256": "6eaf22f1d638be3e44bd1ea2fcaaa4d490cbc88af350b35a96ed6644e22a3c9a",
+    "embeddedConfigSha256": "771a7f5e07194bd18ee09cb13237be84d47433833d246fe33a7c8a97d9b3b7c7",
+    "embeddedSourceCommit": "b56f0e52db99256cdfb6988567edc0e7d597849c",
+    "embeddedBackendTarget": "canonical",
+    "embeddedConfigIndependentlyRead": true,
+    "otaEnabled": false,
+    "otaCheckAutomatically": "NEVER",
+    "useEmbeddedUpdate": true,
+    "firebaseConfigPresent": false,
+    "nativePatchMarker": "USKOCI_RNR01",
+    "pushProven": false,
+    "deviceInstallPerformed": false,
+    "replacesExistingPreview": false
+  },
+  "boundedPackagedAssetScan": {
+    "scope": "Decoded Hermes string table; ASCII key and URL patterns only, not a full native binary audit",
+    "decodedHermesStrings": true,
+    "decodedStringCount": 51368,
+    "unmatchedStringRows": 0,
+    "serviceRoleJwtFound": false,
+    "modernSecretLiteralFound": false,
+    "literalPrefixCount": 1,
+    "supabaseHosts": [
+      "leqcwgzvjsxugfgzdmth.supabase.co"
+    ],
+    "nativeBinaryFullAudit": false
+  },
+  "artifactEvidenceSha256": {
+    "build-receipt.json": "ad23f3dd0e8dff894cf268930f3a36845d446aa14cd01e92b95eaf4b8275fbd4",
+    "native-receipt.json": "4cb8758517bac051010eb1c265f906604f1c538fb075052072a49dcb6552fc4d",
+    "apk-badging.txt": "77a69ad13c4937967ab4d955de68ec4f270db30f5db15a040fc15aa8d1d0d8f9",
+    "AndroidManifest-tree.txt": "8295a25a75e47aed3c4d8d35f369ed35613311756600d3712135d4445e93b447",
+    "signature.txt": "d3f9e564daa1f8874b2fa80116e8ff75f72412c8b88087cc3d0815861751d3d4",
+    "SHA256SUMS.txt": "6cbd234343e2a03034565058738e87d3b99b02ef4a037d518f119539677dfc18"
+  },
+  "workflowSha256": "a92433613716f0f16bf52ac73e17716bff961ec822abbcbd0ab9f2d43e831646",
+  "boundaries": [
+    "This evidence applies only to source b56f0e52db99256cdfb6988567edc0e7d597849c and QA APK 46. It does not prove later integrated R07 selection recovery or budget/security source changes.",
+    "476 active tests and 207 physical migration files are CI source checks, not all historical tests and not the live DEV migration ledger count.",
+    "APK file, embedded source/config, ABI and digests were independently read. SDK and certificate verification are preserved CI aapt/apksigner evidence tied to the exact artifact bytes.",
+    "No installed Android two-user E2E, camera, microphone, map, permission dialog or actual push delivery acceptance was performed.",
+    "No production backend, production signing, Google Play AAB or public release is established.",
+    "The bounded decoded-Hermes scan is not a complete native binary security audit and does not establish legacy server key revocation.",
+    "workflowSha256 is corrected to the exact tracked b56 Git blob bytes. The prior SHA described the scratch text copy with one added trailing LF; CI commands and all run/APK evidence are unchanged."
+  ],
+  "workflowByteEvidence": {
+    "correctedAt": "2026-11-07T16:19:22.739917+00:00",
+    "sourceCommit": "b56f0e52db99256cdfb6988567edc0e7d597849c",
+    "path": ".github/workflows/uskoci-qa-apk.yml",
+    "gitBlobSha1": "85ad80d8ef0faec3166be631e770f23ab23e68c3",
+    "trackedBytes": 11525,
+    "previouslyRetrievedGithubUtf8TextMatchesLocalGitBlobBytes": true,
+    "trackedTrailingLfCount": 1,
+    "previouslyReportedSha256": "6b304ab0551ddb304e977058a0d5e45ceac6845161c7f2abed47bd4e7210185d",
+    "scratchBytes": 11526,
+    "scratchTrailingLfCount": 2,
+    "difference": "The locally saved text evidence had one extra trailing LF introduced when writing it with apply_patch. The original GitHub text fetched during QA46 verification re-encoded as UTF-8 matches the pinned b56 Git blob exactly. No GitHub text normalization or workflow command change was found.",
+    "testOrBuildRerunPerformed": false
+  }
+}

@@ -1,0 +1,103 @@
+{
+  "format_version": 1,
+  "project": "leqcwgzvjsxugfgzdmth",
+  "status": "DEV_SQL_CONFIRMED",
+  "candidate": "scripts/sql/r08_blind_reviews_20261107.sql",
+  "candidate_sha256": "fb1c59407075d6ffd08c6ec91222d6153a293681a294ee8c9624ab181068271d",
+  "candidate_bytes": 52649,
+  "policy_authority": "USKOCI_PRODUCT_UX_MASTER.md section177: bilateral reviews publish on both submissions or after14days from completion; no new submission after expiry. Root confirmed elapsed336hours.",
+  "changed_existing_functions": 9,
+  "new_private_helpers": [
+    "private.agreement_review_deadline_v1(uuid)",
+    "private.agreement_review_published_v1(uuid)"
+  ],
+  "test": {
+    "command": "node --test scripts/r08-blind-reviews-sql.test.cjs",
+    "passed": 16,
+    "failed": 0,
+    "includes_parent_suite": true,
+    "engine": "PGlite PostgreSQL18; actual captured review function bodies and table constraints/triggers",
+    "old_behavior_reproduced": [
+      "First rating and comment exposed before counterpart review",
+      "New review accepted after336hour window"
+    ],
+    "verified_boundaries": [
+      "No row rewrite during candidate application",
+      "Known nine function bodies changed; existing pg_proc attributes/OIDs/ACL/arguments preserved",
+      "Private helper execution unavailable to anon/authenticated/service_role",
+      "First rating excluded from public aggregate/profile/comments/received totals; owner receipt remains readable",
+      "Both bilateral ratings publish immediately",
+      "Single rating publishes at elapsed336hours",
+      "Legacy and v2 writers reject new reviews after expiry",
+      "Existing exact request replay survives expiry/closure with no extra writes",
+      "Missing/future/infinite/current-version-mismatched completion never invents a deadline",
+      "336hour deadline is timezone/DST independent",
+      "Home attention and Agreement eligibility obey same deadline",
+      "Existing block/world/closure gates remain effective",
+      "Comment moderation cannot delete immutable stars or undo bilateral publication",
+      "Unauthorized counterpart, duplicate identity and active Agreement remain rejected",
+      "Stale preimage application fails closed"
+    ],
+    "fixture_substitutions": [
+      "Authentication actor fixture",
+      "World-admission predicate fixture flag",
+      "Unrelated selectable-application count returns zero",
+      "Marketplace audit transport recorded to isolated fixture table"
+    ],
+    "privacy_validator": "Actual captured private.ru4b_public_floor_reason; no stub bypass"
+  },
+  "publication_stability_evidence": {
+    "star_rows_update_delete_forbidden_by_enabled_pre_v3_review_immutable": true,
+    "star_table_not_in_account_closure_redaction_relations": true,
+    "comment_hiding_redaction_keeps_stars": true,
+    "no_publication_backfill_or_new_dataset": true
+  },
+  "proof_boundary": {
+    "dev_deployed": true,
+    "ordinary_auth_postfix_proved": false,
+    "native_proved": false,
+    "hosted_full_erasure_e2e": false,
+    "private_row_or_conversation_captured": false
+  },
+  "dev_predeployment_aggregate_impact": {
+    "immutable_review_rows": 4,
+    "invalid_completion_reviews": 0,
+    "would_remain_published_now": 0,
+    "early_single_reviews_to_hide_until_bilateral_or_deadline": 4,
+    "aggregate_only_no_private_rows": true,
+    "star_row_rewrite": false,
+    "explanation": "These four previously visible early unilateral reviews remain immutable and owner-readable; public projection must withhold them until counterpart submission or the original completion-bound deadline."
+  },
+  "deployment": {
+    "migration_version": "20261107121408",
+    "migration_name": "r08_blind_reviews_20261107",
+    "migration_count_after_apply": 341,
+    "statement_count": 1,
+    "ledger_md5": "f6cc0966cfc421968edfaa6901c4c166",
+    "ledger_sha256": "fb1c59407075d6ffd08c6ec91222d6153a293681a294ee8c9624ab181068271d",
+    "ledger_bytes": 52649,
+    "ledger_statement_equals_reviewed_candidate_bytes": true,
+    "full_changed_bodies_exact": 11,
+    "new_private_helpers_postgres_only_execute": true,
+    "existing_functions_read_and_attributes_preserved": 30,
+    "existing_unchanged_function_bodies": 21,
+    "existing_oid_acl_arguments_preserved": true,
+    "no_business_row_mutation": true,
+    "canonical_file": "supabase/migrations/20261107121408_r08_blind_reviews_20261107.sql",
+    "new_catalog_evidence_sha256": "742adf3ee6c68c7358c5070e3d78e6a9a225a38f8274e506d69ef1dc82a8548f"
+  },
+  "dev_postdeployment_aggregate": {
+    "immutable_review_rows": 4,
+    "currently_published_reviews": 0,
+    "invalid_completion_reviews": 0,
+    "aggregate_only_no_private_rows": true,
+    "captured_before_postfix_ordinary_auth_reviews": true
+  },
+  "ordinaryAuthFollowup": {
+    "status": "PASS",
+    "evidence": "scripts/ordinary-auth-e2e-20261107.receipt.json",
+    "evidenceSha256": "4c63107a21cda2c2faeaf3f6317ac659d30eeb7f41c79f470c75725f848fb35d",
+    "scope": "First rating and comment hidden; second rating publishes both; own immutable replay preserved. Expiry is isolated SQL evidence only.",
+    "native": false
+  }
+}

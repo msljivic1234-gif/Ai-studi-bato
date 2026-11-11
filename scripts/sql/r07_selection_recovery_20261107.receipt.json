@@ -1,0 +1,177 @@
+{
+  "format_version": 1,
+  "task": "R07_SELECTION_READ_ONLY_RECOVERY",
+  "observed_at_utc": "2026-11-07T15:35:11.707060+00:00",
+  "base_commit": "833885296d6e4bad0e49acb58ac72a247df911aa",
+  "checkout_head_at_verification": "b56f0e52db99256cdfb6988567edc0e7d597849c",
+  "status": [
+    "SOURCE_IMPLEMENTIRANO",
+    "TESTIRANO",
+    "DEV_POTVRĐENO"
+  ],
+  "project": "leqcwgzvjsxugfgzdmth",
+  "problem": {
+    "baseline_reproduced": true,
+    "description": "The actual Candidates read callback kept an unconfirmed selection after a refreshed list already showed SELECTED; no authoritative command receipt was read.",
+    "reproduction": {
+      "listShowsSelected": true,
+      "receipt": null,
+      "readCalls": [
+        "need",
+        "candidates"
+      ],
+      "writerCalls": 0,
+      "confirmed": false
+    }
+  },
+  "product_contract": {
+    "check_is_read_only": true,
+    "retry_is_separate_explicit_same_key": true,
+    "no_price_or_headcount_reinterpretation": true,
+    "not_found_proves_failure": false,
+    "current_authority_required": true
+  },
+  "implementation": [
+    "Add a narrowly granted STABLE reader over existing private.selection_commands, exact owner/key/hash/payload and current Agreement ownership/link.",
+    "Require real JWT session_id and the existing captured session guard; deny missing, malformed, revoked, expired, foreign session and deleted or banned account.",
+    "Retain existing closure authority and authorized minimal cooperation history after block or partner closure; no new message, location, contact or media access.",
+    "Resolve the receipt before incidental candidate or task reads. A changed revision or unavailable list cannot hide the committed selection.",
+    "Preserve the immutable unknown intent; NOT_FOUND offers separate read-again and explicit same-key retry actions.",
+    "Settle a selection refusal only when current writer error and SQLSTATE both match; last-place refusal opens current applications.",
+    "Present recovered terminal Agreement state without a fresh-cooperation celebration or stale capacity count.",
+    "Keep recovered view during refresh, fence account/focus/generation changes, and do not mark an in-flight list read as a receipt check.",
+    "Use formal Serbian copy in touched selection presentations and adapter messages."
+  ],
+  "sql": {
+    "candidate": "scripts/sql/r07_selection_recovery_20261107.sql",
+    "sha256": "b29efe20f41cbf1c5521c8de85d3662b2d33fe85d01d3ca86739a51380edfc50",
+    "reader_body_md5": "a5d35714e761047dcbef3f745a86dc22",
+    "writer_preimage_md5": "02934f7831db821a7b33fd6d40289b9a",
+    "session_guard_preimage_md5": "3454eb7040f3dab3cb0c35b512b46859",
+    "new_reader_signature": "public.rpc_read_selection_result(uuid,integer,uuid,integer,text,text,integer)",
+    "existing_writer_unchanged": true,
+    "applied_to_dev": true,
+    "forward_migration": "supabase/migrations/20261107153455_r07_selection_recovery_20261107.sql"
+  },
+  "verification": {
+    "focused_new_tests": {
+      "sql": 16,
+      "client_route_presentation": 16,
+      "failed": 0,
+      "skipped": 0
+    },
+    "related_regression": {
+      "command": "node --test --test-concurrency=3 scripts/r07-selection-recovery-sql.test.cjs scripts/r07-selection-recovery.test.cjs scripts/r07-application-receipt.test.cjs scripts/r07-application-recovery.test.cjs scripts/r07-agreement-snapshot.test.cjs scripts/r07-pricing-semantics.test.cjs scripts/r07-price-snapshot-sql.test.cjs",
+      "tests": 128,
+      "pass": 128,
+      "fail": 0,
+      "skipped": 0,
+      "log_sha256": "24299bba94c9b6c51166a9d70232609a4b6c0c49fda64e3e868578944300b21e"
+    },
+    "typescript": {
+      "command": "npx tsc --noEmit",
+      "exit_code": 0
+    },
+    "diff_check": {
+      "command": "git diff --check",
+      "exit_code": 0
+    },
+    "positive": [
+      "Exact repeated owned selection receipt",
+      "Original HOURLY price and two-person headcount preserved after parent edits",
+      "Later commit recovered using the original key",
+      "Confirmed and terminal Agreement states",
+      "One remaining place admits one whole application"
+    ],
+    "negative": [
+      "Foreign caller/foreign session/missing identity",
+      "Missing or malformed session claim; revoked or expired session; deleted or banned account",
+      "Closing caller, revoked Agreement ownership or broken linkage",
+      "Changed key/payload/hash/headcount; malformed receipt",
+      "Reader installation refused on source, ACL or schema drift",
+      "Second whole application rejected after one place filled without a receipt",
+      "Unknown transport/serialization outcome cannot become conclusive refusal",
+      "Late account/focus/background changes cannot accept a stale receipt"
+    ],
+    "sql_fixture_boundary": "PGlite/PostgreSQL 18, real captured writer and closure/session helper bodies; synthetic Auth claim and auth table fixtures. Matching/calendar/notification seams inherited from r07-price-fixture are explicit. Capacity proof is sequential, not simultaneous hosted transactions.",
+    "route_fixture_boundary": "Actual TypeScript adapter, route callbacks and presentation expressions with transport/session/native-render seams. No installed Android run."
+  },
+  "remaining": [
+    "DEV exact migration and the existing terminal TEST Agreement receipt are confirmed with ordinary Auth. Live revoked-session mutations were not performed; denial is proven by the local captured-helper SQL cases. Native recovery remains untested.",
+    "Pending selection remains memory-only; cold restart recovery is not completed by this patch.",
+    "True last-place concurrency needs a requester and two independent authorized TEST workers; two existing accounts are not sufficient proof.",
+    "Blocked/closing cancellation reason remains NOT_KEPT under the existing contract; no unauthorized audit/message path or retention policy was invented.",
+    "CI, APK/native acceptance and production readiness are not confirmed by these local tests."
+  ],
+  "git_commit": null,
+  "ci": null,
+  "native": null,
+  "file_sha256": {
+    "src/app/(app)/potrebe/[id]/kandidati.tsx": "69d6765291dc230cd91f84652edf723678979f7bbb19a03d95b74ab52decbb8a",
+    "src/data/applicationSelectionClientService.ts": "1bc6aa47814e8f76c5070e007bbf72620c21a3460b563d7923e96c7fd68b5a7c",
+    "src/ui/v2/ApplicationSelectionPresentation.tsx": "788b7dad1a8f09a2f1fcc5aab3286421205fea6dadd1f9814c2fc5edc036b169",
+    "scripts/sql/r07_selection_recovery_20261107.sql": "b29efe20f41cbf1c5521c8de85d3662b2d33fe85d01d3ca86739a51380edfc50",
+    "scripts/sql/r07_selection_recovery_20261107.preimage.json": "14660a9dddda4e9d24af3df3d2cf84cb6aa620da99e1cc95458ca4a9cb7d3752",
+    "scripts/r07-selection-recovery-sql.test.cjs": "cc1a65c781d6106f9fa225e1fe813170eaf45478db2401cb869dffba2a795ed9",
+    "scripts/r07-selection-recovery.test.cjs": "3d71b68981a858f63345af5894a03f76fee75fed1eda57f001c24a260f36bc76",
+    "scripts/r07-selection-recovery-dev-20261107.py": "df72bfe1ae27c38459dc695c206110185016c57c434ee3ea3fe45c90e3a2692b",
+    "scripts/r07-selection-recovery-dev-20261107.receipt.json": "dd17bbba855b92e59acbca53a8278a61eb9d1fddc00373d9774caad44796f5db",
+    "supabase/migrations/20261107153455_r07_selection_recovery_20261107.sql": "b29efe20f41cbf1c5521c8de85d3662b2d33fe85d01d3ca86739a51380edfc50"
+  },
+  "updated_at_utc": "2026-11-07T15:41:09.068552+00:00",
+  "dev": {
+    "readback": {
+      "ledger": {
+        "name": "r07_selection_recovery_20261107",
+        "version": "20261107153455",
+        "joined_md5": "db1ca71ebfeea07af1aafa33d2035e1f",
+        "joined_bytes": 8392,
+        "joined_sha256": "b29efe20f41cbf1c5521c8de85d3662b2d33fe85d01d3ca86739a51380edfc50",
+        "statement_count": 1
+      },
+      "reader": {
+        "acl": "{postgres=X/postgres,authenticated=X/postgres,service_role=X/postgres}",
+        "md5": "a5d35714e761047dcbef3f745a86dc22",
+        "owner": "postgres",
+        "config": [
+          "search_path=pg_catalog"
+        ],
+        "definer": true,
+        "signature": "rpc_read_selection_result(uuid,integer,uuid,integer,text,text,integer)",
+        "volatility": "s",
+        "anonCanExecute": false,
+        "authenticatedCanExecute": true
+      },
+      "dependencies": [
+        {
+          "md5": "02934f7831db821a7b33fd6d40289b9a",
+          "signature": "rpc_select_response(uuid,integer,uuid,integer,text,text)"
+        },
+        {
+          "md5": "3454eb7040f3dab3cb0c35b512b46859",
+          "signature": "private.push_session_valid(uuid,uuid)"
+        },
+        {
+          "md5": "f4999250c315e0253374d4611291c7ad",
+          "signature": "private.closure_account_restricted(uuid)"
+        },
+        {
+          "md5": "dc9bc4c718593850da4fdb49e612dbd2",
+          "signature": "private.closure_assert_open(uuid,uuid)"
+        }
+      ],
+      "migrationCount": 344
+    },
+    "ordinary_auth_receipt": "scripts/r07-selection-recovery-dev-20261107.receipt.json",
+    "ordinary_auth_receipt_sha256": "dd17bbba855b92e59acbca53a8278a61eb9d1fddc00373d9774caad44796f5db",
+    "read_requests": 12,
+    "ordinary_accounts": 2,
+    "known_fixture_credential_count": 2,
+    "agreement_status": "COMPLETED",
+    "public_key_verified": true,
+    "business_writer_calls": 0,
+    "model_calls": 0,
+    "business_rows_and_related_event_hashes_unchanged": true,
+    "remaining_native_acceptance": true
+  }
+}

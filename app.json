@@ -1,0 +1,76 @@
+{
+  "expo": {
+    "name": "USKOČI",
+    "slug": "uskoci",
+    "owner": "sljivas-team",
+    "extra": {
+      "eas": {
+        "projectId": "1e6cc490-9851-4741-9226-128612122db6"
+      }
+    },
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/brand/app-icon/icon.png",
+    "scheme": "uskociapp",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "icon": "./assets/brand/app-icon/icon.png"
+    },
+    "android": {
+      "package": "rs.uskoci.preview",
+      "versionCode": 36,
+      "adaptiveIcon": {
+        "backgroundColor": "#FFFFFF",
+        "foregroundImage": "./assets/brand/app-icon/android-icon-foreground.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "output": "single",
+      "favicon": "./assets/brand/app-icon/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#FFFFFF",
+          "image": "./assets/entry-splash-mark.png",
+          "imageWidth": 144,
+          "resizeMode": "contain",
+          "dark": {
+            "backgroundColor": "#FFFFFF",
+            "image": "./assets/entry-splash-mark.png"
+          }
+        }
+      ],
+      "expo-notifications",
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "./assets/fonts/inter/Inter-Regular.ttf",
+            "./assets/fonts/inter/Inter-Medium.ttf",
+            "./assets/fonts/inter/Inter-SemiBold.ttf",
+            "./assets/fonts/inter/Inter-Bold.ttf",
+            "./assets/fonts/inter/Inter-ExtraBold.ttf"
+          ]
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true,
+      "reactCompiler": true
+    },
+    "runtimeVersion": "uskoci-v1-preview-r1",
+    "updates": {
+      "url": "https://u.expo.dev/1e6cc490-9851-4741-9226-128612122db6",
+      "enabled": true,
+      "checkAutomatically": "ON_LOAD",
+      "fallbackToCacheTimeout": 0,
+      "requestHeaders": {
+        "expo-channel-name": "preview"
+      }
+    }
+  }
+}

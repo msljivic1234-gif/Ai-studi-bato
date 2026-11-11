@@ -1,0 +1,523 @@
+{
+  "kind": "R10_WORK_AREAS_PROJECTION_DEV_EXECUTION",
+  "source_head": "94f2801db54bcbd7cb294cda983e048cd5885939",
+  "project": "leqcwgzvjsxugfgzdmth",
+  "checked_at": "2026-11-07T16:58:30.213336+00:00",
+  "ledger_count": 346,
+  "migration": {
+    "name": "r10_work_areas_projection_20261107",
+    "version": "20261107165752",
+    "joined_md5": "91229e976a7a1d37687ea588e295e400",
+    "joined_bytes": 16509,
+    "joined_sha256": "d269d4eedb38a8727f44162cc6e8640a8dc34d2d52a60b72bc86efa1dee28074",
+    "statement_count": 1
+  },
+  "functions": [
+    {
+      "body_md5": "8f1cd592eb48eb9da31e0af02c0bdd2e",
+      "metadata": {
+        "acl": "{postgres=X/postgres}",
+        "cost": 100,
+        "rows": 0,
+        "owner": "postgres",
+        "config": [
+          "search_path=pg_catalog"
+        ],
+        "result": "jsonb",
+        "strict": false,
+        "language": "plpgsql",
+        "parallel": "u",
+        "arguments": "areas jsonb",
+        "leakproof": false,
+        "volatility": "i",
+        "security_definer": false
+      },
+      "signature": "private.validate_worker_areas_v1(jsonb)"
+    },
+    {
+      "body_md5": "6877307e228608f6283eec166c98016a",
+      "metadata": {
+        "acl": "{postgres=X/postgres}",
+        "cost": 100,
+        "rows": 0,
+        "owner": "postgres",
+        "config": [
+          "search_path=pg_catalog"
+        ],
+        "result": "jsonb",
+        "strict": false,
+        "language": "plpgsql",
+        "parallel": "u",
+        "arguments": "r text, t jsonb, a uuid",
+        "leakproof": false,
+        "volatility": "s",
+        "security_definer": true
+      },
+      "signature": "private.closure_taxonomy_project_v1(text,jsonb,uuid)"
+    },
+    {
+      "body_md5": "48a8c7d266e86586a457aa2d2fa51e45",
+      "metadata": {
+        "acl": "{postgres=X/postgres}",
+        "cost": 100,
+        "rows": 0,
+        "owner": "postgres",
+        "config": [
+          "search_path=pg_catalog"
+        ],
+        "result": "text",
+        "strict": false,
+        "language": "plpgsql",
+        "parallel": "u",
+        "arguments": "r text",
+        "leakproof": false,
+        "volatility": "i",
+        "security_definer": true
+      },
+      "signature": "private.closure_taxonomy_scope_v1(text)"
+    },
+    {
+      "body_md5": "c54d2b639082356d06609317be8226f0",
+      "metadata": {
+        "acl": "{postgres=X/postgres}",
+        "cost": 100,
+        "rows": 0,
+        "owner": "postgres",
+        "config": [
+          "search_path=pg_catalog"
+        ],
+        "result": "jsonb",
+        "strict": false,
+        "language": "sql",
+        "parallel": "u",
+        "arguments": "v jsonb",
+        "leakproof": false,
+        "volatility": "i",
+        "security_definer": false
+      },
+      "signature": "private.data_export_worker_candidate_v5(jsonb)"
+    },
+    {
+      "body_md5": "55ba7bf41ce39d9c914929270b916570",
+      "metadata": {
+        "acl": "{postgres=X/postgres}",
+        "cost": 100,
+        "rows": 0,
+        "owner": "postgres",
+        "config": [
+          "search_path=pg_catalog"
+        ],
+        "result": "jsonb",
+        "strict": false,
+        "language": "plpgsql",
+        "parallel": "u",
+        "arguments": "r text, t jsonb, a uuid, g uuid",
+        "leakproof": false,
+        "volatility": "s",
+        "security_definer": true
+      },
+      "signature": "private.closure_redaction_patch_v5(text,jsonb,uuid,uuid)"
+    },
+    {
+      "body_md5": "102e417ab6d52ab0eec421a8bda5c0c4",
+      "metadata": {
+        "acl": "{postgres=X/postgres}",
+        "cost": 100,
+        "rows": 0,
+        "owner": "postgres",
+        "config": [
+          "search_path=pg_catalog"
+        ],
+        "result": "text[]",
+        "strict": false,
+        "language": "sql",
+        "parallel": "u",
+        "arguments": "",
+        "leakproof": false,
+        "volatility": "i",
+        "security_definer": true
+      },
+      "signature": "private.closure_redaction_relations_v5()"
+    },
+    {
+      "body_md5": "16ed9d5077dd2662e4502a5040a83f80",
+      "metadata": {
+        "acl": "{postgres=X/postgres}",
+        "cost": 100,
+        "rows": 0,
+        "owner": "postgres",
+        "config": [
+          "search_path=pg_catalog"
+        ],
+        "result": "jsonb",
+        "strict": false,
+        "language": "sql",
+        "parallel": "u",
+        "arguments": "",
+        "leakproof": false,
+        "volatility": "i",
+        "security_definer": false
+      },
+      "signature": "private.closure_taxonomy_inventory_v1()"
+    },
+    {
+      "body_md5": "5c88c60b705d2d99c61da935536ec137",
+      "metadata": {
+        "acl": "{postgres=X/postgres}",
+        "cost": 100,
+        "rows": 0,
+        "owner": "postgres",
+        "config": [
+          "search_path=pg_catalog"
+        ],
+        "result": "jsonb",
+        "strict": false,
+        "language": "plpgsql",
+        "parallel": "u",
+        "arguments": "r text, t jsonb, a uuid, g uuid",
+        "leakproof": false,
+        "volatility": "s",
+        "security_definer": true
+      },
+      "signature": "private.closure_taxonomy_patch_v1(text,jsonb,uuid,uuid)"
+    },
+    {
+      "body_md5": "0b1c4a0b5884cdcf9c3b3db67e6bdc41",
+      "metadata": {
+        "acl": "{postgres=X/postgres}",
+        "cost": 100,
+        "rows": 0,
+        "owner": "postgres",
+        "config": [
+          "search_path=pg_catalog"
+        ],
+        "result": "jsonb",
+        "strict": false,
+        "language": "sql",
+        "parallel": "u",
+        "arguments": "",
+        "leakproof": false,
+        "volatility": "i",
+        "security_definer": false
+      },
+      "signature": "private.closure_taxonomy_reset_sections_v1()"
+    },
+    {
+      "body_md5": "1d4c6fd6725c00cb2c65bccc091cecc9",
+      "metadata": {
+        "acl": "{postgres=X/postgres}",
+        "cost": 100,
+        "rows": 0,
+        "owner": "postgres",
+        "config": [
+          "search_path=pg_catalog"
+        ],
+        "result": "jsonb",
+        "strict": false,
+        "language": "plpgsql",
+        "parallel": "u",
+        "arguments": "v jsonb",
+        "leakproof": false,
+        "volatility": "i",
+        "security_definer": false
+      },
+      "signature": "private.closure_taxonomy_semantic_v1(jsonb)"
+    },
+    {
+      "body_md5": "00933c589c16905b09318c080a2150f6",
+      "metadata": {
+        "acl": "{postgres=X/postgres}",
+        "cost": 100,
+        "rows": 0,
+        "owner": "postgres",
+        "config": [
+          "search_path=pg_catalog"
+        ],
+        "result": "jsonb",
+        "strict": false,
+        "language": "sql",
+        "parallel": "u",
+        "arguments": "v jsonb, t text",
+        "leakproof": false,
+        "volatility": "i",
+        "security_definer": false
+      },
+      "signature": "private.data_export_array_v5(jsonb,text)"
+    },
+    {
+      "body_md5": "e08e712c811ab2a093e48ca75a436c25",
+      "metadata": {
+        "acl": "{postgres=X/postgres}",
+        "cost": 100,
+        "rows": 0,
+        "owner": "postgres",
+        "config": [
+          "search_path=pg_catalog"
+        ],
+        "result": "jsonb",
+        "strict": false,
+        "language": "sql",
+        "parallel": "u",
+        "arguments": "",
+        "leakproof": false,
+        "volatility": "i",
+        "security_definer": true
+      },
+      "signature": "private.data_export_dataset_catalog()"
+    },
+    {
+      "body_md5": "39faec2ad11eadd6f1184cb4e560d61d",
+      "metadata": {
+        "acl": "{postgres=X/postgres}",
+        "cost": 100,
+        "rows": 0,
+        "owner": "postgres",
+        "config": [
+          "search_path=pg_catalog"
+        ],
+        "result": "text",
+        "strict": false,
+        "language": "sql",
+        "parallel": "u",
+        "arguments": "",
+        "leakproof": false,
+        "volatility": "s",
+        "security_definer": true
+      },
+      "signature": "private.data_export_projection_sha_v5()"
+    },
+    {
+      "body_md5": "e02fe0db0a56b90b74a29c2b81a38357",
+      "metadata": {
+        "acl": "{postgres=X/postgres}",
+        "cost": 100,
+        "rows": 0,
+        "owner": "postgres",
+        "config": [
+          "search_path=pg_catalog"
+        ],
+        "result": "jsonb",
+        "strict": false,
+        "language": "sql",
+        "parallel": "u",
+        "arguments": "v jsonb, t text",
+        "leakproof": false,
+        "volatility": "i",
+        "security_definer": false
+      },
+      "signature": "private.data_export_scalar_v5(jsonb,text)"
+    },
+    {
+      "body_md5": "c3bde16e2175c7ec33c1a171e0ad04a3",
+      "metadata": {
+        "acl": "{postgres=X/postgres}",
+        "cost": 100,
+        "rows": 0,
+        "owner": "postgres",
+        "config": [
+          "search_path=pg_catalog"
+        ],
+        "result": "text",
+        "strict": false,
+        "language": "sql",
+        "parallel": "u",
+        "arguments": "p_account_id uuid, p_receipt_id uuid, p_binding jsonb, p_cutoff timestamp with time zone",
+        "leakproof": false,
+        "volatility": "s",
+        "security_definer": true
+      },
+      "signature": "private.data_export_snapshot(uuid,uuid,jsonb,timestamp with time zone)"
+    },
+    {
+      "body_md5": "6753530b240ef747d5a18f9e74ce6fb0",
+      "metadata": {
+        "acl": "{postgres=X/postgres}",
+        "cost": 100,
+        "rows": 0,
+        "owner": "postgres",
+        "config": [
+          "search_path=pg_catalog"
+        ],
+        "result": "jsonb",
+        "strict": false,
+        "language": "sql",
+        "parallel": "u",
+        "arguments": "",
+        "leakproof": false,
+        "volatility": "i",
+        "security_definer": true
+      },
+      "signature": "private.closure_taxonomy_export_catalog_v1()"
+    },
+    {
+      "body_md5": "2845351ac34bceeb346257dbc37a686c",
+      "metadata": {
+        "acl": "{postgres=X/postgres}",
+        "cost": 100,
+        "rows": 1000,
+        "owner": "postgres",
+        "config": [
+          "search_path=pg_catalog"
+        ],
+        "result": "TABLE(key text, value jsonb)",
+        "strict": false,
+        "language": "plpgsql",
+        "parallel": "u",
+        "arguments": "a uuid",
+        "leakproof": false,
+        "volatility": "s",
+        "security_definer": true
+      },
+      "signature": "private.closure_taxonomy_export_rows_v1(uuid)"
+    },
+    {
+      "body_md5": "6d9000e634489b43342297d73f6e8809",
+      "metadata": {
+        "acl": "{postgres=X/postgres}",
+        "cost": 100,
+        "rows": 0,
+        "owner": "postgres",
+        "config": [
+          "search_path=pg_catalog"
+        ],
+        "result": "boolean",
+        "strict": false,
+        "language": "plpgsql",
+        "parallel": "u",
+        "arguments": "r text, t jsonb, a uuid",
+        "leakproof": false,
+        "volatility": "s",
+        "security_definer": true
+      },
+      "signature": "private.closure_taxonomy_held_v1(text,jsonb,uuid)"
+    },
+    {
+      "body_md5": "079dfd89aec66efbf2513cf8cad4eda9",
+      "metadata": {
+        "acl": "{postgres=X/postgres}",
+        "cost": 100,
+        "rows": 0,
+        "owner": "postgres",
+        "config": [
+          "search_path=pg_catalog"
+        ],
+        "result": "text[]",
+        "strict": false,
+        "language": "sql",
+        "parallel": "u",
+        "arguments": "",
+        "leakproof": false,
+        "volatility": "i",
+        "security_definer": false
+      },
+      "signature": "private.closure_taxonomy_semantic_keys_v1()"
+    },
+    {
+      "body_md5": "b1552206df3434002e6d294befbca5b6",
+      "metadata": {
+        "acl": "{postgres=X/postgres}",
+        "cost": 100,
+        "rows": 0,
+        "owner": "postgres",
+        "config": [
+          "search_path=pg_catalog"
+        ],
+        "result": "jsonb",
+        "strict": false,
+        "language": "sql",
+        "parallel": "u",
+        "arguments": "v jsonb",
+        "leakproof": false,
+        "volatility": "i",
+        "security_definer": false
+      },
+      "signature": "private.data_export_task_facts_v5(jsonb)"
+    },
+    {
+      "body_md5": "052eea0037026beb43c653bc248af2ad",
+      "metadata": {
+        "acl": "{postgres=X/postgres}",
+        "cost": 100,
+        "rows": 0,
+        "owner": "postgres",
+        "config": [
+          "search_path=pg_catalog"
+        ],
+        "result": "jsonb",
+        "strict": false,
+        "language": "plpgsql",
+        "parallel": "u",
+        "arguments": "v jsonb",
+        "leakproof": false,
+        "volatility": "i",
+        "security_definer": false
+      },
+      "signature": "private.data_export_worker_areas_v5(jsonb)"
+    }
+  ],
+  "projection_sha256": "8b6a6099cab922d88e2ceff88ac9f34c1319cc9c3990814eab18a70288614c0f",
+  "private_adapter_execute": {
+    "anon": false,
+    "service_role": false,
+    "authenticated": false
+  },
+  "verification": {
+    "isolated_actual_projector_tests": 39,
+    "fail": 0,
+    "root_independent_repeat": 39,
+    "all_20_existing_function_metadata_unchanged": true,
+    "only_two_existing_bodies_changed": true,
+    "new_private_adapter": true,
+    "synthetic_dev_read_only_probes": [
+      {
+        "label": "country",
+        "exact_expected": true,
+        "forbidden_extra_absent": true
+      },
+      {
+        "label": "ordered_radius_city",
+        "exact_expected": true,
+        "forbidden_extra_absent": true
+      },
+      {
+        "label": "mixed_invalid_and_private_extra",
+        "exact_expected": true,
+        "forbidden_extra_absent": true
+      },
+      {
+        "label": "extra_precise_coordinates",
+        "exact_expected": true,
+        "forbidden_extra_absent": true
+      },
+      {
+        "label": "null",
+        "exact_expected": true,
+        "forbidden_extra_absent": true
+      },
+      {
+        "label": "wrong_type",
+        "exact_expected": true,
+        "forbidden_extra_absent": true
+      },
+      {
+        "label": "absent_field",
+        "exact_expected": true,
+        "forbidden_extra_absent": true
+      }
+    ],
+    "source_user_rows_changed": 0
+  },
+  "policy": {
+    "retention_source_ready": false,
+    "export_policy_binding_is_null": true,
+    "approved_policy_activated": false,
+    "source_pin_overwritten": false,
+    "retention_period_changed": false
+  },
+  "behavior": "Existing own-account live and archived Worker candidate projections preserve valid workAreas. Projection removes unrecognized keys, skips invalid entries and preserves valid order without rewriting any active profile or archival source.",
+  "limits": [
+    "The DEV synthetic probes are privileged read-only projector calls, not an ordinary-user export/download acceptance.",
+    "The isolated fixture checks actual snapshot/scoping/redaction instructions; it does not execute a full account closure.",
+    "Legal approval, source readiness, export policy binding and native acceptance remain open."
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "projectRef": "leqcwgzvjsxugfgzdmth",
+  "baseSourceCommit": "20903892d7f5def28ce33a15027918e5ca19c342",
+  "status": "DEV_READBACK_CONFIRMED",
+  "function": "uskoci-worker-interview",
+  "previousVersion": 142,
+  "version": 143,
+  "verify_jwt": false,
+  "packageSha256": "c201dc446ff6d2689518d734ac1e4adb9ffe5880d7d56fd9896d320a119a332e",
+  "files": 21,
+  "allFilesByteIdentical": true,
+  "changedSourceFiles": [
+    {
+      "name": "supabase/functions/uskoci-worker-interview/index.ts",
+      "sha256": "a3a5919e218fdf63529d221ff48e1476d0731efa35e7da4eb0c0373a9ce0d54d"
+    }
+  ],
+  "localTests": {
+    "diagnostics": 8,
+    "availabilityPlusDiagnostics": 32,
+    "allPassed": true,
+    "typescript": "PASS"
+  },
+  "scope": "Closed local output-gate diagnostics only; no provider text, user quote, patch keys or values logged. Existing fail-closed parsing, completion and accounting unchanged.",
+  "paidProviderCalls": 0,
+  "failedPriorEntryPointAttempt": {
+    "error": "Entrypoint path does not exist",
+    "versionAndPackageUnchanged": true
+  },
+  "hostedWeeklyCorrection": "NOT_YET_TESTED_ON_V143"
+}
